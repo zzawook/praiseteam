@@ -20,13 +20,12 @@ select public.join_team(current_setting('test.code'));
 
 -- ---- member builds the song library
 select lives_ok($$
-  insert into public.songs (team_id, title, default_key, bpm)
-  values (current_setting('test.team')::bigint, '주의 집에 거하는 자', 'G', 72),
-         (current_setting('test.team')::bigint, '은혜', 'D', 68),
-         (current_setting('test.team')::bigint, '나는 예배자입니다', 'A', 120)
+  select public.add_song(current_setting('test.team')::bigint, '주의 집에 거하는 자', p_version_name => '마커스워십', p_key => 'G', p_bpm => 72),
+         public.add_song(current_setting('test.team')::bigint, '은혜', p_key => 'D', p_bpm => 68),
+         public.add_song(current_setting('test.team')::bigint, '나는 예배자입니다', p_key => 'A', p_bpm => 120)
 $$, 'members add songs');
 select throws_ok($$
-  insert into public.songs (team_id, title, default_key) values (current_setting('test.team')::bigint, 'Bad key', 'H')
+  select public.add_song(current_setting('test.team')::bigint, 'Bad key', p_key => 'H')
 $$, '23514', null, 'invalid musical key rejected');
 select throws_ok($$
   insert into public.sessions (team_id, title, starts_at) values (current_setting('test.team')::bigint, 'x', now())
@@ -50,9 +49,9 @@ with ins as (
   values (current_setting('test.team')::bigint, '금요 철야', now() + interval '3 days') returning id)
 select set_config('test.future', (select id::text from ins), true);
 
-insert into public.setlist_items (team_id, session_id, position, song_id, key, song_form)
-select current_setting('test.team')::bigint, current_setting('test.past')::bigint, row_number() over (order by s.id), s.id, null, 'I-V1-C-B-C'
-from public.songs s where s.title in ('주의 집에 거하는 자', '은혜');
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id, key, song_form)
+select current_setting('test.team')::bigint, current_setting('test.past')::bigint, row_number() over (order by s.id), s.id, v.id, null, 'I-V1-C-B-C'
+from public.songs s join public.song_versions v on v.song_id = s.id where s.title in ('주의 집에 거하는 자', '은혜');
 
 select is((select count(*)::int from public.setlist_items where session_id = current_setting('test.past')::bigint), 2, 'leader sees draft setlist');
 select throws_ok($$ select public.publish_setlist(current_setting('test.future')::bigint) $$, '22023', null, 'cannot publish an empty setlist');
@@ -86,8 +85,9 @@ select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000
 update public.setlist_items set key = 'A'
 where session_id = current_setting('test.past')::bigint
   and song_id = (select id from public.songs where title = '주의 집에 거하는 자');
-insert into public.setlist_items (team_id, session_id, position, song_id)
-select current_setting('test.team')::bigint, current_setting('test.past')::bigint, 3, id from public.songs where title = '나는 예배자입니다';
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id)
+select current_setting('test.team')::bigint, current_setting('test.past')::bigint, 3, s.id, v.id
+from public.songs s join public.song_versions v on v.song_id = s.id where s.title = '나는 예배자입니다';
 select lives_ok($$
   select public.reorder_setlist(
     current_setting('test.past')::bigint,
@@ -107,8 +107,9 @@ select is(
   (select usual_key from public.song_stats where song_id = (select id from public.songs where title = '주의 집에 거하는 자')),
   'A', 'usual key follows the setlist key');
 
-insert into public.setlist_items (team_id, session_id, position, song_id)
-select current_setting('test.team')::bigint, current_setting('test.future')::bigint, 1, id from public.songs where title = '은혜';
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id)
+select current_setting('test.team')::bigint, current_setting('test.future')::bigint, 1, s.id, v.id
+from public.songs s join public.song_versions v on v.song_id = s.id where s.title = '은혜';
 select public.publish_setlist(current_setting('test.future')::bigint);
 select is(
   (select times_played from public.song_stats where song_id = (select id from public.songs where title = '은혜')),

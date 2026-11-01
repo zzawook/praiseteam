@@ -40,7 +40,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
         : songs
             .where((e) =>
                 e.song.title.toLowerCase().contains(q) ||
-                (e.song.artist ?? '').toLowerCase().contains(q) ||
+                (e.versionNames ?? '').toLowerCase().contains(q) ||
                 e.song.tags.any((t) => t.toLowerCase().contains(q)))
             .toList();
     final never = DateTime(1900);
@@ -65,12 +65,12 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
   }
 
   Future<void> _addSong() async {
-    final fields = await showSongForm(context);
-    if (fields == null || !mounted) return;
+    final draft = await showNewSongForm(context);
+    if (draft == null || !mounted) return;
     var id = -1;
     final ok = await runGuarded(
       context,
-      () async => id = await ref.read(songsRepositoryProvider).addSong(widget.teamId, fields),
+      () async => id = await ref.read(songsRepositoryProvider).addSong(widget.teamId, draft.song, draft.version),
     );
     if (!ok || !mounted) return;
     ref.invalidate(songLibraryProvider(widget.teamId));
@@ -153,10 +153,8 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
                     return ListTile(
                       onTap: () => context.push('/t/${widget.teamId}/songs/${e.song.id}'),
                       title: Text(e.song.title),
-                      subtitle: Text(
-                        [if (e.song.artist != null) e.song.artist!, statsLine(l10n, e.stats)].join('\n'),
-                      ),
-                      isThreeLine: e.song.artist != null,
+                      subtitle: Text([?e.versionNames, statsLine(l10n, e.stats)].join('\n')),
+                      isThreeLine: e.versionNames != null,
                       trailing: KeyBadge(e.displayKey),
                     );
                   },

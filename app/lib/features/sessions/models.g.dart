@@ -60,17 +60,22 @@ Map<String, dynamic> _$SessionTemplateToJson(_SessionTemplate instance) =>
       'location': instance.location,
     };
 
-_SetlistSong _$SetlistSongFromJson(Map<String, dynamic> json) => _SetlistSong(
-  title: json['title'] as String,
-  artist: json['artist'] as String?,
-  defaultKey: json['default_key'] as String?,
-  bpm: (json['bpm'] as num?)?.toInt(),
-);
+_SetlistSong _$SetlistSongFromJson(Map<String, dynamic> json) =>
+    _SetlistSong(title: json['title'] as String);
 
 Map<String, dynamic> _$SetlistSongToJson(_SetlistSong instance) =>
+    <String, dynamic>{'title': instance.title};
+
+_SetlistVersion _$SetlistVersionFromJson(Map<String, dynamic> json) =>
+    _SetlistVersion(
+      name: json['name'] as String?,
+      defaultKey: json['default_key'] as String?,
+      bpm: (json['bpm'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$SetlistVersionToJson(_SetlistVersion instance) =>
     <String, dynamic>{
-      'title': instance.title,
-      'artist': instance.artist,
+      'name': instance.name,
       'default_key': instance.defaultKey,
       'bpm': instance.bpm,
     };
@@ -80,12 +85,16 @@ _SetlistItem _$SetlistItemFromJson(Map<String, dynamic> json) => _SetlistItem(
   sessionId: (json['session_id'] as num).toInt(),
   position: (json['position'] as num).toInt(),
   songId: (json['song_id'] as num).toInt(),
+  versionId: (json['version_id'] as num?)?.toInt(),
   key: json['key'] as String?,
   bpm: (json['bpm'] as num?)?.toInt(),
   sheetId: (json['sheet_id'] as num?)?.toInt(),
   songForm: json['song_form'] as String?,
   notes: json['notes'] as String?,
   song: SetlistSong.fromJson(json['songs'] as Map<String, dynamic>),
+  version: json['song_versions'] == null
+      ? null
+      : SetlistVersion.fromJson(json['song_versions'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$SetlistItemToJson(_SetlistItem instance) =>
@@ -94,10 +103,12 @@ Map<String, dynamic> _$SetlistItemToJson(_SetlistItem instance) =>
       'session_id': instance.sessionId,
       'position': instance.position,
       'song_id': instance.songId,
+      'version_id': instance.versionId,
       'key': instance.key,
       'bpm': instance.bpm,
       'sheet_id': instance.sheetId,
       'song_form': instance.songForm,
       'notes': instance.notes,
       'songs': instance.song.toJson(),
+      'song_versions': instance.version?.toJson(),
     };

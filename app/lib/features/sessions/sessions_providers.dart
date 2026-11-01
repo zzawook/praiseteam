@@ -39,10 +39,12 @@ Future<List<SetlistItem>> setlist(Ref ref, int sessionId) {
   return ref.watch(sessionsRepositoryProvider).setlist(sessionId);
 }
 
-/// "추가: A, B / 키: C(G→A) / 템포: D(68→72) / 순서 변경"
+/// "추가: A, B / 버전: C(마커스→어노인팅) / 키: C(G→A) / 템포: D(68→72) / 순서 변경"
 String describeSetlistChanges(AppLocalizations l10n, SetlistChanges changes) => [
       if (changes.added.isNotEmpty) l10n.changeAdded(changes.added.join(', ')),
       if (changes.removed.isNotEmpty) l10n.changeRemoved(changes.removed.join(', ')),
+      if (changes.versionChanged.isNotEmpty)
+        l10n.changeVersion(changes.versionChanged.map((v) => '${v.title}(${v.from ?? '?'}→${v.to ?? '?'})').join(', ')),
       if (changes.keyChanged.isNotEmpty)
         l10n.changeKey(changes.keyChanged.map((k) => '${k.title}(${k.from ?? '?'}→${k.to ?? '?'})').join(', ')),
       if (changes.tempoChanged.isNotEmpty)

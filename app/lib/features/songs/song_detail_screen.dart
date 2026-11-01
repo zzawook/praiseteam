@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/dates.dart';
@@ -15,6 +16,8 @@ import 'sheet_upload.dart';
 import 'song_form.dart';
 import 'songs_providers.dart';
 
+/// A song: what its versions share, each version with its key, tempo,
+/// sheets and links, and the services it was played in.
 class SongDetailScreen extends ConsumerWidget {
   const SongDetailScreen({super.key, required this.teamId, required this.songId});
   final int teamId;
@@ -23,16 +26,27 @@ class SongDetailScreen extends ConsumerWidget {
   void _refresh(WidgetRef ref) {
     ref
       ..invalidate(songDetailProvider(songId))
-      ..invalidate(songSheetsProvider(songId))
+      ..invalidate(songVersionsProvider(songId))
       ..invalidate(songLibraryProvider(teamId));
+  }
+
+  Future<void> _addVersion(BuildContext context, WidgetRef ref) async {
+    final fields = await showVersionForm(context);
+    if (fields == null || !context.mounted) return;
+    if (await runGuarded(context, () => ref.read(songsRepositoryProvider).addVersion(teamId, songId, fields))) {
+      _refresh(ref);
+    }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     final detail = ref.watch(songDetailProvider(songId));
     final isLeader = ref.watch(activeMembershipProvider(teamId))?.role.isLeader ?? false;
+    final me = ref.watch(currentUserIdProvider);
     final repo = ref.read(songsRepositoryProvider);
+    final formats = DateFormats(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +67,7 @@ class SongDetailScreen extends ConsumerWidget {
                     destructive: true,
                   );
                   if (!ok || !context.mounted) return;
-                  if (await runGuarded(context, () => repo.deleteSong(songId))) {
+                  if (await runGuarded(context, () => repo.deleteSong(d.song))) {
                     ref.invalidate(songLibraryProvider(teamId));
                     if (context.mounted) context.pop();
                   }
@@ -75,50 +89,33 @@ class SongDetailScreen extends ConsumerWidget {
             children: [
               _Header(detail: d),
               SectionHeader(
-                l10n.sheets,
-                trailing: TextButton.icon(
-                  icon: const Icon(Icons.upload_file),
-                  label: Text(l10n.uploadSheet),
-                  onPressed: () => _upload(context, ref, d.song),
-                ),
+                l10n.versions,
+                trailing: AddButton(label: l10n.addVersion, onPressed: () => _addVersion(context, ref)),
               ),
-              for (final sheet in d.sheets) ...[
-                _SheetRow(teamId: teamId, sheet: sheet, canDelete: isLeader || sheet.uploadedBy == ref.read(currentUserIdProvider), onChanged: () => _refresh(ref)),
-                const Divider(indent: 20),
-              ],
-              if (d.sheets.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(l10n.uploadSheetHint, style: Theme.of(context).textTheme.bodySmall),
+              for (final v in d.song.versions)
+                _VersionCard(
+                  teamId: teamId,
+                  version: v,
+                  played: [for (final h in d.history) if (h.versionId == v.id) h],
+                  // A song keeps at least one version to play.
+                  canDelete: d.song.versions.length > 1 && (isLeader || v.createdBy == me),
+                  canDeleteSheet: (sheet) => isLeader || sheet.uploadedBy == me,
+                  onChanged: () => _refresh(ref),
                 ),
-              SectionHeader(
-                l10n.originalLinks,
-                trailing: TextButton.icon(
-                  icon: const Icon(Icons.add_link),
-                  label: Text(l10n.addLink),
-                  onPressed: () => _addLink(context, ref, d.links.length),
-                ),
-              ),
-              for (final link in d.links) ...[
-                _LinkRow(link: link, onDelete: () async {
-                  if (await runGuarded(context, () => repo.deleteLink(link.id))) _refresh(ref);
-                }),
-                const Divider(indent: 20),
-              ],
               SectionHeader(l10n.history),
               for (final h in d.history)
                 ListTile(
                   dense: true,
                   onTap: () => context.push('/t/$teamId/sessions/${h.sessionId}'),
                   title: Text(h.sessionTitle),
-                  subtitle: Text(DateFormats(context).fullDate(h.startsAt)),
+                  subtitle: Text([formats.fullDate(h.startsAt), ?h.versionName].join('  ')),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (h.bpm case final bpm?)
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
-                          child: Text('$bpm BPM', style: Theme.of(context).textTheme.labelSmall),
+                          child: Text('$bpm BPM', style: theme.textTheme.labelSmall),
                         ),
                       KeyBadge(h.key),
                     ],
@@ -127,7 +124,7 @@ class SongDetailScreen extends ConsumerWidget {
               if (d.history.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(l10n.neverPlayed, style: Theme.of(context).textTheme.bodySmall),
+                  child: Text(l10n.neverPlayed, style: theme.textTheme.bodySmall),
                 ),
             ],
           ),
@@ -135,8 +132,108 @@ class SongDetailScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Future<void> _addLink(BuildContext context, WidgetRef ref, int count) async {
+class _Header extends StatelessWidget {
+  const _Header({required this.detail});
+  final SongDetail detail;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final song = detail.song;
+    final stats = detail.stats;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            stats.timesPlayed == 0
+                ? l10n.neverPlayed
+                : [
+                    l10n.playedTimes(stats.timesPlayed),
+                    if (stats.lastPlayedAt != null) l10n.lastPlayed(timeAgo(l10n, stats.lastPlayedAt!)),
+                    if (stats.usualKey != null) l10n.usualKey(stats.usualKey!),
+                  ].join(', '),
+            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          if (stats.nextPlannedAt != null)
+            Text(l10n.nextPlanned(DateFormats(context).dayWithWeekday(stats.nextPlannedAt!)), style: theme.textTheme.bodySmall),
+          if (song.timeSignature != null || song.tags.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                if (song.timeSignature case final time?)
+                  Padding(padding: const EdgeInsets.only(right: 6), child: Text(time, style: theme.textTheme.bodyMedium)),
+                for (final t in song.tags) Chip(label: Text(t), visualDensity: VisualDensity.compact),
+              ],
+            ),
+          ],
+          if (song.notes != null) ...[
+            const SizedBox(height: 12),
+            Text(song.notes!, style: theme.textTheme.bodyMedium),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// One version: whose it is, its key and tempo, how often it was played,
+/// and its sheets and links with the ways to add more.
+class _VersionCard extends ConsumerWidget {
+  const _VersionCard({
+    required this.teamId,
+    required this.version,
+    required this.played,
+    required this.canDelete,
+    required this.canDeleteSheet,
+    required this.onChanged,
+  });
+  final int teamId;
+  final SongVersion version;
+
+  /// The announced services that played this version, newest first.
+  final List<SongHistoryEntry> played;
+  final bool canDelete;
+  final bool Function(Sheet sheet) canDeleteSheet;
+  final VoidCallback onChanged;
+
+  Future<void> _edit(BuildContext context, WidgetRef ref) async {
+    final fields = await showVersionForm(context, version: version);
+    if (fields == null || !context.mounted) return;
+    if (await runGuarded(context, () => ref.read(songsRepositoryProvider).updateVersion(version.id, fields))) {
+      onChanged();
+    }
+  }
+
+  Future<void> _delete(BuildContext context, WidgetRef ref, String title) async {
+    final l10n = AppLocalizations.of(context);
+    final ok = await confirm(
+      context,
+      message: l10n.deleteVersionConfirm(title),
+      confirmLabel: l10n.deleteVersion,
+      destructive: true,
+    );
+    if (!ok || !context.mounted) return;
+    try {
+      await ref.read(songsRepositoryProvider).deleteVersion(version);
+      onChanged();
+    } on PostgrestException catch (e) {
+      if (!context.mounted) return;
+      // Still played by some setlist (the database refuses to delete it).
+      e.code == '23503' ? showMessage(context, l10n.versionInUse) : showError(context, e);
+    } catch (e) {
+      if (context.mounted) showError(context, e);
+    }
+  }
+
+  Future<void> _addLink(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final url = TextEditingController();
     final label = TextEditingController();
@@ -163,12 +260,14 @@ class SongDetailScreen extends ConsumerWidget {
     if (!text.startsWith(RegExp('https?://'))) text = 'https://$text';
     final done = await runGuarded(
       context,
-      () => ref.read(songsRepositoryProvider).addLink(teamId, songId, url: text, label: label.text, sortOrder: count),
+      () => ref
+          .read(songsRepositoryProvider)
+          .addLink(teamId, version.id, url: text, label: label.text, sortOrder: version.links.length),
     );
-    if (done) _refresh(ref);
+    if (done) onChanged();
   }
 
-  Future<void> _upload(BuildContext context, WidgetRef ref, Song song) async {
+  Future<void> _upload(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     PreparedSheet? prepared;
     final picked = await runGuarded(context, () async => prepared = await pickSheet());
@@ -179,7 +278,7 @@ class SongDetailScreen extends ConsumerWidget {
       return;
     }
 
-    String? key = song.defaultKey;
+    String? key = version.defaultKey;
     final label = TextEditingController();
     final ok = await showDialog<bool>(
       context: context,
@@ -209,7 +308,7 @@ class SongDetailScreen extends ConsumerWidget {
       context,
       () => ref.read(songsRepositoryProvider).uploadSheet(
             teamId: teamId,
-            songId: songId,
+            versionId: version.id,
             pdf: sheet.pdf,
             pageSizes: sheet.pageSizes,
             key: key,
@@ -217,60 +316,86 @@ class SongDetailScreen extends ConsumerWidget {
           ),
     );
     if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    if (done) _refresh(ref);
+    if (done) onChanged();
   }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.detail});
-  final SongDetail detail;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final song = detail.song;
-    final stats = detail.stats;
-    final facts = [
-      if (song.bpm != null) '${song.bpm} BPM',
-      ?song.timeSignature,
-    ];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+    final title = version.name ?? l10n.unnamedVersion;
+    final now = DateTime.now();
+    final past = played.where((h) => !h.startsAt.isAfter(now)).toList();
+    final usage = past.isEmpty
+        ? l10n.neverPlayed
+        : '${l10n.playedTimes(past.length)}, ${l10n.lastPlayed(timeAgo(l10n, past.first.startsAt))}';
+
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (song.artist != null)
-            Text(song.artist!, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              KeyBadge(song.defaultKey, emphasized: true),
-              if (song.defaultKey != null && facts.isNotEmpty) const SizedBox(width: 12),
-              Text(facts.join('   '), style: theme.textTheme.bodyMedium),
-            ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 4, 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                      Text(usage, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                    ],
+                  ),
+                ),
+                KeyBadge(version.defaultKey, emphasized: true),
+                if (version.bpm case final bpm?)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text('$bpm BPM', style: theme.textTheme.labelLarge),
+                  ),
+                PopupMenuButton<String>(
+                  onSelected: (action) => action == 'edit' ? _edit(context, ref) : _delete(context, ref, title),
+                  itemBuilder: (_) => [
+                    PopupMenuItem(value: 'edit', child: Text(l10n.editVersion)),
+                    if (canDelete) PopupMenuItem(value: 'delete', child: Text(l10n.deleteVersion)),
+                  ],
+                ),
+              ],
+            ),
           ),
-          if (song.tags.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Wrap(spacing: 6, runSpacing: 6, children: [for (final t in song.tags) Chip(label: Text(t), visualDensity: VisualDensity.compact)]),
-          ],
-          if (song.notes != null) ...[
-            const SizedBox(height: 12),
-            Text(song.notes!, style: theme.textTheme.bodyMedium),
-          ],
-          const SizedBox(height: 16),
-          Text(
-            stats.timesPlayed == 0
-                ? l10n.neverPlayed
-                : [
-                    l10n.playedTimes(stats.timesPlayed),
-                    if (stats.lastPlayedAt != null) l10n.lastPlayed(timeAgo(l10n, stats.lastPlayedAt!)),
-                    if (stats.usualKey != null) l10n.usualKey(stats.usualKey!),
-                  ].join(', '),
-            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          for (final sheet in version.sheets)
+            _SheetRow(teamId: teamId, sheet: sheet, canDelete: canDeleteSheet(sheet), onChanged: onChanged),
+          for (final link in version.links)
+            _LinkRow(
+              link: link,
+              onDelete: () async {
+                if (await runGuarded(context, () => ref.read(songsRepositoryProvider).deleteLink(link.id))) onChanged();
+              },
+            ),
+          if (version.sheets.isEmpty && version.links.isEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+              child: Text(l10n.uploadSheetHint, style: theme.textTheme.bodySmall),
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+            child: Wrap(
+              spacing: 4,
+              children: [
+                TextButton.icon(
+                  icon: const Icon(Icons.upload_file),
+                  label: Text(l10n.uploadSheet),
+                  onPressed: () => _upload(context, ref),
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.add_link),
+                  label: Text(l10n.addLink),
+                  onPressed: () => _addLink(context, ref),
+                ),
+              ],
+            ),
           ),
-          if (stats.nextPlannedAt != null)
-            Text(l10n.nextPlanned(DateFormats(context).dayWithWeekday(stats.nextPlannedAt!)), style: theme.textTheme.bodySmall),
         ],
       ),
     );

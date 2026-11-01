@@ -23,11 +23,11 @@ select public.join_team(current_setting('test.code'));
 
 -- leader: song + sheet + two sessions (earlier published, later published, plus a draft)
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000001a","role":"authenticated"}', true);
-with s as (insert into public.songs (team_id, title, created_by) values (current_setting('test.team')::bigint, '은혜', '00000000-0000-0000-0000-00000000001a') returning id)
-select set_config('test.song', (select id::text from s), true);
+select set_config('test.song', public.add_song(current_setting('test.team')::bigint, '은혜')::text, true);
+select set_config('test.version', (select id::text from public.song_versions where song_id = current_setting('test.song')::bigint), true);
 with sh as (
-  insert into public.sheets (team_id, song_id, storage_path, page_count, page_sizes, size_bytes, uploaded_by)
-  values (current_setting('test.team')::bigint, current_setting('test.song')::bigint, current_setting('test.team') || '/s.pdf', 1, '[[595,842]]', 100, '00000000-0000-0000-0000-00000000001a')
+  insert into public.sheets (team_id, version_id, storage_path, page_count, page_sizes, size_bytes, uploaded_by)
+  values (current_setting('test.team')::bigint, current_setting('test.version')::bigint, current_setting('test.team') || '/s.pdf', 1, '[[595,842]]', 100, '00000000-0000-0000-0000-00000000001a')
   returning id)
 select set_config('test.sheet', (select id::text from sh), true);
 
@@ -39,8 +39,8 @@ select set_config('test.early', (select id::text from ins where title = 'early')
        set_config('test.later', (select id::text from ins where title = 'later'), true),
        set_config('test.draft', (select id::text from ins where title = 'draft'), true);
 
-insert into public.setlist_items (team_id, session_id, position, song_id, sheet_id)
-select current_setting('test.team')::bigint, s, 1, current_setting('test.song')::bigint, current_setting('test.sheet')::bigint
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id, sheet_id)
+select current_setting('test.team')::bigint, s, 1, current_setting('test.song')::bigint, current_setting('test.version')::bigint, current_setting('test.sheet')::bigint
 from unnest(array[current_setting('test.early')::bigint, current_setting('test.later')::bigint, current_setting('test.draft')::bigint]) as s;
 select public.publish_setlist(current_setting('test.early')::bigint);
 select public.publish_setlist(current_setting('test.later')::bigint);

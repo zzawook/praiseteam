@@ -9,6 +9,7 @@ import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../notifications/notification_bell.dart';
 import '../rotation/rehearsals.dart';
+import '../songs/models.dart' show Sheet;
 import '../songs/songs_providers.dart';
 import '../teams/teams_providers.dart';
 import 'models.dart';
@@ -44,19 +45,28 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
   Future<void> _addSong(List<SetlistItem> items) async {
     final entry = await pickSong(context, teamId: widget.teamId, alreadyIn: {for (final i in items) i.songId});
     if (entry == null || !mounted) return;
+    if (entry.song.versions.isEmpty) {
+      showMessage(context, AppLocalizations.of(context).songHasNoVersion);
+      return;
+    }
+    final version = await pickVersion(context, entry);
+    if (version == null || !mounted) return;
     final position = items.isEmpty ? 1 : items.map((i) => i.position).reduce((a, b) => a > b ? a : b) + 1;
     final ok = await runGuarded(context, () async {
-      // Attach the song's sheet right away: the one in this key, else the
-      // first one. Leaders can pick another in the item editor.
-      final sheets = await ref.read(songsRepositoryProvider).sheetsFor(entry.song.id);
-      final sheet = sheets.where((s) => s.key == entry.displayKey).firstOrNull ?? sheets.firstOrNull;
+      // The version's key and tempo, and its sheet in that key (else its
+      // first); leaders change any of them for this service in the editor.
+      final versions = await ref.read(songsRepositoryProvider).versions(entry.song.id);
+      final sheets = versions.where((v) => v.id == version.id).firstOrNull?.sheets ?? const <Sheet>[];
+      final key = version.defaultKey ?? entry.stats.usualKey;
+      final sheet = sheets.where((s) => s.key == key).firstOrNull ?? sheets.firstOrNull;
       await ref.read(sessionsRepositoryProvider).addItem(
             teamId: widget.teamId,
             sessionId: widget.sessionId,
             songId: entry.song.id,
+            versionId: version.id,
             position: position,
-            key: entry.displayKey,
-            bpm: entry.song.bpm,
+            key: key,
+            bpm: version.bpm,
             sheetId: sheet?.id,
           );
     });
@@ -348,6 +358,7 @@ class _SetlistRow extends StatelessWidget {
     final theme = Theme.of(context);
     final serif = theme.textTheme.titleLarge?.copyWith(fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700);
     final details = [
+      ?item.version?.name,
       if (item.songForm != null) item.songForm!,
       if (item.notes != null) item.notes!,
     ];

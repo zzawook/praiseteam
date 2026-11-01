@@ -1022,12 +1022,6 @@ abstract class AppLocalizations {
   /// **'곡 이름'**
   String get songTitle;
 
-  /// No description provided for @artist.
-  ///
-  /// In ko, this message translates to:
-  /// **'가수나 출처'**
-  String get artist;
-
   /// No description provided for @bpm.
   ///
   /// In ko, this message translates to:
@@ -1075,6 +1069,96 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'이름 (선택)'**
   String get linkLabel;
+
+  /// No description provided for @versions.
+  ///
+  /// In ko, this message translates to:
+  /// **'버전'**
+  String get versions;
+
+  /// No description provided for @version.
+  ///
+  /// In ko, this message translates to:
+  /// **'버전'**
+  String get version;
+
+  /// No description provided for @addVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'버전 추가'**
+  String get addVersion;
+
+  /// No description provided for @editVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'버전 수정'**
+  String get editVersion;
+
+  /// No description provided for @deleteVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'버전 삭제'**
+  String get deleteVersion;
+
+  /// No description provided for @deleteVersionConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'\'{title}\' 버전을 삭제할까요? 이 버전의 악보와 링크도 함께 삭제돼요.'**
+  String deleteVersionConfirm(String title);
+
+  /// No description provided for @versionInUse.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티에 쓰인 버전은 삭제할 수 없어요.'**
+  String get versionInUse;
+
+  /// No description provided for @versionName.
+  ///
+  /// In ko, this message translates to:
+  /// **'가수·버전'**
+  String get versionName;
+
+  /// No description provided for @versionNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 마커스워십, 어노인팅 라이브'**
+  String get versionNameHint;
+
+  /// No description provided for @unnamedVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 버전'**
+  String get unnamedVersion;
+
+  /// No description provided for @firstVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'첫 버전'**
+  String get firstVersion;
+
+  /// No description provided for @firstVersionHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'가수나 편곡이 다르면 곡 화면에서 버전을 더 추가할 수 있어요. 키와 템포는 콘티에서 그날만 바꿀 수도 있어요.'**
+  String get firstVersionHint;
+
+  /// No description provided for @playedLast.
+  ///
+  /// In ko, this message translates to:
+  /// **'마지막에 쓴 버전'**
+  String get playedLast;
+
+  /// No description provided for @songHasNoVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 곡에는 버전이 없어요. 곡 화면에서 버전을 추가해 주세요.'**
+  String get songHasNoVersion;
+
+  /// No description provided for @changeVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'버전: {changes}'**
+  String changeVersion(String changes);
 
   /// No description provided for @sheets.
   ///

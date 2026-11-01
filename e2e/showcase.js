@@ -55,7 +55,9 @@ function seed(team, leader) {
     ['주의 집에 거하는 자', '마커스워십', 'G', 72], ['은혜', '손경민', 'D', 68], ['주님 다시 오실 때까지', '어노인팅', 'A', 76],
     ['나 같은 죄인 살리신', '찬송가 305장', 'G', 70], ['오직 예수 뿐이네', '마커스워십', 'E', 128], ['하나님의 부르심', '제이어스', 'C', 82],
   ];
-  for (const [t, a, k, b] of songs) q += `insert into public.songs (team_id, title, artist, default_key, bpm, created_by) values (${team}, '${t}', '${a}', '${k}', ${b}, '${leader}');\n`;
+  for (const [t, a, k, b] of songs) q += `select public.add_song(${team}, '${t}', p_version_name => '${a}', p_key => '${k}', p_bpm => ${b});\n`;
+  // a second version of the first song, as teams keep for another arrangement
+  q += `insert into public.song_versions (team_id, song_id, name, default_key, bpm) select ${team}, id, '어노인팅', 'A', 76 from public.songs where team_id = ${team} and title = '${songs[0][0]}';\n`;
   const sessions = [
     ['지난 주일 2부 예배', "now() - interval '14 days'", 'published', [1, 4, 5]],
     ['금요 기도회', "date_trunc('day', now()) + interval '2 days 20 hours'", 'published', [3, 2, 6]],
@@ -65,9 +67,10 @@ function seed(team, leader) {
   ];
   sessions.forEach(([title, at, status, items]) => {
     q += `with s as (insert into public.sessions (team_id, title, starts_at, location, setlist_status, published_at, created_by) values (${team}, '${title}', ${at}, '본당', '${status}', ${status === 'published' ? 'now()' : 'null'}, '${leader}') returning id)
-      insert into public.setlist_items (team_id, session_id, position, song_id, key)
-      select ${team}, s.id, x.pos, so.id, so.default_key from s, unnest(array[${items.join(',') || 'null'}]::int[]) with ordinality as x(n, pos)
-      join (select id, default_key, row_number() over (order by id) as n from public.songs where team_id = ${team}) so on so.n = x.n;\n`;
+      insert into public.setlist_items (team_id, session_id, position, song_id, version_id, key, bpm)
+      select ${team}, s.id, x.pos, so.id, so.version_id, so.default_key, so.bpm from s, unnest(array[${items.join(',') || 'null'}]::int[]) with ordinality as x(n, pos)
+      join (select distinct on (so.id) so.id, v.id as version_id, v.default_key, v.bpm, dense_rank() over (order by so.id) as n
+            from public.songs so join public.song_versions v on v.song_id = so.id where so.team_id = ${team} order by so.id, v.id) so on so.n = x.n;\n`;
   });
   q += `insert into public.session_slots (team_id, session_id, part_id, count) select s.team_id, s.id, d.part_id, d.count from public.sessions s join public.default_slots d on d.team_id = s.team_id where s.team_id = ${team} on conflict do nothing;\n`;
   const assign = (session, part, who, status) => `insert into public.assignments (team_id, session_id, part_id, user_id, status, sent_at, responded_at) select ${team}, s.id, p.id, '${who}', '${status}', case when '${status}' = 'draft' then null else now() end, case when '${status}' in ('accepted','declined') then now() end from public.sessions s, public.parts p where s.team_id = ${team} and s.title = '${session}' and p.team_id = ${team} and p.name = '${part}';\n`;

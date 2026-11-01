@@ -116,7 +116,7 @@ let pages = [];
   await semantics(a);
   await btn(a, '곡 추가').click();
   await type(a, '곡 이름', '주의 집에 거하는 자');
-  await type(a, '가수나 출처', '마커스워십');
+  await type(a, '가수·버전', '마커스워십');
   await btn(a, '저장').click();
   await waitText(a, '악보 올리기');
   const [chooser] = await Promise.all([

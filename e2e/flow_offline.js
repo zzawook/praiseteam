@@ -88,7 +88,7 @@ function pdf(text) {
   out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
   return Buffer.from(out, 'latin1');
 }
-async function uploadSheet(team, song, text) {
+async function uploadSheet(team, version, text) {
   const file = pdf(text);
   const storagePath = `${team}/${crypto.randomUUID()}.pdf`;
   const res = await fetch(`${env.API_URL}/storage/v1/object/sheets/${storagePath}`, {
@@ -97,7 +97,7 @@ async function uploadSheet(team, song, text) {
     body: file,
   });
   if (!res.ok) throw new Error(`upload failed: ${res.status} ${await res.text()}`);
-  return sql(`insert into public.sheets (team_id, song_id, storage_path, page_count, page_sizes, size_bytes) values (${team}, ${song}, '${storagePath}', 1, '[[595, 842]]', ${file.length}) returning id`);
+  return sql(`insert into public.sheets (team_id, version_id, storage_path, page_count, page_sizes, size_bytes) values (${team}, ${version}, '${storagePath}', 1, '[[595, 842]]', ${file.length}) returning id`);
 }
 
 let pages = [];
@@ -128,14 +128,16 @@ let pages = [];
   const aId = sql(`select id from auth.users where email = 'a${stamp}@praise.local'`);
   const bId = sql(`select id from auth.users where email = 'b${stamp}@praise.local'`);
   sql(`insert into public.team_members (team_id, user_id, role, status, approved_at) values (${team}, '${bId}', 'member', 'active', now())`);
-  const song1 = sql(`insert into public.songs (team_id, title) values (${team}, '주의 집에 거하는 자') returning id`);
-  const song2 = sql(`insert into public.songs (team_id, title) values (${team}, '은혜') returning id`);
-  const sheet1 = await uploadSheet(team, song1, 'Sheet one');
-  const sheet2 = await uploadSheet(team, song2, 'Sheet two');
+  const song1 = sql(`select public.add_song(${team}, '주의 집에 거하는 자')`);
+  const song2 = sql(`select public.add_song(${team}, '은혜')`);
+  const version1 = sql(`select id from public.song_versions where song_id = ${song1}`);
+  const version2 = sql(`select id from public.song_versions where song_id = ${song2}`);
+  const sheet1 = await uploadSheet(team, version1, 'Sheet one');
+  const sheet2 = await uploadSheet(team, version2, 'Sheet two');
   const friday = sql(`insert into public.sessions (team_id, title, starts_at) values (${team}, '금요 기도회', now() + interval '2 days') returning id`);
   const sunday = sql(`insert into public.sessions (team_id, title, starts_at) values (${team}, '주일 2부 예배', now() + interval '3 days') returning id`);
-  sql(`insert into public.setlist_items (team_id, session_id, position, song_id, sheet_id) values (${team}, ${friday}, 1, ${song1}, ${sheet1})`);
-  const item2 = sql(`insert into public.setlist_items (team_id, session_id, position, song_id, sheet_id) values (${team}, ${sunday}, 1, ${song2}, ${sheet2}) returning id`);
+  sql(`insert into public.setlist_items (team_id, session_id, position, song_id, version_id, sheet_id) values (${team}, ${friday}, 1, ${song1}, ${version1}, ${sheet1})`);
+  const item2 = sql(`insert into public.setlist_items (team_id, session_id, position, song_id, version_id, sheet_id) values (${team}, ${sunday}, 1, ${song2}, ${version2}, ${sheet2}) returning id`);
   sql(`update public.sessions set setlist_status = 'published', published_at = now() where id in (${friday}, ${sunday})`);
   sql(`insert into public.rehearsals (team_id, session_id, starts_at, location) values (${team}, ${sunday}, now() + interval '2 days 20 hours', '본당 2층')`);
   sql(`insert into public.strokes (id, team_id, session_id, setlist_item_id, sheet_id, page_index, owner_id, visibility, tool, color, width, points) values ('${crypto.randomUUID()}', ${team}, ${sunday}, ${item2}, ${sheet2}, 0, '${aId}', 'team', 'pen', ${0xff2541b2 | 0}, 0.006, '\\x33330040ffcccccd4cff')`);

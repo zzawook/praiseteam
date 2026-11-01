@@ -21,9 +21,10 @@ Future<List<SongEntry>> songLibrary(Ref ref, int teamId) =>
 Future<SongDetail> songDetail(Ref ref, int songId) =>
     ref.watch(songsRepositoryProvider).detail(songId);
 
+/// A song's versions with their sheets, for choosing what a service plays.
 @riverpod
-Future<List<Sheet>> songSheets(Ref ref, int songId) =>
-    ref.watch(songsRepositoryProvider).sheetsFor(songId);
+Future<List<SongVersion>> songVersions(Ref ref, int songId) =>
+    ref.watch(songsRepositoryProvider).versions(songId);
 
 @riverpod
 Future<Sheet> sheet(Ref ref, int sheetId) => ref.watch(songsRepositoryProvider).sheet(sheetId);

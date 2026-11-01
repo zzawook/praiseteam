@@ -602,7 +602,7 @@ as String?,
 /// @nodoc
 mixin _$SetlistSong {
 
- String get title; String? get artist; String? get defaultKey; int? get bpm;
+ String get title;
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -616,20 +616,20 @@ $SetlistSongCopyWith<SetlistSong> get copyWith => _$SetlistSongCopyWithImpl<Setl
 @override
 bool operator ==(Object other) {
   final _this = this as SetlistSong;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistSong&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.artist, _this.artist) || other.artist == _this.artist)&&(identical(other.defaultKey, _this.defaultKey) || other.defaultKey == _this.defaultKey)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistSong&&(identical(other.title, _this.title) || other.title == _this.title));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SetlistSong;
-  return Object.hash(runtimeType,_this.title,_this.artist,_this.defaultKey,_this.bpm);
+  return Object.hash(runtimeType,_this.title);
 }
 
 @override
 String toString() {
   final _this = this as SetlistSong;
-  return 'SetlistSong(title: ${_this.title}, artist: ${_this.artist}, defaultKey: ${_this.defaultKey}, bpm: ${_this.bpm})';
+  return 'SetlistSong(title: ${_this.title})';
 }
 
 
@@ -640,7 +640,7 @@ abstract mixin class $SetlistSongCopyWith<$Res>  {
   factory $SetlistSongCopyWith(SetlistSong value, $Res Function(SetlistSong) _then) = _$SetlistSongCopyWithImpl;
 @useResult
 $Res call({
- String title, String? artist, String? defaultKey, int? bpm
+ String title
 });
 
 
@@ -657,13 +657,10 @@ class _$SetlistSongCopyWithImpl<$Res>
 
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? artist = freezed,Object? defaultKey = freezed,Object? bpm = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,}) {
   return _then(SetlistSong(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,artist: freezed == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
-as String?,defaultKey: freezed == defaultKey ? _self.defaultKey : defaultKey // ignore: cast_nullable_to_non_nullable
-as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
-as int?,
+as String,
   ));
 }
 
@@ -748,10 +745,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String? artist,  String? defaultKey,  int? bpm)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SetlistSong() when $default != null:
-return $default(_that.title,_that.artist,_that.defaultKey,_that.bpm);case _:
+return $default(_that.title);case _:
   return orElse();
 
 }
@@ -769,10 +766,10 @@ return $default(_that.title,_that.artist,_that.defaultKey,_that.bpm);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String? artist,  String? defaultKey,  int? bpm)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title)  $default,) {final _that = this;
 switch (_that) {
 case _SetlistSong():
-return $default(_that.title,_that.artist,_that.defaultKey,_that.bpm);case _:
+return $default(_that.title);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -789,10 +786,10 @@ return $default(_that.title,_that.artist,_that.defaultKey,_that.bpm);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String? artist,  String? defaultKey,  int? bpm)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title)?  $default,) {final _that = this;
 switch (_that) {
 case _SetlistSong() when $default != null:
-return $default(_that.title,_that.artist,_that.defaultKey,_that.bpm);case _:
+return $default(_that.title);case _:
   return null;
 
 }
@@ -804,13 +801,10 @@ return $default(_that.title,_that.artist,_that.defaultKey,_that.bpm);case _:
 @JsonSerializable()
 
 class _SetlistSong implements SetlistSong {
-  const _SetlistSong({required this.title, this.artist, this.defaultKey, this.bpm});
+  const _SetlistSong({required this.title});
   factory _SetlistSong.fromJson(Map<String, dynamic> json) => _$SetlistSongFromJson(json);
 
 @override final  String title;
-@override final  String? artist;
-@override final  String? defaultKey;
-@override final  int? bpm;
 
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
@@ -825,18 +819,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistSong&&(identical(other.title, title) || other.title == title)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.defaultKey, defaultKey) || other.defaultKey == defaultKey)&&(identical(other.bpm, bpm) || other.bpm == bpm));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistSong&&(identical(other.title, title) || other.title == title));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,title,artist,defaultKey,bpm);
+    return Object.hash(runtimeType,title);
 }
 
 @override
 String toString() {
-    return 'SetlistSong(title: $title, artist: $artist, defaultKey: $defaultKey, bpm: $bpm)';
+    return 'SetlistSong(title: $title)';
 }
 
 
@@ -847,7 +841,7 @@ abstract mixin class _$SetlistSongCopyWith<$Res> implements $SetlistSongCopyWith
   factory _$SetlistSongCopyWith(_SetlistSong value, $Res Function(_SetlistSong) _then) = __$SetlistSongCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String? artist, String? defaultKey, int? bpm
+ String title
 });
 
 
@@ -864,10 +858,283 @@ class __$SetlistSongCopyWithImpl<$Res>
 
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? artist = freezed,Object? defaultKey = freezed,Object? bpm = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,}) {
   return _then(_SetlistSong(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,artist: freezed == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$SetlistVersion {
+
+ String? get name; String? get defaultKey; int? get bpm;
+/// Create a copy of SetlistVersion
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SetlistVersionCopyWith<SetlistVersion> get copyWith => _$SetlistVersionCopyWithImpl<SetlistVersion>(this as SetlistVersion, _$identity);
+
+  /// Serializes this SetlistVersion to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as SetlistVersion;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistVersion&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.defaultKey, _this.defaultKey) || other.defaultKey == _this.defaultKey)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as SetlistVersion;
+  return Object.hash(runtimeType,_this.name,_this.defaultKey,_this.bpm);
+}
+
+@override
+String toString() {
+  final _this = this as SetlistVersion;
+  return 'SetlistVersion(name: ${_this.name}, defaultKey: ${_this.defaultKey}, bpm: ${_this.bpm})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SetlistVersionCopyWith<$Res>  {
+  factory $SetlistVersionCopyWith(SetlistVersion value, $Res Function(SetlistVersion) _then) = _$SetlistVersionCopyWithImpl;
+@useResult
+$Res call({
+ String? name, String? defaultKey, int? bpm
+});
+
+
+
+
+}
+/// @nodoc
+class _$SetlistVersionCopyWithImpl<$Res>
+    implements $SetlistVersionCopyWith<$Res> {
+  _$SetlistVersionCopyWithImpl(this._self, this._then);
+
+  final SetlistVersion _self;
+  final $Res Function(SetlistVersion) _then;
+
+/// Create a copy of SetlistVersion
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? defaultKey = freezed,Object? bpm = freezed,}) {
+  return _then(SetlistVersion(
+name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,defaultKey: freezed == defaultKey ? _self.defaultKey : defaultKey // ignore: cast_nullable_to_non_nullable
+as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [SetlistVersion].
+extension SetlistVersionPatterns on SetlistVersion {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SetlistVersion value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SetlistVersion() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SetlistVersion value)  $default,){
+final _that = this;
+switch (_that) {
+case _SetlistVersion():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SetlistVersion value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SetlistVersion() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? defaultKey,  int? bpm)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SetlistVersion() when $default != null:
+return $default(_that.name,_that.defaultKey,_that.bpm);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? defaultKey,  int? bpm)  $default,) {final _that = this;
+switch (_that) {
+case _SetlistVersion():
+return $default(_that.name,_that.defaultKey,_that.bpm);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? defaultKey,  int? bpm)?  $default,) {final _that = this;
+switch (_that) {
+case _SetlistVersion() when $default != null:
+return $default(_that.name,_that.defaultKey,_that.bpm);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _SetlistVersion implements SetlistVersion {
+  const _SetlistVersion({this.name, this.defaultKey, this.bpm});
+  factory _SetlistVersion.fromJson(Map<String, dynamic> json) => _$SetlistVersionFromJson(json);
+
+@override final  String? name;
+@override final  String? defaultKey;
+@override final  int? bpm;
+
+/// Create a copy of SetlistVersion
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SetlistVersionCopyWith<_SetlistVersion> get copyWith => __$SetlistVersionCopyWithImpl<_SetlistVersion>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$SetlistVersionToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistVersion&&(identical(other.name, name) || other.name == name)&&(identical(other.defaultKey, defaultKey) || other.defaultKey == defaultKey)&&(identical(other.bpm, bpm) || other.bpm == bpm));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,name,defaultKey,bpm);
+}
+
+@override
+String toString() {
+    return 'SetlistVersion(name: $name, defaultKey: $defaultKey, bpm: $bpm)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SetlistVersionCopyWith<$Res> implements $SetlistVersionCopyWith<$Res> {
+  factory _$SetlistVersionCopyWith(_SetlistVersion value, $Res Function(_SetlistVersion) _then) = __$SetlistVersionCopyWithImpl;
+@override @useResult
+$Res call({
+ String? name, String? defaultKey, int? bpm
+});
+
+
+
+
+}
+/// @nodoc
+class __$SetlistVersionCopyWithImpl<$Res>
+    implements _$SetlistVersionCopyWith<$Res> {
+  __$SetlistVersionCopyWithImpl(this._self, this._then);
+
+  final _SetlistVersion _self;
+  final $Res Function(_SetlistVersion) _then;
+
+/// Create a copy of SetlistVersion
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? defaultKey = freezed,Object? bpm = freezed,}) {
+  return _then(_SetlistVersion(
+name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,defaultKey: freezed == defaultKey ? _self.defaultKey : defaultKey // ignore: cast_nullable_to_non_nullable
 as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -881,8 +1148,9 @@ as int?,
 /// @nodoc
 mixin _$SetlistItem {
 
- int get id; int get sessionId; int get position; int get songId; String? get key;/// This service's tempo; null plays it at the song's own.
- int? get bpm; int? get sheetId; String? get songForm; String? get notes;@JsonKey(name: 'songs') SetlistSong get song;
+ int get id; int get sessionId; int get position; int get songId;/// Null only in copies kept on a device from before versions.
+ int? get versionId; String? get key;/// This service's tempo; null plays it at the version's own.
+ int? get bpm; int? get sheetId; String? get songForm; String? get notes;@JsonKey(name: 'songs') SetlistSong get song;@JsonKey(name: 'song_versions') SetlistVersion? get version;
 /// Create a copy of SetlistItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -896,20 +1164,20 @@ $SetlistItemCopyWith<SetlistItem> get copyWith => _$SetlistItemCopyWithImpl<Setl
 @override
 bool operator ==(Object other) {
   final _this = this as SetlistItem;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&(identical(other.position, _this.position) || other.position == _this.position)&&(identical(other.songId, _this.songId) || other.songId == _this.songId)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm)&&(identical(other.sheetId, _this.sheetId) || other.sheetId == _this.sheetId)&&(identical(other.songForm, _this.songForm) || other.songForm == _this.songForm)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.song, _this.song) || other.song == _this.song));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&(identical(other.position, _this.position) || other.position == _this.position)&&(identical(other.songId, _this.songId) || other.songId == _this.songId)&&(identical(other.versionId, _this.versionId) || other.versionId == _this.versionId)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm)&&(identical(other.sheetId, _this.sheetId) || other.sheetId == _this.sheetId)&&(identical(other.songForm, _this.songForm) || other.songForm == _this.songForm)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.song, _this.song) || other.song == _this.song)&&(identical(other.version, _this.version) || other.version == _this.version));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SetlistItem;
-  return Object.hash(runtimeType,_this.id,_this.sessionId,_this.position,_this.songId,_this.key,_this.bpm,_this.sheetId,_this.songForm,_this.notes,_this.song);
+  return Object.hash(runtimeType,_this.id,_this.sessionId,_this.position,_this.songId,_this.versionId,_this.key,_this.bpm,_this.sheetId,_this.songForm,_this.notes,_this.song,_this.version);
 }
 
 @override
 String toString() {
   final _this = this as SetlistItem;
-  return 'SetlistItem(id: ${_this.id}, sessionId: ${_this.sessionId}, position: ${_this.position}, songId: ${_this.songId}, key: ${_this.key}, bpm: ${_this.bpm}, sheetId: ${_this.sheetId}, songForm: ${_this.songForm}, notes: ${_this.notes}, song: ${_this.song})';
+  return 'SetlistItem(id: ${_this.id}, sessionId: ${_this.sessionId}, position: ${_this.position}, songId: ${_this.songId}, versionId: ${_this.versionId}, key: ${_this.key}, bpm: ${_this.bpm}, sheetId: ${_this.sheetId}, songForm: ${_this.songForm}, notes: ${_this.notes}, song: ${_this.song}, version: ${_this.version})';
 }
 
 
@@ -920,11 +1188,11 @@ abstract mixin class $SetlistItemCopyWith<$Res>  {
   factory $SetlistItemCopyWith(SetlistItem value, $Res Function(SetlistItem) _then) = _$SetlistItemCopyWithImpl;
 @useResult
 $Res call({
- int id, int sessionId, int position, int songId, String? key, int? bpm, int? sheetId, String? songForm, String? notes,@JsonKey(name: 'songs') SetlistSong song
+ int id, int sessionId, int position, int songId, int? versionId, String? key, int? bpm, int? sheetId, String? songForm, String? notes,@JsonKey(name: 'songs') SetlistSong song,@JsonKey(name: 'song_versions') SetlistVersion? version
 });
 
 
-$SetlistSongCopyWith<$Res> get song;
+$SetlistSongCopyWith<$Res> get song;$SetlistVersionCopyWith<$Res>? get version;
 
 }
 /// @nodoc
@@ -937,19 +1205,21 @@ class _$SetlistItemCopyWithImpl<$Res>
 
 /// Create a copy of SetlistItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? sessionId = null,Object? position = null,Object? songId = null,Object? key = freezed,Object? bpm = freezed,Object? sheetId = freezed,Object? songForm = freezed,Object? notes = freezed,Object? song = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? sessionId = null,Object? position = null,Object? songId = null,Object? versionId = freezed,Object? key = freezed,Object? bpm = freezed,Object? sheetId = freezed,Object? songForm = freezed,Object? notes = freezed,Object? song = null,Object? version = freezed,}) {
   return _then(SetlistItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as int,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as int,songId: null == songId ? _self.songId : songId // ignore: cast_nullable_to_non_nullable
-as int,key: freezed == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as int,versionId: freezed == versionId ? _self.versionId : versionId // ignore: cast_nullable_to_non_nullable
+as int?,key: freezed == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
 as int?,sheetId: freezed == sheetId ? _self.sheetId : sheetId // ignore: cast_nullable_to_non_nullable
 as int?,songForm: freezed == songForm ? _self.songForm : songForm // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,song: null == song ? _self.song : song // ignore: cast_nullable_to_non_nullable
-as SetlistSong,
+as SetlistSong,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as SetlistVersion?,
   ));
 }
 /// Create a copy of SetlistItem
@@ -960,6 +1230,18 @@ $SetlistSongCopyWith<$Res> get song {
   
   return $SetlistSongCopyWith<$Res>(_self.song, (value) {
     return _then(_self.copyWith(song: value));
+  });
+}/// Create a copy of SetlistItem
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SetlistVersionCopyWith<$Res>? get version {
+    if (_self.version == null) {
+    return null;
+  }
+
+  return $SetlistVersionCopyWith<$Res>(_self.version!, (value) {
+    return _then(_self.copyWith(version: value));
   });
 }
 }
@@ -1043,10 +1325,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int sessionId,  int position,  int songId,  String? key,  int? bpm,  int? sheetId,  String? songForm,  String? notes, @JsonKey(name: 'songs')  SetlistSong song)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int sessionId,  int position,  int songId,  int? versionId,  String? key,  int? bpm,  int? sheetId,  String? songForm,  String? notes, @JsonKey(name: 'songs')  SetlistSong song, @JsonKey(name: 'song_versions')  SetlistVersion? version)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SetlistItem() when $default != null:
-return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.key,_that.bpm,_that.sheetId,_that.songForm,_that.notes,_that.song);case _:
+return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.versionId,_that.key,_that.bpm,_that.sheetId,_that.songForm,_that.notes,_that.song,_that.version);case _:
   return orElse();
 
 }
@@ -1064,10 +1346,10 @@ return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.key,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int sessionId,  int position,  int songId,  String? key,  int? bpm,  int? sheetId,  String? songForm,  String? notes, @JsonKey(name: 'songs')  SetlistSong song)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int sessionId,  int position,  int songId,  int? versionId,  String? key,  int? bpm,  int? sheetId,  String? songForm,  String? notes, @JsonKey(name: 'songs')  SetlistSong song, @JsonKey(name: 'song_versions')  SetlistVersion? version)  $default,) {final _that = this;
 switch (_that) {
 case _SetlistItem():
-return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.key,_that.bpm,_that.sheetId,_that.songForm,_that.notes,_that.song);case _:
+return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.versionId,_that.key,_that.bpm,_that.sheetId,_that.songForm,_that.notes,_that.song,_that.version);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1084,10 +1366,10 @@ return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.key,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int sessionId,  int position,  int songId,  String? key,  int? bpm,  int? sheetId,  String? songForm,  String? notes, @JsonKey(name: 'songs')  SetlistSong song)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int sessionId,  int position,  int songId,  int? versionId,  String? key,  int? bpm,  int? sheetId,  String? songForm,  String? notes, @JsonKey(name: 'songs')  SetlistSong song, @JsonKey(name: 'song_versions')  SetlistVersion? version)?  $default,) {final _that = this;
 switch (_that) {
 case _SetlistItem() when $default != null:
-return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.key,_that.bpm,_that.sheetId,_that.songForm,_that.notes,_that.song);case _:
+return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.versionId,_that.key,_that.bpm,_that.sheetId,_that.songForm,_that.notes,_that.song,_that.version);case _:
   return null;
 
 }
@@ -1099,20 +1381,23 @@ return $default(_that.id,_that.sessionId,_that.position,_that.songId,_that.key,_
 @JsonSerializable()
 
 class _SetlistItem extends SetlistItem {
-  const _SetlistItem({required this.id, required this.sessionId, required this.position, required this.songId, this.key, this.bpm, this.sheetId, this.songForm, this.notes, @JsonKey(name: 'songs') required this.song}): super._();
+  const _SetlistItem({required this.id, required this.sessionId, required this.position, required this.songId, this.versionId, this.key, this.bpm, this.sheetId, this.songForm, this.notes, @JsonKey(name: 'songs') required this.song, @JsonKey(name: 'song_versions') this.version}): super._();
   factory _SetlistItem.fromJson(Map<String, dynamic> json) => _$SetlistItemFromJson(json);
 
 @override final  int id;
 @override final  int sessionId;
 @override final  int position;
 @override final  int songId;
+/// Null only in copies kept on a device from before versions.
+@override final  int? versionId;
 @override final  String? key;
-/// This service's tempo; null plays it at the song's own.
+/// This service's tempo; null plays it at the version's own.
 @override final  int? bpm;
 @override final  int? sheetId;
 @override final  String? songForm;
 @override final  String? notes;
 @override@JsonKey(name: 'songs') final  SetlistSong song;
+@override@JsonKey(name: 'song_versions') final  SetlistVersion? version;
 
 /// Create a copy of SetlistItem
 /// with the given fields replaced by the non-null parameter values.
@@ -1127,18 +1412,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.position, position) || other.position == position)&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.key, key) || other.key == key)&&(identical(other.bpm, bpm) || other.bpm == bpm)&&(identical(other.sheetId, sheetId) || other.sheetId == sheetId)&&(identical(other.songForm, songForm) || other.songForm == songForm)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.song, song) || other.song == song));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.position, position) || other.position == position)&&(identical(other.songId, songId) || other.songId == songId)&&(identical(other.versionId, versionId) || other.versionId == versionId)&&(identical(other.key, key) || other.key == key)&&(identical(other.bpm, bpm) || other.bpm == bpm)&&(identical(other.sheetId, sheetId) || other.sheetId == sheetId)&&(identical(other.songForm, songForm) || other.songForm == songForm)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.song, song) || other.song == song)&&(identical(other.version, version) || other.version == version));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,sessionId,position,songId,key,bpm,sheetId,songForm,notes,song);
+    return Object.hash(runtimeType,id,sessionId,position,songId,versionId,key,bpm,sheetId,songForm,notes,song,version);
 }
 
 @override
 String toString() {
-    return 'SetlistItem(id: $id, sessionId: $sessionId, position: $position, songId: $songId, key: $key, bpm: $bpm, sheetId: $sheetId, songForm: $songForm, notes: $notes, song: $song)';
+    return 'SetlistItem(id: $id, sessionId: $sessionId, position: $position, songId: $songId, versionId: $versionId, key: $key, bpm: $bpm, sheetId: $sheetId, songForm: $songForm, notes: $notes, song: $song, version: $version)';
 }
 
 
@@ -1149,11 +1434,11 @@ abstract mixin class _$SetlistItemCopyWith<$Res> implements $SetlistItemCopyWith
   factory _$SetlistItemCopyWith(_SetlistItem value, $Res Function(_SetlistItem) _then) = __$SetlistItemCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int sessionId, int position, int songId, String? key, int? bpm, int? sheetId, String? songForm, String? notes,@JsonKey(name: 'songs') SetlistSong song
+ int id, int sessionId, int position, int songId, int? versionId, String? key, int? bpm, int? sheetId, String? songForm, String? notes,@JsonKey(name: 'songs') SetlistSong song,@JsonKey(name: 'song_versions') SetlistVersion? version
 });
 
 
-@override $SetlistSongCopyWith<$Res> get song;
+@override $SetlistSongCopyWith<$Res> get song;@override $SetlistVersionCopyWith<$Res>? get version;
 
 }
 /// @nodoc
@@ -1166,19 +1451,21 @@ class __$SetlistItemCopyWithImpl<$Res>
 
 /// Create a copy of SetlistItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? sessionId = null,Object? position = null,Object? songId = null,Object? key = freezed,Object? bpm = freezed,Object? sheetId = freezed,Object? songForm = freezed,Object? notes = freezed,Object? song = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? sessionId = null,Object? position = null,Object? songId = null,Object? versionId = freezed,Object? key = freezed,Object? bpm = freezed,Object? sheetId = freezed,Object? songForm = freezed,Object? notes = freezed,Object? song = null,Object? version = freezed,}) {
   return _then(_SetlistItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as int,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as int,songId: null == songId ? _self.songId : songId // ignore: cast_nullable_to_non_nullable
-as int,key: freezed == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as int,versionId: freezed == versionId ? _self.versionId : versionId // ignore: cast_nullable_to_non_nullable
+as int?,key: freezed == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
 as int?,sheetId: freezed == sheetId ? _self.sheetId : sheetId // ignore: cast_nullable_to_non_nullable
 as int?,songForm: freezed == songForm ? _self.songForm : songForm // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,song: null == song ? _self.song : song // ignore: cast_nullable_to_non_nullable
-as SetlistSong,
+as SetlistSong,version: freezed == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as SetlistVersion?,
   ));
 }
 
@@ -1190,6 +1477,18 @@ $SetlistSongCopyWith<$Res> get song {
   
   return $SetlistSongCopyWith<$Res>(_self.song, (value) {
     return _then(_self.copyWith(song: value));
+  });
+}/// Create a copy of SetlistItem
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SetlistVersionCopyWith<$Res>? get version {
+    if (_self.version == null) {
+    return null;
+  }
+
+  return $SetlistVersionCopyWith<$Res>(_self.version!, (value) {
+    return _then(_self.copyWith(version: value));
   });
 }
 }

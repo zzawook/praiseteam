@@ -530,9 +530,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get songTitle => 'Title';
 
   @override
-  String get artist => 'Artist or source';
-
-  @override
   String get bpm => 'BPM';
 
   @override
@@ -555,6 +552,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get linkLabel => 'Label (optional)';
+
+  @override
+  String get versions => 'Versions';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get addVersion => 'Add version';
+
+  @override
+  String get editVersion => 'Edit version';
+
+  @override
+  String get deleteVersion => 'Delete version';
+
+  @override
+  String deleteVersionConfirm(String title) {
+    return 'Delete the version \'$title\'? Its sheets and links are deleted too.';
+  }
+
+  @override
+  String get versionInUse => 'A version used in a setlist can\'t be deleted.';
+
+  @override
+  String get versionName => 'Artist or version';
+
+  @override
+  String get versionNameHint => 'e.g. the artist, a live recording';
+
+  @override
+  String get unnamedVersion => 'Main version';
+
+  @override
+  String get firstVersion => 'First version';
+
+  @override
+  String get firstVersionHint =>
+      'Add more versions on the song\'s page for other artists or arrangements. A setlist can also change the key and tempo for one service.';
+
+  @override
+  String get playedLast => 'Played last';
+
+  @override
+  String get songHasNoVersion =>
+      'This song has no version yet. Add one on the song\'s page.';
+
+  @override
+  String changeVersion(String changes) {
+    return 'Version: $changes';
+  }
 
   @override
   String get sheets => 'Sheets';

@@ -67,8 +67,10 @@ select throws_ok($$ select public.respond_assignment(current_setting('test.a')::
 
 -- ---- setlist announcements go to the people serving and leaders
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000002a","role":"authenticated"}', true);
-with s as (insert into public.songs (team_id, title, created_by) values (current_setting('test.team')::bigint, '곡', '00000000-0000-0000-0000-00000000002a') returning id)
-insert into public.setlist_items (team_id, session_id, position, song_id) select current_setting('test.team')::bigint, current_setting('test.session')::bigint, 1, id from s;
+select set_config('test.song', public.add_song(current_setting('test.team')::bigint, '곡')::text, true);
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id)
+select current_setting('test.team')::bigint, current_setting('test.session')::bigint, 1, v.song_id, v.id
+from public.song_versions v where v.song_id = current_setting('test.song')::bigint;
 select public.publish_setlist(current_setting('test.session')::bigint);
 reset role;
 select is(

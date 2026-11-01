@@ -5,7 +5,7 @@ import '../../core/music_widgets.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../songs/models.dart';
-import '../songs/song_form.dart';
+import '../songs/song_form.dart' show showNewSongForm;
 import '../songs/songs_providers.dart';
 import '../songs/songs_screen.dart' show statsLine;
 
@@ -38,11 +38,11 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
   String _query = '';
 
   Future<void> _createAndPick() async {
-    final fields = await showSongForm(context);
-    if (fields == null || !mounted) return;
+    final draft = await showNewSongForm(context);
+    if (draft == null || !mounted) return;
     final repo = ref.read(songsRepositoryProvider);
     var id = -1;
-    if (!await runGuarded(context, () async => id = await repo.addSong(widget.teamId, fields))) return;
+    if (!await runGuarded(context, () async => id = await repo.addSong(widget.teamId, draft.song, draft.version))) return;
     ref.invalidate(songLibraryProvider(widget.teamId));
     final library = await ref.read(songLibraryProvider(widget.teamId).future);
     if (!mounted) return;
@@ -72,7 +72,7 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
                   .where((e) =>
                       _query.isEmpty ||
                       e.song.title.toLowerCase().contains(_query) ||
-                      (e.song.artist ?? '').toLowerCase().contains(_query))
+                      (e.versionNames ?? '').toLowerCase().contains(_query))
                   .toList();
               return ListView(
                 controller: widget.controller,
@@ -88,7 +88,8 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
                       enabled: !widget.alreadyIn.contains(e.song.id),
                       onTap: () => Navigator.pop(context, e),
                       title: Text(e.song.title),
-                      subtitle: Text(statsLine(l10n, e.stats)),
+                      subtitle: Text([?e.versionNames, statsLine(l10n, e.stats)].join('\n')),
+                      isThreeLine: e.versionNames != null,
                       trailing: KeyBadge(e.displayKey),
                     ),
                 ],
@@ -99,4 +100,47 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
       ],
     );
   }
+}
+
+/// Which version of [entry] a service plays: asked only when the song has
+/// more than one, offering first the version played last. Null when
+/// cancelled.
+Future<SongVersion?> pickVersion(BuildContext context, SongEntry entry) async {
+  final versions = entry.song.versions;
+  if (versions.length <= 1) return versions.firstOrNull;
+  final preferred = entry.preferredVersion;
+  final ordered = [?preferred, ...versions.where((v) => v.id != preferred?.id)];
+  return showModalBottomSheet<SongVersion>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) {
+      final l10n = AppLocalizations.of(context);
+      final theme = Theme.of(context);
+      return SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: Text(entry.song.title, style: theme.textTheme.titleMedium),
+            ),
+            for (final v in ordered)
+              ListTile(
+                title: Text(v.name ?? l10n.unnamedVersion),
+                subtitle: v.id == entry.stats.lastVersionId ? Text(l10n.playedLast) : null,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (v.bpm case final bpm?)
+                      Padding(padding: const EdgeInsets.only(right: 10), child: Text('$bpm BPM', style: theme.textTheme.labelMedium)),
+                    KeyBadge(v.defaultKey),
+                  ],
+                ),
+                onTap: () => Navigator.pop(context, v),
+              ),
+          ],
+        ),
+      );
+    },
+  );
 }

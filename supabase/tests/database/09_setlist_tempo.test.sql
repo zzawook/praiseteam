@@ -14,18 +14,18 @@ select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000
 select set_config('test.team', public.create_team('T')::text, true);
 update public.teams set join_requires_approval = false where id = current_setting('test.team')::bigint;
 select set_config('test.code', (select invite_code from public.teams where id = current_setting('test.team')::bigint), true);
-with ins as (insert into public.songs (team_id, title, default_key, bpm) values (current_setting('test.team')::bigint, '은혜', 'D', 68) returning id)
-select set_config('test.song', (select id::text from ins), true);
+select set_config('test.song', public.add_song(current_setting('test.team')::bigint, '은혜', p_key => 'D', p_bpm => 68)::text, true);
+select set_config('test.version', (select id::text from public.song_versions where song_id = current_setting('test.song')::bigint), true);
 
 -- two past services play the song: one at its usual tempo, one faster
 with ins as (insert into public.sessions (team_id, title, starts_at) values (current_setting('test.team')::bigint, '주일 1부', now() - interval '14 days') returning id)
 select set_config('test.usual', (select id::text from ins), true);
 with ins as (insert into public.sessions (team_id, title, starts_at) values (current_setting('test.team')::bigint, '주일 2부', now() - interval '7 days') returning id)
 select set_config('test.faster', (select id::text from ins), true);
-insert into public.setlist_items (team_id, session_id, position, song_id)
-values (current_setting('test.team')::bigint, current_setting('test.usual')::bigint, 1, current_setting('test.song')::bigint);
-insert into public.setlist_items (team_id, session_id, position, song_id, bpm)
-values (current_setting('test.team')::bigint, current_setting('test.faster')::bigint, 1, current_setting('test.song')::bigint, 76);
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id)
+values (current_setting('test.team')::bigint, current_setting('test.usual')::bigint, 1, current_setting('test.song')::bigint, current_setting('test.version')::bigint);
+insert into public.setlist_items (team_id, session_id, position, song_id, version_id, bpm)
+values (current_setting('test.team')::bigint, current_setting('test.faster')::bigint, 1, current_setting('test.song')::bigint, current_setting('test.version')::bigint, 76);
 select public.publish_setlist(current_setting('test.usual')::bigint);
 select is(public.publish_setlist(current_setting('test.faster')::bigint), '{}'::jsonb, 'first announcement has no change summary');
 
@@ -34,7 +34,7 @@ select is(
   '76'::jsonb, 'the announcement keeps the tempo');
 select is(
   (select string_agg(bpm::text, ',' order by starts_at) from public.song_history where song_id = current_setting('test.song')::bigint),
-  '68,76', 'history shows each service''s tempo, the song''s own when not set');
+  '68,76', 'history shows each service''s tempo, the version''s own when not set');
 select is(
   (select times_played from public.song_stats where song_id = current_setting('test.song')::bigint),
   2, 'both count as the same song');

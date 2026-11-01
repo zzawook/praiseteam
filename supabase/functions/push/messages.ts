@@ -18,18 +18,23 @@ const list = (v: unknown): string[] => (Array.isArray(v) ? v.map(str) : []);
 type Summary = {
   added?: string[];
   removed?: string[];
+  version_changed?: Array<{ title: string; from?: string | null; to?: string | null }>;
   key_changed?: Array<{ title: string; from: string | null; to: string | null }>;
   tempo_changed?: Array<{ title: string; from?: number | null; to?: number | null }>;
   reordered?: boolean;
 };
 
-/** "추가: A, B / 키: C(G→A) / 템포: D(68→72) / 순서 변경" */
+/** "추가: A, B / 버전: C(마커스→어노인팅) / 키: C(G→A) / 템포: D(68→72) / 순서 변경" */
 export function describeChanges(summary: Summary | undefined, locale: Locale): string {
   if (!summary) return "";
   const ko = locale === "ko";
   const parts: string[] = [];
   if (summary.added?.length) parts.push(`${ko ? "추가" : "Added"}: ${summary.added.join(", ")}`);
   if (summary.removed?.length) parts.push(`${ko ? "빠짐" : "Removed"}: ${summary.removed.join(", ")}`);
+  if (summary.version_changed?.length) {
+    const versions = summary.version_changed.map((v) => `${v.title}(${v.from ?? "?"}→${v.to ?? "?"})`);
+    parts.push(`${ko ? "버전" : "Version"}: ${versions.join(", ")}`);
+  }
   if (summary.key_changed?.length) {
     const keys = summary.key_changed.map((k) => `${k.title}(${k.from ?? "?"}→${k.to ?? "?"})`);
     parts.push(`${ko ? "키" : "Key"}: ${keys.join(", ")}`);

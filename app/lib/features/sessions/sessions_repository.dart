@@ -14,7 +14,8 @@ class SessionsRepository {
   static const _sessionColumns =
       'id, team_id, title, starts_at, location, theme, notes, setlist_status, published_at, setlist_items(count)';
   static const _itemColumns =
-      'id, session_id, position, song_id, key, bpm, sheet_id, song_form, notes, songs(title, artist, default_key, bpm)';
+      'id, session_id, position, song_id, version_id, key, bpm, sheet_id, song_form, notes, songs(title), '
+      'song_versions(name, default_key, bpm)';
 
   /// A session stays "upcoming" for the rest of its day.
   static DateTime get _upcomingCutoff => DateTime.now().subtract(const Duration(hours: 12)).toUtc();
@@ -75,6 +76,7 @@ class SessionsRepository {
     required int teamId,
     required int sessionId,
     required int songId,
+    required int versionId,
     required int position,
     String? key,
     int? bpm,
@@ -84,6 +86,7 @@ class SessionsRepository {
         'team_id': teamId,
         'session_id': sessionId,
         'song_id': songId,
+        'version_id': versionId,
         'position': position,
         'key': ?key,
         'bpm': ?bpm,

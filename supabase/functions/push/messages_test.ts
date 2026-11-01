@@ -29,6 +29,10 @@ Deno.test("setlist change summary", () => {
     describeChanges({ tempo_changed: [{ title: "은혜", from: 68, to: 72 }, { title: "주의 집", to: 76 }] }, "en"),
     "Tempo: 은혜(68→72), 주의 집(?→76)",
   );
+  assertEquals(
+    describeChanges({ version_changed: [{ title: "주의 집", from: "마커스워십", to: "어노인팅" }], key_changed: [{ title: "주의 집", from: "G", to: "A" }] }, "ko"),
+    "버전: 주의 집(마커스워십→어노인팅) / 키: 주의 집(G→A)",
+  );
   assertEquals(describeChanges({}, "en"), "");
 });
 

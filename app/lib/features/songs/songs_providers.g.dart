@@ -200,53 +200,60 @@ final class SongDetailFamily extends $Family
   String toString() => r'songDetailProvider';
 }
 
-@ProviderFor(songSheets)
-final songSheetsProvider = SongSheetsFamily._();
+/// A song's versions with their sheets, for choosing what a service plays.
 
-final class SongSheetsProvider
+@ProviderFor(songVersions)
+final songVersionsProvider = SongVersionsFamily._();
+
+/// A song's versions with their sheets, for choosing what a service plays.
+
+final class SongVersionsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<Sheet>>,
-          List<Sheet>,
-          FutureOr<List<Sheet>>
+          AsyncValue<List<SongVersion>>,
+          List<SongVersion>,
+          FutureOr<List<SongVersion>>
         >
-    with $FutureModifier<List<Sheet>>, $FutureProvider<List<Sheet>> {
-  SongSheetsProvider._({
-    required SongSheetsFamily super.from,
+    with
+        $FutureModifier<List<SongVersion>>,
+        $FutureProvider<List<SongVersion>> {
+  /// A song's versions with their sheets, for choosing what a service plays.
+  SongVersionsProvider._({
+    required SongVersionsFamily super.from,
     required int super.argument,
   }) : super(
          retry: null,
-         name: r'songSheetsProvider',
+         name: r'songVersionsProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$songSheetsHash();
+  String debugGetCreateSourceHash() => _$songVersionsHash();
 
   @override
   String toString() {
-    return r'songSheetsProvider'
+    return r'songVersionsProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $FutureProviderElement<List<Sheet>> $createElement(
+  $FutureProviderElement<List<SongVersion>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<Sheet>> create(Ref ref) {
+  FutureOr<List<SongVersion>> create(Ref ref) {
     final argument = this.argument as int;
-    return songSheets(ref, argument);
+    return songVersions(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SongSheetsProvider && other.argument == argument;
+    return other is SongVersionsProvider && other.argument == argument;
   }
 
   @override
@@ -255,24 +262,28 @@ final class SongSheetsProvider
   }
 }
 
-String _$songSheetsHash() => r'c7d67c2f64568d6f8a9e5d590e5de5fe7105bc88';
+String _$songVersionsHash() => r'c3e1e1ef62f0c995d02d81980764be8e6b211d2a';
 
-final class SongSheetsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<Sheet>>, int> {
-  SongSheetsFamily._()
+/// A song's versions with their sheets, for choosing what a service plays.
+
+final class SongVersionsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<SongVersion>>, int> {
+  SongVersionsFamily._()
     : super(
         retry: null,
-        name: r'songSheetsProvider',
+        name: r'songVersionsProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  SongSheetsProvider call(int songId) =>
-      SongSheetsProvider._(argument: songId, from: this);
+  /// A song's versions with their sheets, for choosing what a service plays.
+
+  SongVersionsProvider call(int songId) =>
+      SongVersionsProvider._(argument: songId, from: this);
 
   @override
-  String toString() => r'songSheetsProvider';
+  String toString() => r'songVersionsProvider';
 }
 
 @ProviderFor(sheet)

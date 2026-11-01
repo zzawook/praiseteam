@@ -5,11 +5,12 @@ import '../../core/music.dart';
 import '../../core/music_widgets.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
+import '../songs/models.dart';
 import '../songs/songs_providers.dart';
 import 'models.dart';
 import 'sessions_providers.dart';
 
-/// Key, tempo, sheet, song form and notes of one song in the setlist.
+/// Version, key, tempo, sheet, song form and notes of one song in the setlist.
 Future<void> showSetlistItemEditor(BuildContext context, {required SetlistItem item}) =>
     showModalBottomSheet<void>(
       context: context,
@@ -30,6 +31,7 @@ class _ItemEditor extends ConsumerStatefulWidget {
 }
 
 class _ItemEditorState extends ConsumerState<_ItemEditor> {
+  late int? _versionId = widget.item.versionId;
   late String? _key = widget.item.effectiveKey;
   late final _bpm = TextEditingController(text: widget.item.effectiveBpm?.toString());
   String? _bpmError;
@@ -51,7 +53,19 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
     Navigator.pop(context);
   }
 
-  Future<void> _save() async {
+  /// Another version brings its own key, tempo and sheet, which can still
+  /// be changed for this service.
+  void _switchVersion(SongVersion v) {
+    setState(() {
+      _versionId = v.id;
+      _key = v.defaultKey ?? _key;
+      _bpm.text = v.bpm?.toString() ?? '';
+      _bpmError = null;
+      _sheetId = (v.sheets.where((s) => s.key == _key).firstOrNull ?? v.sheets.firstOrNull)?.id;
+    });
+  }
+
+  Future<void> _save(SongVersion? version) async {
     final bpmText = _bpm.text.trim();
     final bpm = int.tryParse(bpmText);
     if (bpmText.isNotEmpty && (bpm == null || bpm < 20 || bpm > 300)) {
@@ -65,9 +79,11 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
       () => ref.read(sessionsRepositoryProvider).updateItem(widget.item.id, {
         // Stored explicitly so history keeps this service's key and tempo
         // even if the song's own change later.
+        'version_id': ?version?.id,
         'key': _key,
         'bpm': bpm,
-        'sheet_id': _sheetId,
+        // Only a sheet of the version this service plays.
+        'sheet_id': version != null && version.sheets.any((s) => s.id == _sheetId) ? _sheetId : null,
         'song_form': form.isEmpty ? null : form,
         'notes': _notes.text.trim().isEmpty ? null : _notes.text.trim(),
       }),
@@ -87,7 +103,10 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final sheets = ref.watch(songSheetsProvider(widget.item.songId)).value ?? const [];
+    final versions = ref.watch(songVersionsProvider(widget.item.songId)).value ?? const <SongVersion>[];
+    // A copy kept from before versions has none: its song's only version.
+    final version = versions.where((v) => v.id == _versionId).firstOrNull ?? (versions.length == 1 ? versions.first : null);
+    final sheets = version?.sheets ?? const <Sheet>[];
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -97,10 +116,35 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
           children: [
             Text(widget.item.song.title, style: theme.textTheme.titleLarge),
             const SizedBox(height: 16),
+            if (versions.length > 1) ...[
+              DropdownButtonFormField<int>(
+                // Re-created once the versions arrive.
+                key: ValueKey(('version', versions.length)),
+                initialValue: version?.id,
+                decoration: InputDecoration(labelText: l10n.version),
+                items: [
+                  for (final v in versions)
+                    DropdownMenuItem(
+                      value: v.id,
+                      child: Text(
+                        [v.name ?? l10n.unnamedVersion, ?v.defaultKey, if (v.bpm != null) '${v.bpm} BPM'].join('  '),
+                      ),
+                    ),
+                ],
+                onChanged: (id) => _switchVersion(versions.firstWhere((v) => v.id == id)),
+              ),
+              const SizedBox(height: 12),
+            ],
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: KeyField(value: _key, onChanged: (k) => setState(() => _key = k))),
+                Expanded(
+                  child: KeyField(
+                    key: ValueKey(('key', _versionId)),
+                    value: _key,
+                    onChanged: (k) => setState(() => _key = k),
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: TextField(
@@ -114,6 +158,8 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<int?>(
+              // Re-created when the sheets arrive or the version changes.
+              key: ValueKey(('sheet', version?.id, sheets.length, _sheetId)),
               initialValue: sheets.any((s) => s.id == _sheetId) ? _sheetId : null,
               decoration: InputDecoration(labelText: l10n.sheet),
               items: [
@@ -139,7 +185,7 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
               decoration: InputDecoration(labelText: l10n.notes, counterText: ''),
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _busy ? null : _save, child: Text(l10n.save)),
+            FilledButton(onPressed: _busy ? null : () => _save(version), child: Text(l10n.save)),
             const SizedBox(height: 8),
             TextButton(
               onPressed: _busy ? null : _remove,

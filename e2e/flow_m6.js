@@ -78,8 +78,8 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
 
   // a published setlist with two songs (no sheets: one stand page each)
   const session = sql(`select id from public.sessions where team_id = ${team} order by id desc limit 1`);
-  sql(`insert into public.songs (team_id, title) values (${team}, '주의 집에 거하는 자'), (${team}, '은혜')`);
-  sql(`insert into public.setlist_items (team_id, session_id, position, song_id) select ${team}, ${session}, row_number() over (order by id), id from public.songs where team_id = ${team}`);
+  sql(`select public.add_song(${team}, '주의 집에 거하는 자'), public.add_song(${team}, '은혜')`);
+  sql(`insert into public.setlist_items (team_id, session_id, position, song_id, version_id) select ${team}, ${session}, row_number() over (order by v.song_id), v.song_id, v.id from public.song_versions v where v.team_id = ${team}`);
   sql(`update public.sessions set setlist_status = 'published', published_at = now() where id = ${session}`);
 
   // the stand header reads "<title>\n<page> / <pages>"

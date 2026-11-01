@@ -509,9 +509,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get songTitle => '곡 이름';
 
   @override
-  String get artist => '가수나 출처';
-
-  @override
   String get bpm => 'BPM';
 
   @override
@@ -534,6 +531,56 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get linkLabel => '이름 (선택)';
+
+  @override
+  String get versions => '버전';
+
+  @override
+  String get version => '버전';
+
+  @override
+  String get addVersion => '버전 추가';
+
+  @override
+  String get editVersion => '버전 수정';
+
+  @override
+  String get deleteVersion => '버전 삭제';
+
+  @override
+  String deleteVersionConfirm(String title) {
+    return '\'$title\' 버전을 삭제할까요? 이 버전의 악보와 링크도 함께 삭제돼요.';
+  }
+
+  @override
+  String get versionInUse => '콘티에 쓰인 버전은 삭제할 수 없어요.';
+
+  @override
+  String get versionName => '가수·버전';
+
+  @override
+  String get versionNameHint => '예: 마커스워십, 어노인팅 라이브';
+
+  @override
+  String get unnamedVersion => '기본 버전';
+
+  @override
+  String get firstVersion => '첫 버전';
+
+  @override
+  String get firstVersionHint =>
+      '가수나 편곡이 다르면 곡 화면에서 버전을 더 추가할 수 있어요. 키와 템포는 콘티에서 그날만 바꿀 수도 있어요.';
+
+  @override
+  String get playedLast => '마지막에 쓴 버전';
+
+  @override
+  String get songHasNoVersion => '이 곡에는 버전이 없어요. 곡 화면에서 버전을 추가해 주세요.';
+
+  @override
+  String changeVersion(String changes) {
+    return '버전: $changes';
+  }
 
   @override
   String get sheets => '악보';

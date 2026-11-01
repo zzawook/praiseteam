@@ -76,9 +76,17 @@ abstract class SessionTemplate with _$SessionTemplate {
 
 @freezed
 abstract class SetlistSong with _$SetlistSong {
-  const factory SetlistSong({required String title, String? artist, String? defaultKey, int? bpm}) = _SetlistSong;
+  const factory SetlistSong({required String title}) = _SetlistSong;
 
   factory SetlistSong.fromJson(Map<String, dynamic> json) => _$SetlistSongFromJson(json);
+}
+
+/// The version a setlist entry plays, as embedded with the entry.
+@freezed
+abstract class SetlistVersion with _$SetlistVersion {
+  const factory SetlistVersion({String? name, String? defaultKey, int? bpm}) = _SetlistVersion;
+
+  factory SetlistVersion.fromJson(Map<String, dynamic> json) => _$SetlistVersionFromJson(json);
 }
 
 @freezed
@@ -90,21 +98,25 @@ abstract class SetlistItem with _$SetlistItem {
     required int sessionId,
     required int position,
     required int songId,
+
+    /// Null only in copies kept on a device from before versions.
+    int? versionId,
     String? key,
 
-    /// This service's tempo; null plays it at the song's own.
+    /// This service's tempo; null plays it at the version's own.
     int? bpm,
     int? sheetId,
     String? songForm,
     String? notes,
     @JsonKey(name: 'songs') required SetlistSong song,
+    @JsonKey(name: 'song_versions') SetlistVersion? version,
   }) = _SetlistItem;
 
-  /// The key for this service, falling back to the song's default.
-  String? get effectiveKey => key ?? song.defaultKey;
+  /// The key for this service, falling back to the version's.
+  String? get effectiveKey => key ?? version?.defaultKey;
 
-  /// The tempo for this service, falling back to the song's.
-  int? get effectiveBpm => bpm ?? song.bpm;
+  /// The tempo for this service, falling back to the version's.
+  int? get effectiveBpm => bpm ?? version?.bpm;
 
   factory SetlistItem.fromJson(Map<String, dynamic> json) => _$SetlistItemFromJson(json);
 }
@@ -114,6 +126,7 @@ class SetlistChanges {
   const SetlistChanges({
     this.added = const [],
     this.removed = const [],
+    this.versionChanged = const [],
     this.keyChanged = const [],
     this.tempoChanged = const [],
     this.reordered = false,
@@ -122,6 +135,10 @@ class SetlistChanges {
   factory SetlistChanges.fromJson(Map<String, dynamic>? json) => SetlistChanges(
         added: [for (final t in (json?['added'] as List? ?? const [])) t.toString()],
         removed: [for (final t in (json?['removed'] as List? ?? const [])) t.toString()],
+        versionChanged: [
+          for (final v in (json?['version_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
+            (title: v['title'].toString(), from: v['from'] as String?, to: v['to'] as String?),
+        ],
         keyChanged: [
           for (final k in (json?['key_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
             (title: k['title'].toString(), from: k['from'] as String?, to: k['to'] as String?),
@@ -135,9 +152,16 @@ class SetlistChanges {
 
   final List<String> added;
   final List<String> removed;
+  final List<({String title, String? from, String? to})> versionChanged;
   final List<({String title, String? from, String? to})> keyChanged;
   final List<({String title, int? from, int? to})> tempoChanged;
   final bool reordered;
 
-  bool get isEmpty => added.isEmpty && removed.isEmpty && keyChanged.isEmpty && tempoChanged.isEmpty && !reordered;
+  bool get isEmpty =>
+      added.isEmpty &&
+      removed.isEmpty &&
+      versionChanged.isEmpty &&
+      keyChanged.isEmpty &&
+      tempoChanged.isEmpty &&
+      !reordered;
 }
