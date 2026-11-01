@@ -1,0 +1,3 @@
+# per-environment dart-defines (see env/README.md)
+*.json
+!example.json

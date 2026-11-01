@@ -1,0 +1,877 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Korean (`ko`).
+class AppLocalizationsKo extends AppLocalizations {
+  AppLocalizationsKo([String locale = 'ko']) : super(locale);
+
+  @override
+  String get appTitle => 'PraiseTeam';
+
+  @override
+  String get loginTagline => '콘티, 악보, 로테이션을 팀이 함께 봐요.';
+
+  @override
+  String get continueWithGoogle => 'Google로 계속하기';
+
+  @override
+  String get devLoginTitle => '개발용 로그인 (로컬 서버 전용)';
+
+  @override
+  String get email => '이메일';
+
+  @override
+  String get password => '비밀번호';
+
+  @override
+  String get signIn => '로그인';
+
+  @override
+  String get signUp => '계정 만들기';
+
+  @override
+  String get signOut => '로그아웃';
+
+  @override
+  String get loading => '불러오는 중';
+
+  @override
+  String get retry => '다시 시도';
+
+  @override
+  String get cancel => '취소';
+
+  @override
+  String get save => '저장';
+
+  @override
+  String get create => '만들기';
+
+  @override
+  String get delete => '삭제';
+
+  @override
+  String get close => '닫기';
+
+  @override
+  String get copy => '복사';
+
+  @override
+  String get copied => '복사했어요';
+
+  @override
+  String get welcomeTitle => '찬양팀에 들어가기';
+
+  @override
+  String get welcomeBody => '초대 코드를 받았다면 바로 가입하고, 처음이라면 팀을 만들어요.';
+
+  @override
+  String get joinWithCode => '초대 코드로 가입';
+
+  @override
+  String get inviteCode => '초대 코드';
+
+  @override
+  String get inviteCodeHint => '8자리 코드';
+
+  @override
+  String get join => '가입하기';
+
+  @override
+  String get createTeam => '새 팀 만들기';
+
+  @override
+  String get teamName => '팀 이름';
+
+  @override
+  String get teamNameHint => '예: 청년부 찬양팀';
+
+  @override
+  String get pendingTitle => '승인을 기다리고 있어요';
+
+  @override
+  String pendingBody(String team) {
+    return '$team 리더가 승인하면 바로 들어갈 수 있어요.';
+  }
+
+  @override
+  String get checkAgain => '다시 확인';
+
+  @override
+  String get cancelRequest => '가입 요청 취소';
+
+  @override
+  String get joinAnotherTeam => '다른 팀에 가입';
+
+  @override
+  String get navTeam => '팀';
+
+  @override
+  String get navNotifications => '알림';
+
+  @override
+  String get navSettings => '설정';
+
+  @override
+  String get switchTeam => '팀 바꾸기';
+
+  @override
+  String get addTeam => '팀 추가';
+
+  @override
+  String get inviteTitle => '초대 코드';
+
+  @override
+  String get inviteHint => '이 코드를 새 팀원에게 보내주세요.';
+
+  @override
+  String get newInviteCode => '새 코드로 바꾸기';
+
+  @override
+  String get newInviteCodeConfirm => '지금 코드는 더 이상 쓸 수 없게 돼요. 새 코드로 바꿀까요?';
+
+  @override
+  String get joinRequests => '가입 요청';
+
+  @override
+  String get approve => '승인';
+
+  @override
+  String get reject => '거절';
+
+  @override
+  String get members => '멤버';
+
+  @override
+  String membersCount(int count) {
+    return '멤버 $count명';
+  }
+
+  @override
+  String get roleOwner => '관리자';
+
+  @override
+  String get roleLeader => '리더';
+
+  @override
+  String get roleMember => '멤버';
+
+  @override
+  String get you => '나';
+
+  @override
+  String get noPartsYet => '파트 미정';
+
+  @override
+  String get editParts => '파트 정하기';
+
+  @override
+  String get changeRole => '역할 바꾸기';
+
+  @override
+  String get removeFromTeam => '팀에서 내보내기';
+
+  @override
+  String removeConfirm(String name) {
+    return '$name님을 팀에서 내보낼까요?';
+  }
+
+  @override
+  String get parts => '파트';
+
+  @override
+  String get manageParts => '파트 관리';
+
+  @override
+  String get myParts => '내 파트';
+
+  @override
+  String get partsPickerHint => '섬길 수 있는 파트를 모두 골라주세요.';
+
+  @override
+  String get addPart => '파트 추가';
+
+  @override
+  String get partName => '파트 이름';
+
+  @override
+  String get renamePart => '이름 바꾸기';
+
+  @override
+  String get hidePart => '목록에서 숨기기';
+
+  @override
+  String get partKindVocal => '보컬';
+
+  @override
+  String get partKindInstrument => '악기';
+
+  @override
+  String get partKindTech => '음향·영상';
+
+  @override
+  String get notificationsEmpty => '새 알림이 오면 여기에 보여요.';
+
+  @override
+  String get notifJoinRequestTitle => '가입 요청';
+
+  @override
+  String notifJoinRequestBody(String name, String team) {
+    return '$name님이 $team에 가입을 요청했어요.';
+  }
+
+  @override
+  String get notifApprovedTitle => '가입 승인';
+
+  @override
+  String notifApprovedBody(String team) {
+    return '$team에 가입됐어요.';
+  }
+
+  @override
+  String get notifFallback => '새 알림';
+
+  @override
+  String get profile => '프로필';
+
+  @override
+  String get displayName => '이름';
+
+  @override
+  String get language => '언어';
+
+  @override
+  String get languageSystem => '기기 설정 따르기';
+
+  @override
+  String get teamSettings => '팀 설정';
+
+  @override
+  String get requireApproval => '가입할 때 리더 승인 받기';
+
+  @override
+  String get leaveTeam => '팀 나가기';
+
+  @override
+  String leaveTeamConfirm(String team) {
+    return '$team에서 나갈까요?';
+  }
+
+  @override
+  String get errorInvalidCode => '초대 코드가 맞지 않아요. 대소문자 상관없이 8자리를 다시 확인해 주세요.';
+
+  @override
+  String get errorNotAllowed => '이 작업은 리더만 할 수 있어요.';
+
+  @override
+  String get errorLastOwner => '팀에는 관리자가 한 명 이상 있어야 해요. 다른 사람을 먼저 관리자로 정해주세요.';
+
+  @override
+  String get errorNetwork => '서버에 연결할 수 없어요. 인터넷 연결을 확인해 주세요.';
+
+  @override
+  String get errorGoogleNotConfigured => 'Google 로그인이 아직 설정되지 않았어요.';
+
+  @override
+  String errorGeneric(String detail) {
+    return '요청을 처리하지 못했어요: $detail';
+  }
+
+  @override
+  String get navSessions => '예배';
+
+  @override
+  String get navSongs => '곡';
+
+  @override
+  String get upcomingSessions => '다가오는 예배';
+
+  @override
+  String get pastSessions => '지난 예배';
+
+  @override
+  String get noSessionsLeader => '예배를 추가하고 콘티를 준비해 보세요.';
+
+  @override
+  String get noSessionsMember => '리더가 예배를 추가하면 여기에 보여요.';
+
+  @override
+  String get addSession => '예배 추가';
+
+  @override
+  String get editSession => '예배 수정';
+
+  @override
+  String get deleteSession => '예배 삭제';
+
+  @override
+  String deleteSessionConfirm(String title) {
+    return '\'$title\' 예배를 삭제할까요? 콘티도 함께 삭제돼요.';
+  }
+
+  @override
+  String get sessionTitle => '예배 이름';
+
+  @override
+  String get sessionTitleHint => '예: 주일 2부 예배';
+
+  @override
+  String get date => '날짜';
+
+  @override
+  String get time => '시간';
+
+  @override
+  String get location => '장소';
+
+  @override
+  String get theme => '설교 본문이나 주제';
+
+  @override
+  String get notes => '메모';
+
+  @override
+  String get repeatWeekly => '매주 같은 시간에 반복';
+
+  @override
+  String repeatCount(int count) {
+    return '$count주 동안';
+  }
+
+  @override
+  String get setlist => '콘티';
+
+  @override
+  String get setlistDraft => '초안';
+
+  @override
+  String get setlistPublished => '공지됨';
+
+  @override
+  String songsCount(int count) {
+    return '$count곡';
+  }
+
+  @override
+  String get addSongToSetlist => '곡 추가';
+
+  @override
+  String get publishSetlist => '콘티 공지하기';
+
+  @override
+  String get republishSetlist => '바뀐 내용 공지하기';
+
+  @override
+  String get publishConfirm => '팀에 콘티를 공지할까요? 팀원들에게 알림이 가요.';
+
+  @override
+  String get republishConfirm => '바뀐 내용을 팀에 알릴까요?';
+
+  @override
+  String get published => '콘티를 공지했어요';
+
+  @override
+  String get noChanges => '지난 공지 이후 바뀐 게 없어요.';
+
+  @override
+  String get setlistEmptyLeader => '곡을 추가해서 콘티를 만들어요.';
+
+  @override
+  String get setlistEmptyMember => '아직 콘티가 공지되지 않았어요.';
+
+  @override
+  String get key => '키';
+
+  @override
+  String get songForm => '송폼';
+
+  @override
+  String get songFormHint => '예: I-V1-C-V2-C-B-C-O';
+
+  @override
+  String get sheet => '악보';
+
+  @override
+  String get noSheet => '악보 없음';
+
+  @override
+  String get removeFromSetlist => '콘티에서 빼기';
+
+  @override
+  String changeAdded(String songs) {
+    return '추가: $songs';
+  }
+
+  @override
+  String changeRemoved(String songs) {
+    return '빠짐: $songs';
+  }
+
+  @override
+  String changeKey(String changes) {
+    return '키: $changes';
+  }
+
+  @override
+  String get changeOrder => '순서 변경';
+
+  @override
+  String notifSetlistTitle(String session) {
+    return '$session 콘티';
+  }
+
+  @override
+  String notifSetlistUpdatedTitle(String session) {
+    return '$session 콘티가 바뀌었어요';
+  }
+
+  @override
+  String get searchSongs => '곡 이름이나 가수로 찾기';
+
+  @override
+  String get sortTitle => '이름순';
+
+  @override
+  String get sortRecent => '최근에 한 곡';
+
+  @override
+  String get sortMost => '많이 한 곡';
+
+  @override
+  String get sortLongAgo => '오래 안 한 곡';
+
+  @override
+  String get addSong => '곡 추가';
+
+  @override
+  String get editSong => '곡 정보 수정';
+
+  @override
+  String get deleteSong => '곡 삭제';
+
+  @override
+  String deleteSongConfirm(String title) {
+    return '\'$title\' 곡을 라이브러리에서 삭제할까요?';
+  }
+
+  @override
+  String get songInUse => '콘티에 쓰인 곡은 삭제할 수 없어요.';
+
+  @override
+  String get songTitle => '곡 이름';
+
+  @override
+  String get artist => '가수나 출처';
+
+  @override
+  String get bpm => 'BPM';
+
+  @override
+  String get timeSignature => '박자';
+
+  @override
+  String get tags => '태그';
+
+  @override
+  String get tagsHint => '쉼표로 구분 (예: 감사, 빠른 곡)';
+
+  @override
+  String get originalLinks => '원곡 링크';
+
+  @override
+  String get addLink => '링크 추가';
+
+  @override
+  String get linkUrl => '주소 (https://...)';
+
+  @override
+  String get linkLabel => '이름 (선택)';
+
+  @override
+  String get sheets => '악보';
+
+  @override
+  String get uploadSheet => '악보 올리기';
+
+  @override
+  String get uploadSheetHint => 'PDF나 사진을 고르면 악보 한 개로 저장돼요.';
+
+  @override
+  String get sheetLabel => '악보 이름 (예: 코드, 드럼)';
+
+  @override
+  String get uploading => '올리는 중';
+
+  @override
+  String pages(int count) {
+    return '$count쪽';
+  }
+
+  @override
+  String get history => '기록';
+
+  @override
+  String playedTimes(int count) {
+    return '총 $count회';
+  }
+
+  @override
+  String get neverPlayed => '아직 안 했어요';
+
+  @override
+  String lastPlayed(String ago) {
+    return '마지막 $ago';
+  }
+
+  @override
+  String usualKey(String key) {
+    return '주로 $key';
+  }
+
+  @override
+  String nextPlanned(String date) {
+    return '다음 예정 $date';
+  }
+
+  @override
+  String get today => '오늘';
+
+  @override
+  String daysAgo(int n) {
+    return '$n일 전';
+  }
+
+  @override
+  String weeksAgo(int n) {
+    return '$n주 전';
+  }
+
+  @override
+  String monthsAgo(int n) {
+    return '$n개월 전';
+  }
+
+  @override
+  String yearsAgo(int n) {
+    return '$n년 전';
+  }
+
+  @override
+  String get stats => '통계';
+
+  @override
+  String get topSongs => '많이 한 곡';
+
+  @override
+  String notPlayedSince(int months) {
+    return '$months개월 넘게 안 한 곡';
+  }
+
+  @override
+  String get period3m => '3개월';
+
+  @override
+  String get period6m => '6개월';
+
+  @override
+  String get period1y => '1년';
+
+  @override
+  String get periodAll => '전체';
+
+  @override
+  String timesShort(int count) {
+    return '$count회';
+  }
+
+  @override
+  String get viewSheet => '악보 보기';
+
+  @override
+  String get open => '열기';
+
+  @override
+  String get viewSheets => '악보 보기';
+
+  @override
+  String get annotate => '필기';
+
+  @override
+  String get doneAnnotating => '완료';
+
+  @override
+  String get pen => '펜';
+
+  @override
+  String get highlighter => '형광펜';
+
+  @override
+  String get eraser => '지우개';
+
+  @override
+  String get inkForMe => '나만 보기';
+
+  @override
+  String get inkForTeam => '팀 공용';
+
+  @override
+  String get showTeamInk => '팀 필기 보이기';
+
+  @override
+  String get showMyInk => '내 필기 보이기';
+
+  @override
+  String get undo => '실행 취소';
+
+  @override
+  String get redo => '다시 실행';
+
+  @override
+  String get stageMode => '무대 모드';
+
+  @override
+  String get copyPreviousInk => '지난 필기 가져오기';
+
+  @override
+  String copiedInk(int count) {
+    return '필기 $count개를 가져왔어요';
+  }
+
+  @override
+  String get noPreviousInk => '같은 악보로 한 지난 예배에 내 필기가 없어요.';
+
+  @override
+  String get noSheetForSong => '이 곡에는 악보가 없어요';
+
+  @override
+  String pageOf(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
+  String get inkColor => '색';
+
+  @override
+  String unsavedInk(int count) {
+    return '저장 대기 $count';
+  }
+
+  @override
+  String get rotation => '로테이션';
+
+  @override
+  String get myServing => '내 섬김';
+
+  @override
+  String get noServing => '다가오는 섬김이 없어요.';
+
+  @override
+  String get accept => '수락';
+
+  @override
+  String get decline => '거절';
+
+  @override
+  String get declineReason => '못 하는 이유 (선택)';
+
+  @override
+  String get statusDraft => '초안';
+
+  @override
+  String get statusPending => '응답 대기';
+
+  @override
+  String get statusAccepted => '수락';
+
+  @override
+  String get statusDeclined => '거절';
+
+  @override
+  String get autoAssign => '자동 배정';
+
+  @override
+  String autoAssignDone(int count) {
+    return '$count자리를 초안으로 채웠어요. 확인하고 고친 뒤 보내세요.';
+  }
+
+  @override
+  String sendDrafts(int count) {
+    return '보내기 ($count)';
+  }
+
+  @override
+  String sendDraftsConfirm(int count) {
+    return '초안 $count건을 보낼까요? 배정된 사람에게 알림이 가요.';
+  }
+
+  @override
+  String sent(int count) {
+    return '$count건을 보냈어요';
+  }
+
+  @override
+  String get addPerson => '사람 추가';
+
+  @override
+  String get replacePerson => '다른 사람으로 바꾸기';
+
+  @override
+  String get removePerson => '빼기';
+
+  @override
+  String needed(int count) {
+    return '$count명';
+  }
+
+  @override
+  String get setNeeded => '필요 인원';
+
+  @override
+  String get defaultNeeded => '기본 필요 인원';
+
+  @override
+  String get defaultNeededHint => '새로 만드는 예배에 이 인원이 들어가요.';
+
+  @override
+  String get unavailableThatDay => '그날 안 돼요';
+
+  @override
+  String get alreadyServing => '이미 섬김';
+
+  @override
+  String get requestSwap => '대타 요청';
+
+  @override
+  String get swapMessage => '남길 말 (선택)';
+
+  @override
+  String get swapRequested => '같은 파트 팀원들에게 대타를 요청했어요';
+
+  @override
+  String get cancelSwap => '대타 요청 취소';
+
+  @override
+  String get swapOpen => '대타 구함';
+
+  @override
+  String get takeSwap => '대신 섬기기';
+
+  @override
+  String get swapTaken => '섬김을 넘겨받았어요';
+
+  @override
+  String get blockouts => '불가능 날짜';
+
+  @override
+  String get myBlockouts => '내 불가능 날짜';
+
+  @override
+  String get teamBlockouts => '팀원 불가능 날짜';
+
+  @override
+  String get addBlockout => '날짜 추가';
+
+  @override
+  String get blockoutNote => '메모 (선택, 리더만 봐요)';
+
+  @override
+  String get noBlockouts => '등록된 날짜가 없어요.';
+
+  @override
+  String get servingPeople => '섬기는 사람';
+
+  @override
+  String notifAssignmentRequested(String session, String part) {
+    return '$session $part 섬김 요청';
+  }
+
+  @override
+  String notifAssignmentDeclined(String name, String session, String part) {
+    return '$name님이 $session $part 섬김을 거절했어요';
+  }
+
+  @override
+  String notifAssignmentRemoved(String session, String part) {
+    return '$session $part 섬김에서 빠졌어요';
+  }
+
+  @override
+  String notifAssignmentNudge(String session, String part) {
+    return '$session $part 섬김 요청에 아직 답하지 않았어요';
+  }
+
+  @override
+  String notifSwapRequested(String name, String session, String part) {
+    return '$name님이 $session $part 대타를 구해요';
+  }
+
+  @override
+  String notifSwapFilled(String name, String session, String part) {
+    return '$name님이 $session $part을(를) 맡았어요';
+  }
+
+  @override
+  String notifServiceReminder(String session, String part) {
+    return '내일 $session $part 섬김이 있어요';
+  }
+
+  @override
+  String notifRehearsalScheduled(String when) {
+    return '연습 일정: $when';
+  }
+
+  @override
+  String notifRehearsalReminder(String when) {
+    return '곧 연습이에요: $when';
+  }
+
+  @override
+  String get rehearsals => '연습';
+
+  @override
+  String get addRehearsal => '연습 추가';
+
+  @override
+  String get noRehearsals => '잡힌 연습이 없어요.';
+
+  @override
+  String get rsvpGoing => '참석';
+
+  @override
+  String get rsvpLate => '지각';
+
+  @override
+  String get rsvpNotGoing => '불참';
+
+  @override
+  String get attendanceCheck => '출석 체크';
+
+  @override
+  String get present => '출석';
+
+  @override
+  String get absent => '결석';
+
+  @override
+  String get calendarSubscribe => '캘린더에 구독';
+
+  @override
+  String get calendarHint => '내 섬김과 연습 일정이 캘린더에 자동으로 들어가요.';
+
+  @override
+  String get openInCalendar => '캘린더 앱에서 열기';
+
+  @override
+  String get newCalendarUrl => '주소 새로 만들기';
+
+  @override
+  String get newCalendarUrlHint => '새로 만들면 예전 주소로는 더 이상 보이지 않아요.';
+
+  @override
+  String get googleCalendarHint =>
+      '구글 캘린더는 웹에서 \'다른 캘린더 > URL로 추가\'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요.';
+}

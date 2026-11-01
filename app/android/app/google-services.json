@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677984922607",
+    "project_id": "praiseteam-sg",
+    "storage_bucket": "praiseteam-sg.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677984922607:android:b9ce2546084e0fb5cd241a",
+        "android_client_info": {
+          "package_name": "com.kjaehyeok.praiseteam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRTw-TY5iouXsc3EePMJqkYvSd303Qby8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

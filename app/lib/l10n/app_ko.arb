@@ -1,0 +1,606 @@
+{
+  "@@locale": "ko",
+  "appTitle": "PraiseTeam",
+  "loginTagline": "콘티, 악보, 로테이션을 팀이 함께 봐요.",
+  "continueWithGoogle": "Google로 계속하기",
+  "devLoginTitle": "개발용 로그인 (로컬 서버 전용)",
+  "email": "이메일",
+  "password": "비밀번호",
+  "signIn": "로그인",
+  "signUp": "계정 만들기",
+  "signOut": "로그아웃",
+  "loading": "불러오는 중",
+  "retry": "다시 시도",
+  "cancel": "취소",
+  "save": "저장",
+  "create": "만들기",
+  "delete": "삭제",
+  "close": "닫기",
+  "copy": "복사",
+  "copied": "복사했어요",
+  "welcomeTitle": "찬양팀에 들어가기",
+  "welcomeBody": "초대 코드를 받았다면 바로 가입하고, 처음이라면 팀을 만들어요.",
+  "joinWithCode": "초대 코드로 가입",
+  "inviteCode": "초대 코드",
+  "inviteCodeHint": "8자리 코드",
+  "join": "가입하기",
+  "createTeam": "새 팀 만들기",
+  "teamName": "팀 이름",
+  "teamNameHint": "예: 청년부 찬양팀",
+  "pendingTitle": "승인을 기다리고 있어요",
+  "pendingBody": "{team} 리더가 승인하면 바로 들어갈 수 있어요.",
+  "@pendingBody": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "checkAgain": "다시 확인",
+  "cancelRequest": "가입 요청 취소",
+  "joinAnotherTeam": "다른 팀에 가입",
+  "navTeam": "팀",
+  "navNotifications": "알림",
+  "navSettings": "설정",
+  "switchTeam": "팀 바꾸기",
+  "addTeam": "팀 추가",
+  "inviteTitle": "초대 코드",
+  "inviteHint": "이 코드를 새 팀원에게 보내주세요.",
+  "newInviteCode": "새 코드로 바꾸기",
+  "newInviteCodeConfirm": "지금 코드는 더 이상 쓸 수 없게 돼요. 새 코드로 바꿀까요?",
+  "joinRequests": "가입 요청",
+  "approve": "승인",
+  "reject": "거절",
+  "members": "멤버",
+  "membersCount": "멤버 {count}명",
+  "@membersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "roleOwner": "관리자",
+  "roleLeader": "리더",
+  "roleMember": "멤버",
+  "you": "나",
+  "noPartsYet": "파트 미정",
+  "editParts": "파트 정하기",
+  "changeRole": "역할 바꾸기",
+  "removeFromTeam": "팀에서 내보내기",
+  "removeConfirm": "{name}님을 팀에서 내보낼까요?",
+  "@removeConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "parts": "파트",
+  "manageParts": "파트 관리",
+  "myParts": "내 파트",
+  "partsPickerHint": "섬길 수 있는 파트를 모두 골라주세요.",
+  "addPart": "파트 추가",
+  "partName": "파트 이름",
+  "renamePart": "이름 바꾸기",
+  "hidePart": "목록에서 숨기기",
+  "partKindVocal": "보컬",
+  "partKindInstrument": "악기",
+  "partKindTech": "음향·영상",
+  "notificationsEmpty": "새 알림이 오면 여기에 보여요.",
+  "notifJoinRequestTitle": "가입 요청",
+  "notifJoinRequestBody": "{name}님이 {team}에 가입을 요청했어요.",
+  "@notifJoinRequestBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "notifApprovedTitle": "가입 승인",
+  "notifApprovedBody": "{team}에 가입됐어요.",
+  "@notifApprovedBody": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "notifFallback": "새 알림",
+  "profile": "프로필",
+  "displayName": "이름",
+  "language": "언어",
+  "languageSystem": "기기 설정 따르기",
+  "teamSettings": "팀 설정",
+  "requireApproval": "가입할 때 리더 승인 받기",
+  "leaveTeam": "팀 나가기",
+  "leaveTeamConfirm": "{team}에서 나갈까요?",
+  "@leaveTeamConfirm": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "errorInvalidCode": "초대 코드가 맞지 않아요. 대소문자 상관없이 8자리를 다시 확인해 주세요.",
+  "errorNotAllowed": "이 작업은 리더만 할 수 있어요.",
+  "errorLastOwner": "팀에는 관리자가 한 명 이상 있어야 해요. 다른 사람을 먼저 관리자로 정해주세요.",
+  "errorNetwork": "서버에 연결할 수 없어요. 인터넷 연결을 확인해 주세요.",
+  "errorGoogleNotConfigured": "Google 로그인이 아직 설정되지 않았어요.",
+  "errorGeneric": "요청을 처리하지 못했어요: {detail}",
+  "@errorGeneric": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "navSessions": "예배",
+  "navSongs": "곡",
+  "upcomingSessions": "다가오는 예배",
+  "pastSessions": "지난 예배",
+  "noSessionsLeader": "예배를 추가하고 콘티를 준비해 보세요.",
+  "noSessionsMember": "리더가 예배를 추가하면 여기에 보여요.",
+  "addSession": "예배 추가",
+  "editSession": "예배 수정",
+  "deleteSession": "예배 삭제",
+  "deleteSessionConfirm": "'{title}' 예배를 삭제할까요? 콘티도 함께 삭제돼요.",
+  "@deleteSessionConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionTitle": "예배 이름",
+  "sessionTitleHint": "예: 주일 2부 예배",
+  "date": "날짜",
+  "time": "시간",
+  "location": "장소",
+  "theme": "설교 본문이나 주제",
+  "notes": "메모",
+  "repeatWeekly": "매주 같은 시간에 반복",
+  "repeatCount": "{count}주 동안",
+  "@repeatCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setlist": "콘티",
+  "setlistDraft": "초안",
+  "setlistPublished": "공지됨",
+  "songsCount": "{count}곡",
+  "@songsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addSongToSetlist": "곡 추가",
+  "publishSetlist": "콘티 공지하기",
+  "republishSetlist": "바뀐 내용 공지하기",
+  "publishConfirm": "팀에 콘티를 공지할까요? 팀원들에게 알림이 가요.",
+  "republishConfirm": "바뀐 내용을 팀에 알릴까요?",
+  "published": "콘티를 공지했어요",
+  "noChanges": "지난 공지 이후 바뀐 게 없어요.",
+  "setlistEmptyLeader": "곡을 추가해서 콘티를 만들어요.",
+  "setlistEmptyMember": "아직 콘티가 공지되지 않았어요.",
+  "key": "키",
+  "songForm": "송폼",
+  "songFormHint": "예: I-V1-C-V2-C-B-C-O",
+  "sheet": "악보",
+  "noSheet": "악보 없음",
+  "removeFromSetlist": "콘티에서 빼기",
+  "changeAdded": "추가: {songs}",
+  "@changeAdded": {
+    "placeholders": {
+      "songs": {
+        "type": "String"
+      }
+    }
+  },
+  "changeRemoved": "빠짐: {songs}",
+  "@changeRemoved": {
+    "placeholders": {
+      "songs": {
+        "type": "String"
+      }
+    }
+  },
+  "changeKey": "키: {changes}",
+  "@changeKey": {
+    "placeholders": {
+      "changes": {
+        "type": "String"
+      }
+    }
+  },
+  "changeOrder": "순서 변경",
+  "notifSetlistTitle": "{session} 콘티",
+  "@notifSetlistTitle": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      }
+    }
+  },
+  "notifSetlistUpdatedTitle": "{session} 콘티가 바뀌었어요",
+  "@notifSetlistUpdatedTitle": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      }
+    }
+  },
+  "searchSongs": "곡 이름이나 가수로 찾기",
+  "sortTitle": "이름순",
+  "sortRecent": "최근에 한 곡",
+  "sortMost": "많이 한 곡",
+  "sortLongAgo": "오래 안 한 곡",
+  "addSong": "곡 추가",
+  "editSong": "곡 정보 수정",
+  "deleteSong": "곡 삭제",
+  "deleteSongConfirm": "'{title}' 곡을 라이브러리에서 삭제할까요?",
+  "@deleteSongConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "songInUse": "콘티에 쓰인 곡은 삭제할 수 없어요.",
+  "songTitle": "곡 이름",
+  "artist": "가수나 출처",
+  "bpm": "BPM",
+  "timeSignature": "박자",
+  "tags": "태그",
+  "tagsHint": "쉼표로 구분 (예: 감사, 빠른 곡)",
+  "originalLinks": "원곡 링크",
+  "addLink": "링크 추가",
+  "linkUrl": "주소 (https://...)",
+  "linkLabel": "이름 (선택)",
+  "sheets": "악보",
+  "uploadSheet": "악보 올리기",
+  "uploadSheetHint": "PDF나 사진을 고르면 악보 한 개로 저장돼요.",
+  "sheetLabel": "악보 이름 (예: 코드, 드럼)",
+  "uploading": "올리는 중",
+  "pages": "{count}쪽",
+  "@pages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "history": "기록",
+  "playedTimes": "총 {count}회",
+  "@playedTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "neverPlayed": "아직 안 했어요",
+  "lastPlayed": "마지막 {ago}",
+  "@lastPlayed": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "usualKey": "주로 {key}",
+  "@usualKey": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "nextPlanned": "다음 예정 {date}",
+  "@nextPlanned": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "today": "오늘",
+  "daysAgo": "{n}일 전",
+  "@daysAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "weeksAgo": "{n}주 전",
+  "@weeksAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "monthsAgo": "{n}개월 전",
+  "@monthsAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "yearsAgo": "{n}년 전",
+  "@yearsAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "stats": "통계",
+  "topSongs": "많이 한 곡",
+  "notPlayedSince": "{months}개월 넘게 안 한 곡",
+  "@notPlayedSince": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "period3m": "3개월",
+  "period6m": "6개월",
+  "period1y": "1년",
+  "periodAll": "전체",
+  "timesShort": "{count}회",
+  "@timesShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "viewSheet": "악보 보기",
+  "open": "열기",
+  "viewSheets": "악보 보기",
+  "annotate": "필기",
+  "doneAnnotating": "완료",
+  "pen": "펜",
+  "highlighter": "형광펜",
+  "eraser": "지우개",
+  "inkForMe": "나만 보기",
+  "inkForTeam": "팀 공용",
+  "showTeamInk": "팀 필기 보이기",
+  "showMyInk": "내 필기 보이기",
+  "undo": "실행 취소",
+  "redo": "다시 실행",
+  "stageMode": "무대 모드",
+  "copyPreviousInk": "지난 필기 가져오기",
+  "copiedInk": "필기 {count}개를 가져왔어요",
+  "@copiedInk": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noPreviousInk": "같은 악보로 한 지난 예배에 내 필기가 없어요.",
+  "noSheetForSong": "이 곡에는 악보가 없어요",
+  "pageOf": "{current} / {total}",
+  "@pageOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "inkColor": "색",
+  "unsavedInk": "저장 대기 {count}",
+  "@unsavedInk": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rotation": "로테이션",
+  "myServing": "내 섬김",
+  "noServing": "다가오는 섬김이 없어요.",
+  "accept": "수락",
+  "decline": "거절",
+  "declineReason": "못 하는 이유 (선택)",
+  "statusDraft": "초안",
+  "statusPending": "응답 대기",
+  "statusAccepted": "수락",
+  "statusDeclined": "거절",
+  "autoAssign": "자동 배정",
+  "autoAssignDone": "{count}자리를 초안으로 채웠어요. 확인하고 고친 뒤 보내세요.",
+  "@autoAssignDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sendDrafts": "보내기 ({count})",
+  "@sendDrafts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sendDraftsConfirm": "초안 {count}건을 보낼까요? 배정된 사람에게 알림이 가요.",
+  "@sendDraftsConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sent": "{count}건을 보냈어요",
+  "@sent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addPerson": "사람 추가",
+  "replacePerson": "다른 사람으로 바꾸기",
+  "removePerson": "빼기",
+  "needed": "{count}명",
+  "@needed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setNeeded": "필요 인원",
+  "defaultNeeded": "기본 필요 인원",
+  "defaultNeededHint": "새로 만드는 예배에 이 인원이 들어가요.",
+  "unavailableThatDay": "그날 안 돼요",
+  "alreadyServing": "이미 섬김",
+  "requestSwap": "대타 요청",
+  "swapMessage": "남길 말 (선택)",
+  "swapRequested": "같은 파트 팀원들에게 대타를 요청했어요",
+  "cancelSwap": "대타 요청 취소",
+  "swapOpen": "대타 구함",
+  "takeSwap": "대신 섬기기",
+  "swapTaken": "섬김을 넘겨받았어요",
+  "blockouts": "불가능 날짜",
+  "myBlockouts": "내 불가능 날짜",
+  "teamBlockouts": "팀원 불가능 날짜",
+  "addBlockout": "날짜 추가",
+  "blockoutNote": "메모 (선택, 리더만 봐요)",
+  "noBlockouts": "등록된 날짜가 없어요.",
+  "servingPeople": "섬기는 사람",
+  "notifAssignmentRequested": "{session} {part} 섬김 요청",
+  "@notifAssignmentRequested": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAssignmentDeclined": "{name}님이 {session} {part} 섬김을 거절했어요",
+  "@notifAssignmentDeclined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAssignmentRemoved": "{session} {part} 섬김에서 빠졌어요",
+  "@notifAssignmentRemoved": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAssignmentNudge": "{session} {part} 섬김 요청에 아직 답하지 않았어요",
+  "@notifAssignmentNudge": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifSwapRequested": "{name}님이 {session} {part} 대타를 구해요",
+  "@notifSwapRequested": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifSwapFilled": "{name}님이 {session} {part}을(를) 맡았어요",
+  "@notifSwapFilled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifServiceReminder": "내일 {session} {part} 섬김이 있어요",
+  "@notifServiceReminder": {
+    "placeholders": {
+      "session": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "notifRehearsalScheduled": "연습 일정: {when}",
+  "@notifRehearsalScheduled": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "notifRehearsalReminder": "곧 연습이에요: {when}",
+  "@notifRehearsalReminder": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "rehearsals": "연습",
+  "addRehearsal": "연습 추가",
+  "noRehearsals": "잡힌 연습이 없어요.",
+  "rsvpGoing": "참석",
+  "rsvpLate": "지각",
+  "rsvpNotGoing": "불참",
+  "attendanceCheck": "출석 체크",
+  "present": "출석",
+  "absent": "결석",
+  "calendarSubscribe": "캘린더에 구독",
+  "calendarHint": "내 섬김과 연습 일정이 캘린더에 자동으로 들어가요.",
+  "openInCalendar": "캘린더 앱에서 열기",
+  "newCalendarUrl": "주소 새로 만들기",
+  "newCalendarUrlHint": "새로 만들면 예전 주소로는 더 이상 보이지 않아요.",
+  "googleCalendarHint": "구글 캘린더는 웹에서 '다른 캘린더 > URL로 추가'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요."
+}

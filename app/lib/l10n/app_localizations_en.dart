@@ -1,0 +1,955 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appTitle => 'PraiseTeam';
+
+  @override
+  String get loginTagline =>
+      'Setlists, sheets and rotations, shared with your team.';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get devLoginTitle => 'Developer login (local server only)';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get signUp => 'Create account';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get loading => 'Loading';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get welcomeTitle => 'Join your worship team';
+
+  @override
+  String get welcomeBody =>
+      'Got an invite code? Join right away. First one here? Create the team.';
+
+  @override
+  String get joinWithCode => 'Join with an invite code';
+
+  @override
+  String get inviteCode => 'Invite code';
+
+  @override
+  String get inviteCodeHint => '8 characters';
+
+  @override
+  String get join => 'Join';
+
+  @override
+  String get createTeam => 'Create a team';
+
+  @override
+  String get teamName => 'Team name';
+
+  @override
+  String get teamNameHint => 'e.g. Youth worship team';
+
+  @override
+  String get pendingTitle => 'Waiting for approval';
+
+  @override
+  String pendingBody(String team) {
+    return 'You\'ll get in as soon as a leader of $team approves.';
+  }
+
+  @override
+  String get checkAgain => 'Check again';
+
+  @override
+  String get cancelRequest => 'Cancel request';
+
+  @override
+  String get joinAnotherTeam => 'Join another team';
+
+  @override
+  String get navTeam => 'Team';
+
+  @override
+  String get navNotifications => 'Notifications';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get switchTeam => 'Switch team';
+
+  @override
+  String get addTeam => 'Add a team';
+
+  @override
+  String get inviteTitle => 'Invite code';
+
+  @override
+  String get inviteHint => 'Send this code to new members.';
+
+  @override
+  String get newInviteCode => 'Replace code';
+
+  @override
+  String get newInviteCodeConfirm =>
+      'The current code will stop working. Replace it?';
+
+  @override
+  String get joinRequests => 'Join requests';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get reject => 'Decline';
+
+  @override
+  String get members => 'Members';
+
+  @override
+  String membersCount(int count) {
+    return '$count members';
+  }
+
+  @override
+  String get roleOwner => 'Admin';
+
+  @override
+  String get roleLeader => 'Leader';
+
+  @override
+  String get roleMember => 'Member';
+
+  @override
+  String get you => 'You';
+
+  @override
+  String get noPartsYet => 'No part yet';
+
+  @override
+  String get editParts => 'Set parts';
+
+  @override
+  String get changeRole => 'Change role';
+
+  @override
+  String get removeFromTeam => 'Remove from team';
+
+  @override
+  String removeConfirm(String name) {
+    return 'Remove $name from the team?';
+  }
+
+  @override
+  String get parts => 'Parts';
+
+  @override
+  String get manageParts => 'Manage parts';
+
+  @override
+  String get myParts => 'My parts';
+
+  @override
+  String get partsPickerHint => 'Pick every part you can serve in.';
+
+  @override
+  String get addPart => 'Add part';
+
+  @override
+  String get partName => 'Part name';
+
+  @override
+  String get renamePart => 'Rename';
+
+  @override
+  String get hidePart => 'Hide from list';
+
+  @override
+  String get partKindVocal => 'Vocals';
+
+  @override
+  String get partKindInstrument => 'Instruments';
+
+  @override
+  String get partKindTech => 'Sound & media';
+
+  @override
+  String get notificationsEmpty => 'New notifications will show up here.';
+
+  @override
+  String get notifJoinRequestTitle => 'Join request';
+
+  @override
+  String notifJoinRequestBody(String name, String team) {
+    return '$name asked to join $team.';
+  }
+
+  @override
+  String get notifApprovedTitle => 'You\'re in';
+
+  @override
+  String notifApprovedBody(String team) {
+    return 'You joined $team.';
+  }
+
+  @override
+  String get notifFallback => 'New notification';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get displayName => 'Name';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get languageSystem => 'Use device setting';
+
+  @override
+  String get teamSettings => 'Team settings';
+
+  @override
+  String get requireApproval => 'Leaders approve new members';
+
+  @override
+  String get leaveTeam => 'Leave team';
+
+  @override
+  String leaveTeamConfirm(String team) {
+    return 'Leave $team?';
+  }
+
+  @override
+  String get errorInvalidCode =>
+      'That invite code doesn\'t match. Check the 8 characters and try again.';
+
+  @override
+  String get errorNotAllowed => 'Only leaders can do this.';
+
+  @override
+  String get errorLastOwner =>
+      'A team needs at least one admin. Make someone else an admin first.';
+
+  @override
+  String get errorNetwork =>
+      'Can\'t reach the server. Check your internet connection.';
+
+  @override
+  String get errorGoogleNotConfigured => 'Google sign-in isn\'t set up yet.';
+
+  @override
+  String errorGeneric(String detail) {
+    return 'Couldn\'t complete the request: $detail';
+  }
+
+  @override
+  String get navSessions => 'Services';
+
+  @override
+  String get navSongs => 'Songs';
+
+  @override
+  String get upcomingSessions => 'Upcoming';
+
+  @override
+  String get pastSessions => 'Past';
+
+  @override
+  String get noSessionsLeader => 'Add a service and start its setlist.';
+
+  @override
+  String get noSessionsMember =>
+      'Services show up here once a leader adds them.';
+
+  @override
+  String get addSession => 'Add service';
+
+  @override
+  String get editSession => 'Edit service';
+
+  @override
+  String get deleteSession => 'Delete service';
+
+  @override
+  String deleteSessionConfirm(String title) {
+    return 'Delete \'$title\'? Its setlist is deleted too.';
+  }
+
+  @override
+  String get sessionTitle => 'Service name';
+
+  @override
+  String get sessionTitleHint => 'e.g. Sunday 2nd service';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get location => 'Place';
+
+  @override
+  String get theme => 'Sermon passage or theme';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get repeatWeekly => 'Repeat weekly at this time';
+
+  @override
+  String repeatCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'for $count weeks',
+      one: 'for 1 week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get setlist => 'Setlist';
+
+  @override
+  String get setlistDraft => 'Draft';
+
+  @override
+  String get setlistPublished => 'Announced';
+
+  @override
+  String songsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count songs',
+      one: '1 song',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addSongToSetlist => 'Add song';
+
+  @override
+  String get publishSetlist => 'Announce setlist';
+
+  @override
+  String get republishSetlist => 'Announce changes';
+
+  @override
+  String get publishConfirm =>
+      'Announce this setlist? Your team gets notified.';
+
+  @override
+  String get republishConfirm => 'Tell the team what changed?';
+
+  @override
+  String get published => 'Setlist announced';
+
+  @override
+  String get noChanges => 'Nothing changed since the last announcement.';
+
+  @override
+  String get setlistEmptyLeader => 'Add songs to build the setlist.';
+
+  @override
+  String get setlistEmptyMember => 'The setlist hasn\'t been announced yet.';
+
+  @override
+  String get key => 'Key';
+
+  @override
+  String get songForm => 'Song form';
+
+  @override
+  String get songFormHint => 'e.g. I-V1-C-V2-C-B-C-O';
+
+  @override
+  String get sheet => 'Sheet';
+
+  @override
+  String get noSheet => 'No sheet';
+
+  @override
+  String get removeFromSetlist => 'Remove from setlist';
+
+  @override
+  String changeAdded(String songs) {
+    return 'Added: $songs';
+  }
+
+  @override
+  String changeRemoved(String songs) {
+    return 'Removed: $songs';
+  }
+
+  @override
+  String changeKey(String changes) {
+    return 'Key: $changes';
+  }
+
+  @override
+  String get changeOrder => 'New order';
+
+  @override
+  String notifSetlistTitle(String session) {
+    return 'Setlist: $session';
+  }
+
+  @override
+  String notifSetlistUpdatedTitle(String session) {
+    return 'Setlist changed: $session';
+  }
+
+  @override
+  String get searchSongs => 'Search by title or artist';
+
+  @override
+  String get sortTitle => 'Title';
+
+  @override
+  String get sortRecent => 'Recently played';
+
+  @override
+  String get sortMost => 'Most played';
+
+  @override
+  String get sortLongAgo => 'Not played lately';
+
+  @override
+  String get addSong => 'Add song';
+
+  @override
+  String get editSong => 'Edit song';
+
+  @override
+  String get deleteSong => 'Delete song';
+
+  @override
+  String deleteSongConfirm(String title) {
+    return 'Delete \'$title\' from the library?';
+  }
+
+  @override
+  String get songInUse => 'Songs used in a setlist can\'t be deleted.';
+
+  @override
+  String get songTitle => 'Title';
+
+  @override
+  String get artist => 'Artist or source';
+
+  @override
+  String get bpm => 'BPM';
+
+  @override
+  String get timeSignature => 'Time signature';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get tagsHint => 'Comma separated (e.g. thanksgiving, upbeat)';
+
+  @override
+  String get originalLinks => 'Original recordings';
+
+  @override
+  String get addLink => 'Add link';
+
+  @override
+  String get linkUrl => 'URL (https://...)';
+
+  @override
+  String get linkLabel => 'Label (optional)';
+
+  @override
+  String get sheets => 'Sheets';
+
+  @override
+  String get uploadSheet => 'Upload sheet';
+
+  @override
+  String get uploadSheetHint =>
+      'Pick a PDF or photos; they\'re saved as one sheet.';
+
+  @override
+  String get sheetLabel => 'Label (e.g. chords, drums)';
+
+  @override
+  String get uploading => 'Uploading';
+
+  @override
+  String pages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get history => 'History';
+
+  @override
+  String playedTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Played $count times',
+      one: 'Played once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get neverPlayed => 'Not played yet';
+
+  @override
+  String lastPlayed(String ago) {
+    return 'Last $ago';
+  }
+
+  @override
+  String usualKey(String key) {
+    return 'Usually $key';
+  }
+
+  @override
+  String nextPlanned(String date) {
+    return 'Next $date';
+  }
+
+  @override
+  String get today => 'today';
+
+  @override
+  String daysAgo(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n days ago',
+      one: 'yesterday',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeksAgo(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n weeks ago',
+      one: '1 week ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String monthsAgo(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n months ago',
+      one: '1 month ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yearsAgo(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n years ago',
+      one: '1 year ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get stats => 'Statistics';
+
+  @override
+  String get topSongs => 'Most played';
+
+  @override
+  String notPlayedSince(int months) {
+    return 'Not played in $months+ months';
+  }
+
+  @override
+  String get period3m => '3 months';
+
+  @override
+  String get period6m => '6 months';
+
+  @override
+  String get period1y => '1 year';
+
+  @override
+  String get periodAll => 'All time';
+
+  @override
+  String timesShort(int count) {
+    return '$count×';
+  }
+
+  @override
+  String get viewSheet => 'Open sheet';
+
+  @override
+  String get open => 'Open';
+
+  @override
+  String get viewSheets => 'Open sheets';
+
+  @override
+  String get annotate => 'Annotate';
+
+  @override
+  String get doneAnnotating => 'Done';
+
+  @override
+  String get pen => 'Pen';
+
+  @override
+  String get highlighter => 'Highlighter';
+
+  @override
+  String get eraser => 'Eraser';
+
+  @override
+  String get inkForMe => 'Only me';
+
+  @override
+  String get inkForTeam => 'Whole team';
+
+  @override
+  String get showTeamInk => 'Show team notes';
+
+  @override
+  String get showMyInk => 'Show my notes';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get redo => 'Redo';
+
+  @override
+  String get stageMode => 'Stage mode';
+
+  @override
+  String get copyPreviousInk => 'Bring notes from last time';
+
+  @override
+  String copiedInk(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Brought $count notes',
+      one: 'Brought 1 note',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noPreviousInk =>
+      'No notes of yours on this sheet from an earlier service.';
+
+  @override
+  String get noSheetForSong => 'No sheet for this song';
+
+  @override
+  String pageOf(int current, int total) {
+    return '$current / $total';
+  }
+
+  @override
+  String get inkColor => 'Color';
+
+  @override
+  String unsavedInk(int count) {
+    return '$count waiting to save';
+  }
+
+  @override
+  String get rotation => 'Rotation';
+
+  @override
+  String get myServing => 'I\'m serving';
+
+  @override
+  String get noServing => 'Nothing coming up for you.';
+
+  @override
+  String get accept => 'Accept';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get declineReason => 'Reason (optional)';
+
+  @override
+  String get statusDraft => 'Draft';
+
+  @override
+  String get statusPending => 'Waiting';
+
+  @override
+  String get statusAccepted => 'Accepted';
+
+  @override
+  String get statusDeclined => 'Declined';
+
+  @override
+  String get autoAssign => 'Auto-assign';
+
+  @override
+  String autoAssignDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Filled $count places as drafts. Review, then send.',
+      one: 'Filled 1 place as a draft. Review, then send.',
+      zero: 'Nothing to fill',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sendDrafts(int count) {
+    return 'Send ($count)';
+  }
+
+  @override
+  String sendDraftsConfirm(int count) {
+    return 'Send $count drafts? Each person gets a request.';
+  }
+
+  @override
+  String sent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sent $count requests',
+      one: 'Sent 1 request',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addPerson => 'Add person';
+
+  @override
+  String get replacePerson => 'Replace';
+
+  @override
+  String get removePerson => 'Remove';
+
+  @override
+  String needed(int count) {
+    return '$count needed';
+  }
+
+  @override
+  String get setNeeded => 'People needed';
+
+  @override
+  String get defaultNeeded => 'Default people per part';
+
+  @override
+  String get defaultNeededHint => 'New services start with these numbers.';
+
+  @override
+  String get unavailableThatDay => 'Unavailable that day';
+
+  @override
+  String get alreadyServing => 'Already serving';
+
+  @override
+  String get requestSwap => 'Ask for a sub';
+
+  @override
+  String get swapMessage => 'Message (optional)';
+
+  @override
+  String get swapRequested => 'Asked teammates in this part';
+
+  @override
+  String get cancelSwap => 'Cancel sub request';
+
+  @override
+  String get swapOpen => 'Needs a sub';
+
+  @override
+  String get takeSwap => 'I\'ll take it';
+
+  @override
+  String get swapTaken => 'It\'s yours now';
+
+  @override
+  String get blockouts => 'Unavailable dates';
+
+  @override
+  String get myBlockouts => 'My unavailable dates';
+
+  @override
+  String get teamBlockouts => 'Team\'s unavailable dates';
+
+  @override
+  String get addBlockout => 'Add dates';
+
+  @override
+  String get blockoutNote => 'Note (optional, leaders only)';
+
+  @override
+  String get noBlockouts => 'No dates added.';
+
+  @override
+  String get servingPeople => 'Serving';
+
+  @override
+  String notifAssignmentRequested(String session, String part) {
+    return '$session: can you serve on $part?';
+  }
+
+  @override
+  String notifAssignmentDeclined(String name, String session, String part) {
+    return '$name declined $part for $session';
+  }
+
+  @override
+  String notifAssignmentRemoved(String session, String part) {
+    return 'You\'re off $part for $session';
+  }
+
+  @override
+  String notifAssignmentNudge(String session, String part) {
+    return 'Still waiting on your answer: $part for $session';
+  }
+
+  @override
+  String notifSwapRequested(String name, String session, String part) {
+    return '$name needs a sub: $part for $session';
+  }
+
+  @override
+  String notifSwapFilled(String name, String session, String part) {
+    return '$name took $part for $session';
+  }
+
+  @override
+  String notifServiceReminder(String session, String part) {
+    return 'Tomorrow: $part for $session';
+  }
+
+  @override
+  String notifRehearsalScheduled(String when) {
+    return 'Rehearsal: $when';
+  }
+
+  @override
+  String notifRehearsalReminder(String when) {
+    return 'Rehearsal soon: $when';
+  }
+
+  @override
+  String get rehearsals => 'Rehearsals';
+
+  @override
+  String get addRehearsal => 'Add rehearsal';
+
+  @override
+  String get noRehearsals => 'No rehearsal scheduled.';
+
+  @override
+  String get rsvpGoing => 'Going';
+
+  @override
+  String get rsvpLate => 'Late';
+
+  @override
+  String get rsvpNotGoing => 'Can\'t come';
+
+  @override
+  String get attendanceCheck => 'Attendance';
+
+  @override
+  String get present => 'Present';
+
+  @override
+  String get absent => 'Absent';
+
+  @override
+  String get calendarSubscribe => 'Subscribe in your calendar';
+
+  @override
+  String get calendarHint =>
+      'Your services and rehearsals show up in your calendar.';
+
+  @override
+  String get openInCalendar => 'Open in calendar app';
+
+  @override
+  String get newCalendarUrl => 'Make a new address';
+
+  @override
+  String get newCalendarUrlHint => 'The old address stops working.';
+
+  @override
+  String get googleCalendarHint =>
+      'Google Calendar: on the web, Other calendars > From URL. Updates can take a few hours.';
+}

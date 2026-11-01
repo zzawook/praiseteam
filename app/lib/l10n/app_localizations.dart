@@ -1,0 +1,1688 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+import 'app_localizations_ko.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('ko'),
+  ];
+
+  /// No description provided for @appTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'PraiseTeam'**
+  String get appTitle;
+
+  /// No description provided for @loginTagline.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티, 악보, 로테이션을 팀이 함께 봐요.'**
+  String get loginTagline;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In ko, this message translates to:
+  /// **'Google로 계속하기'**
+  String get continueWithGoogle;
+
+  /// No description provided for @devLoginTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'개발용 로그인 (로컬 서버 전용)'**
+  String get devLoginTitle;
+
+  /// No description provided for @email.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In ko, this message translates to:
+  /// **'비밀번호'**
+  String get password;
+
+  /// No description provided for @signIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인'**
+  String get signIn;
+
+  /// No description provided for @signUp.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 만들기'**
+  String get signUp;
+
+  /// No description provided for @signOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그아웃'**
+  String get signOut;
+
+  /// No description provided for @loading.
+  ///
+  /// In ko, this message translates to:
+  /// **'불러오는 중'**
+  String get loading;
+
+  /// No description provided for @retry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get retry;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get save;
+
+  /// No description provided for @create.
+  ///
+  /// In ko, this message translates to:
+  /// **'만들기'**
+  String get create;
+
+  /// No description provided for @delete.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get delete;
+
+  /// No description provided for @close.
+  ///
+  /// In ko, this message translates to:
+  /// **'닫기'**
+  String get close;
+
+  /// No description provided for @copy.
+  ///
+  /// In ko, this message translates to:
+  /// **'복사'**
+  String get copy;
+
+  /// No description provided for @copied.
+  ///
+  /// In ko, this message translates to:
+  /// **'복사했어요'**
+  String get copied;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'찬양팀에 들어가기'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 받았다면 바로 가입하고, 처음이라면 팀을 만들어요.'**
+  String get welcomeBody;
+
+  /// No description provided for @joinWithCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드로 가입'**
+  String get joinWithCode;
+
+  /// No description provided for @inviteCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드'**
+  String get inviteCode;
+
+  /// No description provided for @inviteCodeHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'8자리 코드'**
+  String get inviteCodeHint;
+
+  /// No description provided for @join.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입하기'**
+  String get join;
+
+  /// No description provided for @createTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 팀 만들기'**
+  String get createTeam;
+
+  /// No description provided for @teamName.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 이름'**
+  String get teamName;
+
+  /// No description provided for @teamNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 청년부 찬양팀'**
+  String get teamNameHint;
+
+  /// No description provided for @pendingTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'승인을 기다리고 있어요'**
+  String get pendingTitle;
+
+  /// No description provided for @pendingBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{team} 리더가 승인하면 바로 들어갈 수 있어요.'**
+  String pendingBody(String team);
+
+  /// No description provided for @checkAgain.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 확인'**
+  String get checkAgain;
+
+  /// No description provided for @cancelRequest.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 요청 취소'**
+  String get cancelRequest;
+
+  /// No description provided for @joinAnotherTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'다른 팀에 가입'**
+  String get joinAnotherTeam;
+
+  /// No description provided for @navTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀'**
+  String get navTeam;
+
+  /// No description provided for @navNotifications.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get navNotifications;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정'**
+  String get navSettings;
+
+  /// No description provided for @switchTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 바꾸기'**
+  String get switchTeam;
+
+  /// No description provided for @addTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 추가'**
+  String get addTeam;
+
+  /// No description provided for @inviteTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드'**
+  String get inviteTitle;
+
+  /// No description provided for @inviteHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 코드를 새 팀원에게 보내주세요.'**
+  String get inviteHint;
+
+  /// No description provided for @newInviteCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 코드로 바꾸기'**
+  String get newInviteCode;
+
+  /// No description provided for @newInviteCodeConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'지금 코드는 더 이상 쓸 수 없게 돼요. 새 코드로 바꿀까요?'**
+  String get newInviteCodeConfirm;
+
+  /// No description provided for @joinRequests.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 요청'**
+  String get joinRequests;
+
+  /// No description provided for @approve.
+  ///
+  /// In ko, this message translates to:
+  /// **'승인'**
+  String get approve;
+
+  /// No description provided for @reject.
+  ///
+  /// In ko, this message translates to:
+  /// **'거절'**
+  String get reject;
+
+  /// No description provided for @members.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버'**
+  String get members;
+
+  /// No description provided for @membersCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버 {count}명'**
+  String membersCount(int count);
+
+  /// No description provided for @roleOwner.
+  ///
+  /// In ko, this message translates to:
+  /// **'관리자'**
+  String get roleOwner;
+
+  /// No description provided for @roleLeader.
+  ///
+  /// In ko, this message translates to:
+  /// **'리더'**
+  String get roleLeader;
+
+  /// No description provided for @roleMember.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버'**
+  String get roleMember;
+
+  /// No description provided for @you.
+  ///
+  /// In ko, this message translates to:
+  /// **'나'**
+  String get you;
+
+  /// No description provided for @noPartsYet.
+  ///
+  /// In ko, this message translates to:
+  /// **'파트 미정'**
+  String get noPartsYet;
+
+  /// No description provided for @editParts.
+  ///
+  /// In ko, this message translates to:
+  /// **'파트 정하기'**
+  String get editParts;
+
+  /// No description provided for @changeRole.
+  ///
+  /// In ko, this message translates to:
+  /// **'역할 바꾸기'**
+  String get changeRole;
+
+  /// No description provided for @removeFromTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀에서 내보내기'**
+  String get removeFromTeam;
+
+  /// No description provided for @removeConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님을 팀에서 내보낼까요?'**
+  String removeConfirm(String name);
+
+  /// No description provided for @parts.
+  ///
+  /// In ko, this message translates to:
+  /// **'파트'**
+  String get parts;
+
+  /// No description provided for @manageParts.
+  ///
+  /// In ko, this message translates to:
+  /// **'파트 관리'**
+  String get manageParts;
+
+  /// No description provided for @myParts.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 파트'**
+  String get myParts;
+
+  /// No description provided for @partsPickerHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬길 수 있는 파트를 모두 골라주세요.'**
+  String get partsPickerHint;
+
+  /// No description provided for @addPart.
+  ///
+  /// In ko, this message translates to:
+  /// **'파트 추가'**
+  String get addPart;
+
+  /// No description provided for @partName.
+  ///
+  /// In ko, this message translates to:
+  /// **'파트 이름'**
+  String get partName;
+
+  /// No description provided for @renamePart.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름 바꾸기'**
+  String get renamePart;
+
+  /// No description provided for @hidePart.
+  ///
+  /// In ko, this message translates to:
+  /// **'목록에서 숨기기'**
+  String get hidePart;
+
+  /// No description provided for @partKindVocal.
+  ///
+  /// In ko, this message translates to:
+  /// **'보컬'**
+  String get partKindVocal;
+
+  /// No description provided for @partKindInstrument.
+  ///
+  /// In ko, this message translates to:
+  /// **'악기'**
+  String get partKindInstrument;
+
+  /// No description provided for @partKindTech.
+  ///
+  /// In ko, this message translates to:
+  /// **'음향·영상'**
+  String get partKindTech;
+
+  /// No description provided for @notificationsEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 알림이 오면 여기에 보여요.'**
+  String get notificationsEmpty;
+
+  /// No description provided for @notifJoinRequestTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 요청'**
+  String get notifJoinRequestTitle;
+
+  /// No description provided for @notifJoinRequestBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님이 {team}에 가입을 요청했어요.'**
+  String notifJoinRequestBody(String name, String team);
+
+  /// No description provided for @notifApprovedTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 승인'**
+  String get notifApprovedTitle;
+
+  /// No description provided for @notifApprovedBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{team}에 가입됐어요.'**
+  String notifApprovedBody(String team);
+
+  /// No description provided for @notifFallback.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 알림'**
+  String get notifFallback;
+
+  /// No description provided for @profile.
+  ///
+  /// In ko, this message translates to:
+  /// **'프로필'**
+  String get profile;
+
+  /// No description provided for @displayName.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름'**
+  String get displayName;
+
+  /// No description provided for @language.
+  ///
+  /// In ko, this message translates to:
+  /// **'언어'**
+  String get language;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In ko, this message translates to:
+  /// **'기기 설정 따르기'**
+  String get languageSystem;
+
+  /// No description provided for @teamSettings.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 설정'**
+  String get teamSettings;
+
+  /// No description provided for @requireApproval.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입할 때 리더 승인 받기'**
+  String get requireApproval;
+
+  /// No description provided for @leaveTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 나가기'**
+  String get leaveTeam;
+
+  /// No description provided for @leaveTeamConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{team}에서 나갈까요?'**
+  String leaveTeamConfirm(String team);
+
+  /// No description provided for @errorInvalidCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드가 맞지 않아요. 대소문자 상관없이 8자리를 다시 확인해 주세요.'**
+  String get errorInvalidCode;
+
+  /// No description provided for @errorNotAllowed.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 작업은 리더만 할 수 있어요.'**
+  String get errorNotAllowed;
+
+  /// No description provided for @errorLastOwner.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀에는 관리자가 한 명 이상 있어야 해요. 다른 사람을 먼저 관리자로 정해주세요.'**
+  String get errorLastOwner;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In ko, this message translates to:
+  /// **'서버에 연결할 수 없어요. 인터넷 연결을 확인해 주세요.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorGoogleNotConfigured.
+  ///
+  /// In ko, this message translates to:
+  /// **'Google 로그인이 아직 설정되지 않았어요.'**
+  String get errorGoogleNotConfigured;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In ko, this message translates to:
+  /// **'요청을 처리하지 못했어요: {detail}'**
+  String errorGeneric(String detail);
+
+  /// No description provided for @navSessions.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배'**
+  String get navSessions;
+
+  /// No description provided for @navSongs.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡'**
+  String get navSongs;
+
+  /// No description provided for @upcomingSessions.
+  ///
+  /// In ko, this message translates to:
+  /// **'다가오는 예배'**
+  String get upcomingSessions;
+
+  /// No description provided for @pastSessions.
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 예배'**
+  String get pastSessions;
+
+  /// No description provided for @noSessionsLeader.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배를 추가하고 콘티를 준비해 보세요.'**
+  String get noSessionsLeader;
+
+  /// No description provided for @noSessionsMember.
+  ///
+  /// In ko, this message translates to:
+  /// **'리더가 예배를 추가하면 여기에 보여요.'**
+  String get noSessionsMember;
+
+  /// No description provided for @addSession.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배 추가'**
+  String get addSession;
+
+  /// No description provided for @editSession.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배 수정'**
+  String get editSession;
+
+  /// No description provided for @deleteSession.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배 삭제'**
+  String get deleteSession;
+
+  /// No description provided for @deleteSessionConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'\'{title}\' 예배를 삭제할까요? 콘티도 함께 삭제돼요.'**
+  String deleteSessionConfirm(String title);
+
+  /// No description provided for @sessionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배 이름'**
+  String get sessionTitle;
+
+  /// No description provided for @sessionTitleHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 주일 2부 예배'**
+  String get sessionTitleHint;
+
+  /// No description provided for @date.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜'**
+  String get date;
+
+  /// No description provided for @time.
+  ///
+  /// In ko, this message translates to:
+  /// **'시간'**
+  String get time;
+
+  /// No description provided for @location.
+  ///
+  /// In ko, this message translates to:
+  /// **'장소'**
+  String get location;
+
+  /// No description provided for @theme.
+  ///
+  /// In ko, this message translates to:
+  /// **'설교 본문이나 주제'**
+  String get theme;
+
+  /// No description provided for @notes.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모'**
+  String get notes;
+
+  /// No description provided for @repeatWeekly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주 같은 시간에 반복'**
+  String get repeatWeekly;
+
+  /// No description provided for @repeatCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}주 동안'**
+  String repeatCount(int count);
+
+  /// No description provided for @setlist.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티'**
+  String get setlist;
+
+  /// No description provided for @setlistDraft.
+  ///
+  /// In ko, this message translates to:
+  /// **'초안'**
+  String get setlistDraft;
+
+  /// No description provided for @setlistPublished.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지됨'**
+  String get setlistPublished;
+
+  /// No description provided for @songsCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}곡'**
+  String songsCount(int count);
+
+  /// No description provided for @addSongToSetlist.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 추가'**
+  String get addSongToSetlist;
+
+  /// No description provided for @publishSetlist.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 공지하기'**
+  String get publishSetlist;
+
+  /// No description provided for @republishSetlist.
+  ///
+  /// In ko, this message translates to:
+  /// **'바뀐 내용 공지하기'**
+  String get republishSetlist;
+
+  /// No description provided for @publishConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀에 콘티를 공지할까요? 팀원들에게 알림이 가요.'**
+  String get publishConfirm;
+
+  /// No description provided for @republishConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'바뀐 내용을 팀에 알릴까요?'**
+  String get republishConfirm;
+
+  /// No description provided for @published.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티를 공지했어요'**
+  String get published;
+
+  /// No description provided for @noChanges.
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 공지 이후 바뀐 게 없어요.'**
+  String get noChanges;
+
+  /// No description provided for @setlistEmptyLeader.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡을 추가해서 콘티를 만들어요.'**
+  String get setlistEmptyLeader;
+
+  /// No description provided for @setlistEmptyMember.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 콘티가 공지되지 않았어요.'**
+  String get setlistEmptyMember;
+
+  /// No description provided for @key.
+  ///
+  /// In ko, this message translates to:
+  /// **'키'**
+  String get key;
+
+  /// No description provided for @songForm.
+  ///
+  /// In ko, this message translates to:
+  /// **'송폼'**
+  String get songForm;
+
+  /// No description provided for @songFormHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: I-V1-C-V2-C-B-C-O'**
+  String get songFormHint;
+
+  /// No description provided for @sheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보'**
+  String get sheet;
+
+  /// No description provided for @noSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 없음'**
+  String get noSheet;
+
+  /// No description provided for @removeFromSetlist.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티에서 빼기'**
+  String get removeFromSetlist;
+
+  /// No description provided for @changeAdded.
+  ///
+  /// In ko, this message translates to:
+  /// **'추가: {songs}'**
+  String changeAdded(String songs);
+
+  /// No description provided for @changeRemoved.
+  ///
+  /// In ko, this message translates to:
+  /// **'빠짐: {songs}'**
+  String changeRemoved(String songs);
+
+  /// No description provided for @changeKey.
+  ///
+  /// In ko, this message translates to:
+  /// **'키: {changes}'**
+  String changeKey(String changes);
+
+  /// No description provided for @changeOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'순서 변경'**
+  String get changeOrder;
+
+  /// No description provided for @notifSetlistTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'{session} 콘티'**
+  String notifSetlistTitle(String session);
+
+  /// No description provided for @notifSetlistUpdatedTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'{session} 콘티가 바뀌었어요'**
+  String notifSetlistUpdatedTitle(String session);
+
+  /// No description provided for @searchSongs.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 이름이나 가수로 찾기'**
+  String get searchSongs;
+
+  /// No description provided for @sortTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름순'**
+  String get sortTitle;
+
+  /// No description provided for @sortRecent.
+  ///
+  /// In ko, this message translates to:
+  /// **'최근에 한 곡'**
+  String get sortRecent;
+
+  /// No description provided for @sortMost.
+  ///
+  /// In ko, this message translates to:
+  /// **'많이 한 곡'**
+  String get sortMost;
+
+  /// No description provided for @sortLongAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'오래 안 한 곡'**
+  String get sortLongAgo;
+
+  /// No description provided for @addSong.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 추가'**
+  String get addSong;
+
+  /// No description provided for @editSong.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 정보 수정'**
+  String get editSong;
+
+  /// No description provided for @deleteSong.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 삭제'**
+  String get deleteSong;
+
+  /// No description provided for @deleteSongConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'\'{title}\' 곡을 라이브러리에서 삭제할까요?'**
+  String deleteSongConfirm(String title);
+
+  /// No description provided for @songInUse.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티에 쓰인 곡은 삭제할 수 없어요.'**
+  String get songInUse;
+
+  /// No description provided for @songTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 이름'**
+  String get songTitle;
+
+  /// No description provided for @artist.
+  ///
+  /// In ko, this message translates to:
+  /// **'가수나 출처'**
+  String get artist;
+
+  /// No description provided for @bpm.
+  ///
+  /// In ko, this message translates to:
+  /// **'BPM'**
+  String get bpm;
+
+  /// No description provided for @timeSignature.
+  ///
+  /// In ko, this message translates to:
+  /// **'박자'**
+  String get timeSignature;
+
+  /// No description provided for @tags.
+  ///
+  /// In ko, this message translates to:
+  /// **'태그'**
+  String get tags;
+
+  /// No description provided for @tagsHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'쉼표로 구분 (예: 감사, 빠른 곡)'**
+  String get tagsHint;
+
+  /// No description provided for @originalLinks.
+  ///
+  /// In ko, this message translates to:
+  /// **'원곡 링크'**
+  String get originalLinks;
+
+  /// No description provided for @addLink.
+  ///
+  /// In ko, this message translates to:
+  /// **'링크 추가'**
+  String get addLink;
+
+  /// No description provided for @linkUrl.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소 (https://...)'**
+  String get linkUrl;
+
+  /// No description provided for @linkLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름 (선택)'**
+  String get linkLabel;
+
+  /// No description provided for @sheets.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보'**
+  String get sheets;
+
+  /// No description provided for @uploadSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 올리기'**
+  String get uploadSheet;
+
+  /// No description provided for @uploadSheetHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'PDF나 사진을 고르면 악보 한 개로 저장돼요.'**
+  String get uploadSheetHint;
+
+  /// No description provided for @sheetLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 이름 (예: 코드, 드럼)'**
+  String get sheetLabel;
+
+  /// No description provided for @uploading.
+  ///
+  /// In ko, this message translates to:
+  /// **'올리는 중'**
+  String get uploading;
+
+  /// No description provided for @pages.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}쪽'**
+  String pages(int count);
+
+  /// No description provided for @history.
+  ///
+  /// In ko, this message translates to:
+  /// **'기록'**
+  String get history;
+
+  /// No description provided for @playedTimes.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 {count}회'**
+  String playedTimes(int count);
+
+  /// No description provided for @neverPlayed.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 안 했어요'**
+  String get neverPlayed;
+
+  /// No description provided for @lastPlayed.
+  ///
+  /// In ko, this message translates to:
+  /// **'마지막 {ago}'**
+  String lastPlayed(String ago);
+
+  /// No description provided for @usualKey.
+  ///
+  /// In ko, this message translates to:
+  /// **'주로 {key}'**
+  String usualKey(String key);
+
+  /// No description provided for @nextPlanned.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 예정 {date}'**
+  String nextPlanned(String date);
+
+  /// No description provided for @today.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘'**
+  String get today;
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{n}일 전'**
+  String daysAgo(int n);
+
+  /// No description provided for @weeksAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{n}주 전'**
+  String weeksAgo(int n);
+
+  /// No description provided for @monthsAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{n}개월 전'**
+  String monthsAgo(int n);
+
+  /// No description provided for @yearsAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{n}년 전'**
+  String yearsAgo(int n);
+
+  /// No description provided for @stats.
+  ///
+  /// In ko, this message translates to:
+  /// **'통계'**
+  String get stats;
+
+  /// No description provided for @topSongs.
+  ///
+  /// In ko, this message translates to:
+  /// **'많이 한 곡'**
+  String get topSongs;
+
+  /// No description provided for @notPlayedSince.
+  ///
+  /// In ko, this message translates to:
+  /// **'{months}개월 넘게 안 한 곡'**
+  String notPlayedSince(int months);
+
+  /// No description provided for @period3m.
+  ///
+  /// In ko, this message translates to:
+  /// **'3개월'**
+  String get period3m;
+
+  /// No description provided for @period6m.
+  ///
+  /// In ko, this message translates to:
+  /// **'6개월'**
+  String get period6m;
+
+  /// No description provided for @period1y.
+  ///
+  /// In ko, this message translates to:
+  /// **'1년'**
+  String get period1y;
+
+  /// No description provided for @periodAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체'**
+  String get periodAll;
+
+  /// No description provided for @timesShort.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}회'**
+  String timesShort(int count);
+
+  /// No description provided for @viewSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 보기'**
+  String get viewSheet;
+
+  /// No description provided for @open.
+  ///
+  /// In ko, this message translates to:
+  /// **'열기'**
+  String get open;
+
+  /// No description provided for @viewSheets.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 보기'**
+  String get viewSheets;
+
+  /// No description provided for @annotate.
+  ///
+  /// In ko, this message translates to:
+  /// **'필기'**
+  String get annotate;
+
+  /// No description provided for @doneAnnotating.
+  ///
+  /// In ko, this message translates to:
+  /// **'완료'**
+  String get doneAnnotating;
+
+  /// No description provided for @pen.
+  ///
+  /// In ko, this message translates to:
+  /// **'펜'**
+  String get pen;
+
+  /// No description provided for @highlighter.
+  ///
+  /// In ko, this message translates to:
+  /// **'형광펜'**
+  String get highlighter;
+
+  /// No description provided for @eraser.
+  ///
+  /// In ko, this message translates to:
+  /// **'지우개'**
+  String get eraser;
+
+  /// No description provided for @inkForMe.
+  ///
+  /// In ko, this message translates to:
+  /// **'나만 보기'**
+  String get inkForMe;
+
+  /// No description provided for @inkForTeam.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 공용'**
+  String get inkForTeam;
+
+  /// No description provided for @showTeamInk.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 필기 보이기'**
+  String get showTeamInk;
+
+  /// No description provided for @showMyInk.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 필기 보이기'**
+  String get showMyInk;
+
+  /// No description provided for @undo.
+  ///
+  /// In ko, this message translates to:
+  /// **'실행 취소'**
+  String get undo;
+
+  /// No description provided for @redo.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 실행'**
+  String get redo;
+
+  /// No description provided for @stageMode.
+  ///
+  /// In ko, this message translates to:
+  /// **'무대 모드'**
+  String get stageMode;
+
+  /// No description provided for @copyPreviousInk.
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 필기 가져오기'**
+  String get copyPreviousInk;
+
+  /// No description provided for @copiedInk.
+  ///
+  /// In ko, this message translates to:
+  /// **'필기 {count}개를 가져왔어요'**
+  String copiedInk(int count);
+
+  /// No description provided for @noPreviousInk.
+  ///
+  /// In ko, this message translates to:
+  /// **'같은 악보로 한 지난 예배에 내 필기가 없어요.'**
+  String get noPreviousInk;
+
+  /// No description provided for @noSheetForSong.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 곡에는 악보가 없어요'**
+  String get noSheetForSong;
+
+  /// No description provided for @pageOf.
+  ///
+  /// In ko, this message translates to:
+  /// **'{current} / {total}'**
+  String pageOf(int current, int total);
+
+  /// No description provided for @inkColor.
+  ///
+  /// In ko, this message translates to:
+  /// **'색'**
+  String get inkColor;
+
+  /// No description provided for @unsavedInk.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장 대기 {count}'**
+  String unsavedInk(int count);
+
+  /// No description provided for @rotation.
+  ///
+  /// In ko, this message translates to:
+  /// **'로테이션'**
+  String get rotation;
+
+  /// No description provided for @myServing.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 섬김'**
+  String get myServing;
+
+  /// No description provided for @noServing.
+  ///
+  /// In ko, this message translates to:
+  /// **'다가오는 섬김이 없어요.'**
+  String get noServing;
+
+  /// No description provided for @accept.
+  ///
+  /// In ko, this message translates to:
+  /// **'수락'**
+  String get accept;
+
+  /// No description provided for @decline.
+  ///
+  /// In ko, this message translates to:
+  /// **'거절'**
+  String get decline;
+
+  /// No description provided for @declineReason.
+  ///
+  /// In ko, this message translates to:
+  /// **'못 하는 이유 (선택)'**
+  String get declineReason;
+
+  /// No description provided for @statusDraft.
+  ///
+  /// In ko, this message translates to:
+  /// **'초안'**
+  String get statusDraft;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'응답 대기'**
+  String get statusPending;
+
+  /// No description provided for @statusAccepted.
+  ///
+  /// In ko, this message translates to:
+  /// **'수락'**
+  String get statusAccepted;
+
+  /// No description provided for @statusDeclined.
+  ///
+  /// In ko, this message translates to:
+  /// **'거절'**
+  String get statusDeclined;
+
+  /// No description provided for @autoAssign.
+  ///
+  /// In ko, this message translates to:
+  /// **'자동 배정'**
+  String get autoAssign;
+
+  /// No description provided for @autoAssignDone.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}자리를 초안으로 채웠어요. 확인하고 고친 뒤 보내세요.'**
+  String autoAssignDone(int count);
+
+  /// No description provided for @sendDrafts.
+  ///
+  /// In ko, this message translates to:
+  /// **'보내기 ({count})'**
+  String sendDrafts(int count);
+
+  /// No description provided for @sendDraftsConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'초안 {count}건을 보낼까요? 배정된 사람에게 알림이 가요.'**
+  String sendDraftsConfirm(int count);
+
+  /// No description provided for @sent.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}건을 보냈어요'**
+  String sent(int count);
+
+  /// No description provided for @addPerson.
+  ///
+  /// In ko, this message translates to:
+  /// **'사람 추가'**
+  String get addPerson;
+
+  /// No description provided for @replacePerson.
+  ///
+  /// In ko, this message translates to:
+  /// **'다른 사람으로 바꾸기'**
+  String get replacePerson;
+
+  /// No description provided for @removePerson.
+  ///
+  /// In ko, this message translates to:
+  /// **'빼기'**
+  String get removePerson;
+
+  /// No description provided for @needed.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명'**
+  String needed(int count);
+
+  /// No description provided for @setNeeded.
+  ///
+  /// In ko, this message translates to:
+  /// **'필요 인원'**
+  String get setNeeded;
+
+  /// No description provided for @defaultNeeded.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 필요 인원'**
+  String get defaultNeeded;
+
+  /// No description provided for @defaultNeededHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'새로 만드는 예배에 이 인원이 들어가요.'**
+  String get defaultNeededHint;
+
+  /// No description provided for @unavailableThatDay.
+  ///
+  /// In ko, this message translates to:
+  /// **'그날 안 돼요'**
+  String get unavailableThatDay;
+
+  /// No description provided for @alreadyServing.
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 섬김'**
+  String get alreadyServing;
+
+  /// No description provided for @requestSwap.
+  ///
+  /// In ko, this message translates to:
+  /// **'대타 요청'**
+  String get requestSwap;
+
+  /// No description provided for @swapMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'남길 말 (선택)'**
+  String get swapMessage;
+
+  /// No description provided for @swapRequested.
+  ///
+  /// In ko, this message translates to:
+  /// **'같은 파트 팀원들에게 대타를 요청했어요'**
+  String get swapRequested;
+
+  /// No description provided for @cancelSwap.
+  ///
+  /// In ko, this message translates to:
+  /// **'대타 요청 취소'**
+  String get cancelSwap;
+
+  /// No description provided for @swapOpen.
+  ///
+  /// In ko, this message translates to:
+  /// **'대타 구함'**
+  String get swapOpen;
+
+  /// No description provided for @takeSwap.
+  ///
+  /// In ko, this message translates to:
+  /// **'대신 섬기기'**
+  String get takeSwap;
+
+  /// No description provided for @swapTaken.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬김을 넘겨받았어요'**
+  String get swapTaken;
+
+  /// No description provided for @blockouts.
+  ///
+  /// In ko, this message translates to:
+  /// **'불가능 날짜'**
+  String get blockouts;
+
+  /// No description provided for @myBlockouts.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 불가능 날짜'**
+  String get myBlockouts;
+
+  /// No description provided for @teamBlockouts.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀원 불가능 날짜'**
+  String get teamBlockouts;
+
+  /// No description provided for @addBlockout.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 추가'**
+  String get addBlockout;
+
+  /// No description provided for @blockoutNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'메모 (선택, 리더만 봐요)'**
+  String get blockoutNote;
+
+  /// No description provided for @noBlockouts.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 날짜가 없어요.'**
+  String get noBlockouts;
+
+  /// No description provided for @servingPeople.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬기는 사람'**
+  String get servingPeople;
+
+  /// No description provided for @notifAssignmentRequested.
+  ///
+  /// In ko, this message translates to:
+  /// **'{session} {part} 섬김 요청'**
+  String notifAssignmentRequested(String session, String part);
+
+  /// No description provided for @notifAssignmentDeclined.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님이 {session} {part} 섬김을 거절했어요'**
+  String notifAssignmentDeclined(String name, String session, String part);
+
+  /// No description provided for @notifAssignmentRemoved.
+  ///
+  /// In ko, this message translates to:
+  /// **'{session} {part} 섬김에서 빠졌어요'**
+  String notifAssignmentRemoved(String session, String part);
+
+  /// No description provided for @notifAssignmentNudge.
+  ///
+  /// In ko, this message translates to:
+  /// **'{session} {part} 섬김 요청에 아직 답하지 않았어요'**
+  String notifAssignmentNudge(String session, String part);
+
+  /// No description provided for @notifSwapRequested.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님이 {session} {part} 대타를 구해요'**
+  String notifSwapRequested(String name, String session, String part);
+
+  /// No description provided for @notifSwapFilled.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님이 {session} {part}을(를) 맡았어요'**
+  String notifSwapFilled(String name, String session, String part);
+
+  /// No description provided for @notifServiceReminder.
+  ///
+  /// In ko, this message translates to:
+  /// **'내일 {session} {part} 섬김이 있어요'**
+  String notifServiceReminder(String session, String part);
+
+  /// No description provided for @notifRehearsalScheduled.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습 일정: {when}'**
+  String notifRehearsalScheduled(String when);
+
+  /// No description provided for @notifRehearsalReminder.
+  ///
+  /// In ko, this message translates to:
+  /// **'곧 연습이에요: {when}'**
+  String notifRehearsalReminder(String when);
+
+  /// No description provided for @rehearsals.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습'**
+  String get rehearsals;
+
+  /// No description provided for @addRehearsal.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습 추가'**
+  String get addRehearsal;
+
+  /// No description provided for @noRehearsals.
+  ///
+  /// In ko, this message translates to:
+  /// **'잡힌 연습이 없어요.'**
+  String get noRehearsals;
+
+  /// No description provided for @rsvpGoing.
+  ///
+  /// In ko, this message translates to:
+  /// **'참석'**
+  String get rsvpGoing;
+
+  /// No description provided for @rsvpLate.
+  ///
+  /// In ko, this message translates to:
+  /// **'지각'**
+  String get rsvpLate;
+
+  /// No description provided for @rsvpNotGoing.
+  ///
+  /// In ko, this message translates to:
+  /// **'불참'**
+  String get rsvpNotGoing;
+
+  /// No description provided for @attendanceCheck.
+  ///
+  /// In ko, this message translates to:
+  /// **'출석 체크'**
+  String get attendanceCheck;
+
+  /// No description provided for @present.
+  ///
+  /// In ko, this message translates to:
+  /// **'출석'**
+  String get present;
+
+  /// No description provided for @absent.
+  ///
+  /// In ko, this message translates to:
+  /// **'결석'**
+  String get absent;
+
+  /// No description provided for @calendarSubscribe.
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더에 구독'**
+  String get calendarSubscribe;
+
+  /// No description provided for @calendarHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 섬김과 연습 일정이 캘린더에 자동으로 들어가요.'**
+  String get calendarHint;
+
+  /// No description provided for @openInCalendar.
+  ///
+  /// In ko, this message translates to:
+  /// **'캘린더 앱에서 열기'**
+  String get openInCalendar;
+
+  /// No description provided for @newCalendarUrl.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소 새로 만들기'**
+  String get newCalendarUrl;
+
+  /// No description provided for @newCalendarUrlHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'새로 만들면 예전 주소로는 더 이상 보이지 않아요.'**
+  String get newCalendarUrlHint;
+
+  /// No description provided for @googleCalendarHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'구글 캘린더는 웹에서 \'다른 캘린더 > URL로 추가\'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요.'**
+  String get googleCalendarHint;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'ko'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+    case 'ko':
+      return AppLocalizationsKo();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}
