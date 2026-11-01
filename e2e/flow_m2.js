@@ -63,7 +63,7 @@ let pages = [];
   await shot(a, '02-welcome-desktop');
   await type(a, '팀 이름', '청년부 찬양팀');
   await btn(a, '만들기').click();
-  await waitText(a, '다가오는 예배');
+  await waitText(a, '할 일');
   const code = require('child_process').execSync(
     `docker exec supabase_db_praiseteam psql -U postgres -d postgres -Atc "select invite_code from public.teams order by id desc limit 1"`,
   ).toString().trim();
@@ -93,7 +93,7 @@ let pages = [];
 
   // B: into the team
   await btn(b, '다시 확인').click();
-  await waitText(b, '다가오는 예배');
+  await waitText(b, '할 일');
 
   // B serves nowhere yet, so opts in to every setlist in settings
   await load(b, '/t/1/settings');

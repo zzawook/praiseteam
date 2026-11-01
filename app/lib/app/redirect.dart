@@ -38,7 +38,7 @@ String? resolveRedirect({
   }
 
   bool isActiveTeam(int? id) => id != null && active.any((m) => m.teamId == id);
-  String home() => '/t/${isActiveTeam(lastTeamId) ? lastTeamId : active.first.teamId}/sessions';
+  String home() => '/t/${isActiveTeam(lastTeamId) ? lastTeamId : active.first.teamId}/home';
 
   if (_entryPoints.contains(location)) {
     final target = from == null ? null : Uri.tryParse(from);

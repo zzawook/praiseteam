@@ -29,9 +29,18 @@ enum Rsvp {
 enum Attendance { present, late, absent }
 
 class Rehearsal {
-  const Rehearsal({required this.id, required this.startsAt, this.location, this.responses = const {}});
+  const Rehearsal({
+    required this.id,
+    required this.startsAt,
+    this.sessionId,
+    this.location,
+    this.responses = const {},
+  });
   final int id;
   final DateTime startsAt;
+
+  /// The service it prepares for; null for a team-wide rehearsal.
+  final int? sessionId;
   final String? location;
 
   /// user id -> (rsvp, attendance); members only get their own row (RLS).
@@ -53,11 +62,26 @@ class RehearsalsRepository {
           .eq('session_id', sessionId)
           .order('starts_at', ascending: true),
     );
-    return [
-      for (final r in rows)
-        Rehearsal(
+    return [for (final r in rows) _rehearsal(r, sessionId)];
+  }
+
+  /// The team's rehearsals from now until [until] (members get only their
+  /// own responses back; leaders get everyone's).
+  Future<List<Rehearsal>> upcoming(int teamId, {required DateTime until}) async {
+    final rows = await _db
+        .from('rehearsals')
+        .select('id, session_id, starts_at, location, rehearsal_responses(user_id, rsvp, attendance)')
+        .eq('team_id', teamId)
+        .gte('starts_at', DateTime.now().toUtc().toIso8601String())
+        .lt('starts_at', until.toUtc().toIso8601String())
+        .order('starts_at', ascending: true);
+    return [for (final r in rows) _rehearsal(r, r['session_id'] as int?)];
+  }
+
+  static Rehearsal _rehearsal(Map<String, dynamic> r, int? sessionId) => Rehearsal(
           id: r['id'] as int,
           startsAt: DateTime.parse(r['starts_at'] as String),
+          sessionId: sessionId,
           location: r['location'] as String?,
           responses: {
             for (final x in (r['rehearsal_responses'] as List).cast<Map<String, dynamic>>())
@@ -66,9 +90,7 @@ class RehearsalsRepository {
                 attendance: x['attendance'] == null ? null : Attendance.values.byName(x['attendance'] as String),
               ),
           },
-        ),
-    ];
-  }
+        );
 
   Future<void> add(int teamId, int sessionId, DateTime startsAt, String? location) => _db.from('rehearsals').insert({
         'team_id': teamId,

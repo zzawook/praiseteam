@@ -45,6 +45,14 @@ async function type(page, label, text) {
 async function waitText(page, text, timeout = 20000) {
   await page.waitForFunction((t) => [...document.querySelectorAll('flt-semantics')].some((e) => (e.getAttribute('aria-label') || e.textContent || '').includes(t)), text, { timeout });
 }
+// The services tab shows the next service's card ("다음 예배") with its own
+// 악보 보기; wait until the session page has replaced it.
+async function onSessionPage(page) {
+  await page.waitForFunction(() => {
+    const texts = [...document.querySelectorAll('flt-semantics')].map((e) => e.getAttribute('aria-label') || e.textContent || '');
+    return !texts.some((t) => t.includes('다음 예배')) && texts.some((t) => t.includes('악보 보기'));
+  }, null, { timeout: 20000 });
+}
 async function shot(page, name) { await page.waitForTimeout(600); await page.screenshot({ path: `${SHOTS}/${name}.png` }); console.log('shot', name); }
 
 let pages = [];
@@ -63,7 +71,7 @@ let pages = [];
   await shot(a, '02-welcome-desktop');
   await type(a, '팀 이름', '청년부 찬양팀');
   await btn(a, '만들기').click();
-  await waitText(a, '다가오는 예배');
+  await waitText(a, '할 일');
   const code = require('child_process').execSync(
     `docker exec supabase_db_praiseteam psql -U postgres -d postgres -Atc "select invite_code from public.teams order by id desc limit 1"`,
   ).toString().trim();
@@ -93,7 +101,7 @@ let pages = [];
 
   // B: into the team
   await btn(b, '다시 확인').click();
-  await waitText(b, '다가오는 예배');
+  await waitText(b, '할 일');
 
   // B serves nowhere yet, so opts in to every setlist in settings
   await load(b, '/t/1/settings');
@@ -165,6 +173,7 @@ let pages = [];
   await a.goto(BASE + '/t/1/sessions', { waitUntil: 'load' });
   await semantics(a);
   await a.getByText('주일 2부 예배').or(a.getByRole('button', { name: /주일 2부 예배/ })).first().click();
+  await onSessionPage(a);
   await waitText(a, '콘티');
   await a.getByRole('button', { name: '악보 보기' }).click();
   await waitText(a, '필기');

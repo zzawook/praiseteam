@@ -7,6 +7,7 @@ import '../features/auth/auth.dart';
 import '../features/chat/channels_screen.dart';
 import '../features/chat/chat_screen.dart';
 import '../features/auth/login_screen.dart';
+import '../features/home/home_screen.dart';
 import '../features/notifications/notifications_screen.dart';
 import '../features/rotation/blockouts_screen.dart';
 import '../features/rotation/rotation_screen.dart';
@@ -107,6 +108,10 @@ GoRouter router(Ref ref) {
           child: child,
         ),
         routes: [
+          GoRoute(
+            path: '/t/:teamId/home',
+            builder: (_, state) => HomeScreen(teamId: teamIdOf(state)!),
+          ),
           GoRoute(
             path: '/t/:teamId/sessions',
             builder: (_, state) => SessionsScreen(teamId: teamIdOf(state)!),

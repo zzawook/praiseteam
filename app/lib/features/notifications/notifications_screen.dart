@@ -62,7 +62,7 @@ String notificationRoute(AppNotification n) {
     'member_join_request' || 'member_approved' => '/t/$team/team',
     'announcement' => '/t/$team/announcements',
     'chat_message' when n.params['channel_id'] != null => '/t/$team/chat/${n.params['channel_id']}',
-    _ => '/t/$team/sessions',
+    _ => '/t/$team/home',
   };
 }
 

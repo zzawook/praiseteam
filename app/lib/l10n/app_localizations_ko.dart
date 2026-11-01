@@ -1133,4 +1133,113 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get partChatsToJoin => '이 파트가 들어갈 채팅방';
+
+  @override
+  String get navHome => '홈';
+
+  @override
+  String get todo => '할 일';
+
+  @override
+  String get nothingToDo => '할 일이 없어요.';
+
+  @override
+  String rehearsalRsvpTodo(String title) {
+    return '$title 연습에 오나요?';
+  }
+
+  @override
+  String get teamRehearsal => '팀 연습';
+
+  @override
+  String get newAnnouncementTodo => '새 공지가 있어요';
+
+  @override
+  String joinRequestsCount(int count) {
+    return '가입 요청 $count명';
+  }
+
+  @override
+  String get readiness => '준비 현황';
+
+  @override
+  String setlistPublishedCount(int count) {
+    return '콘티 공지됨 $count곡';
+  }
+
+  @override
+  String setlistDraftCount(int count) {
+    return '콘티 초안 $count곡';
+  }
+
+  @override
+  String get setlistNone => '콘티 없음';
+
+  @override
+  String placesFilled(int accepted, int needed) {
+    return '수락 $accepted/$needed';
+  }
+
+  @override
+  String get placesUnset => '필요 인원 미정';
+
+  @override
+  String waitingCount(int count) {
+    return '응답 대기 $count';
+  }
+
+  @override
+  String declinedCount(int count) {
+    return '거절 $count';
+  }
+
+  @override
+  String unsentCount(int count) {
+    return '보내지 않음 $count';
+  }
+
+  @override
+  String rehearsalComing(int count, int total) {
+    return '연습 참석 $count/$total';
+  }
+
+  @override
+  String noAnswerCount(int count) {
+    return '미응답 $count';
+  }
+
+  @override
+  String get noRehearsal => '연습 없음';
+
+  @override
+  String get mySchedule => '내 일정';
+
+  @override
+  String get noScheduleSoon => '앞으로 4주 동안 잡힌 일정이 없어요.';
+
+  @override
+  String get teamNews => '팀 소식';
+
+  @override
+  String get noNews => '새 소식이 없어요.';
+
+  @override
+  String get servingLoad => '섬김 분배';
+
+  @override
+  String get servingLoadHint => '최근 8주 동안 섬긴 횟수예요. 한 사람에게 몰리지 않는지 봐 주세요.';
+
+  @override
+  String get songNotes => '곡 참고';
+
+  @override
+  String get mostPlayedRecently => '최근 3개월 많이 한 곡';
+
+  @override
+  String get notPlayedLately => '오래 안 한 곡';
+
+  @override
+  String rehearsalAt(String when) {
+    return '연습 $when';
+  }
 }

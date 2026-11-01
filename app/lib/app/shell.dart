@@ -30,12 +30,14 @@ class _Destination {
   final String Function(AppLocalizations) label;
 }
 
+/// The sections. Settings is not one of them: it opens from me (my avatar
+/// on phones and tablets, my profile card on laptops).
 final _destinations = [
+  _Destination('home', Icons.home_outlined, Icons.home, (l) => l.navHome),
   _Destination('sessions', Icons.event_note_outlined, Icons.event_note, (l) => l.navSessions),
   _Destination('songs', Icons.library_music_outlined, Icons.library_music, (l) => l.navSongs),
   _Destination('chat', Icons.forum_outlined, Icons.forum, (l) => l.navChat),
   _Destination('team', Icons.groups_outlined, Icons.groups, (l) => l.navTeam),
-  _Destination('settings', Icons.settings_outlined, Icons.settings, (l) => l.navSettings),
 ];
 
 class AppShell extends ConsumerWidget {
@@ -44,12 +46,18 @@ class AppShell extends ConsumerWidget {
   final String location;
   final Widget child;
 
-  /// /t/{teamId}/{section}/... -> index of {section}
-  int get _index {
+  /// /t/{teamId}/{section}/... -> {section}; the rotation and blockouts
+  /// pages belong to services.
+  String get _section {
     final segments = location.split('/');
     final section = segments.length > 3 ? segments[3] : '';
-    final i = _destinations.indexWhere((d) => d.path == section);
-    return i < 0 ? 0 : i;
+    return section == 'rotation' || section == 'blockouts' ? 'sessions' : section;
+  }
+
+  /// The section's place in the bar, or null on settings.
+  int? get _index {
+    final i = _destinations.indexWhere((d) => d.path == _section);
+    return i < 0 ? null : i;
   }
 
   void _go(BuildContext context, int index) => context.go('/t/$teamId/${_destinations[index].path}');
@@ -81,7 +89,7 @@ class AppShell extends ConsumerWidget {
           children: [
             const OfflineBanner(),
             NavigationBar(
-              selectedIndex: _index,
+              selectedIndex: _index ?? 0,
               onDestinationSelected: (i) => _go(context, i),
               destinations: [
                 for (final d in _destinations)
@@ -112,7 +120,7 @@ class AppShell extends ConsumerWidget {
           children: [
             _Sidebar(
               teamId: teamId,
-              section: _destinations[_index].path,
+              section: _section,
               onSelect: (path) => context.go('/t/$teamId/$path'),
               unreadChat: unreadChat,
               newAnnouncements: newAnnouncements,
@@ -133,6 +141,11 @@ class AppShell extends ConsumerWidget {
             leading: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: TeamSwitcher(teamId: teamId, compact: true),
+            ),
+            trailingAtBottom: true,
+            trailing: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _MeAvatar(teamId: teamId, selected: _section == 'settings'),
             ),
             destinations: [
               for (final d in _destinations)
@@ -190,16 +203,15 @@ class _Sidebar extends ConsumerWidget {
               child: TeamSwitcher(teamId: teamId, wide: true),
             ),
             for (final d in _destinations)
-              if (d.path != 'settings')
-                _SidebarItem(
-                  icon: d.icon,
-                  selectedIcon: d.selectedIcon,
-                  label: d.label(l10n),
-                  selected: d.path == section,
-                  count: d.path == 'chat' ? unreadChat : 0,
-                  dot: d.path == 'chat' && unreadChat == 0 && newAnnouncements,
-                  onTap: () => onSelect(d.path),
-                ),
+              _SidebarItem(
+                icon: d.icon,
+                selectedIcon: d.selectedIcon,
+                label: d.label(l10n),
+                selected: d.path == section,
+                count: d.path == 'chat' ? unreadChat : 0,
+                dot: d.path == 'chat' && unreadChat == 0 && newAnnouncements,
+                onTap: () => onSelect(d.path),
+              ),
             const Spacer(),
             const Divider(),
             Padding(
@@ -361,7 +373,7 @@ class TeamSwitcher extends ConsumerWidget {
 
     return PopupMenuButton<int>(
       tooltip: l10n.switchTeam,
-      onSelected: (id) => id < 0 ? context.go('/welcome') : context.go('/t/$id/sessions'),
+      onSelected: (id) => id < 0 ? context.go('/welcome') : context.go('/t/$id/home'),
       itemBuilder: (_) => [
         for (final m in active)
           CheckedPopupMenuItem(value: m.teamId, checked: m.teamId == teamId, child: Text(m.team.name)),
@@ -431,6 +443,34 @@ class TeamSwitcher extends ConsumerWidget {
                 ],
               ),
             ),
+    );
+  }
+}
+
+/// My avatar on the tablet rail: opens settings, ringed while there.
+class _MeAvatar extends ConsumerWidget {
+  const _MeAvatar({required this.teamId, required this.selected});
+  final int teamId;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final name = ref.watch(myProfileProvider).value?.displayName ?? '';
+    final scheme = Theme.of(context).colorScheme;
+    return IconButton(
+      tooltip: AppLocalizations.of(context).navSettings,
+      isSelected: selected,
+      onPressed: () => context.go('/t/$teamId/settings'),
+      icon: DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: selected ? scheme.primary : Colors.transparent, width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(2),
+          child: PersonAvatar(name: name, id: ref.watch(currentUserIdProvider) ?? '', radius: 16),
+        ),
+      ),
     );
   }
 }

@@ -85,6 +85,7 @@ function seed(team, leader) {
 }
 
 const screens = (team, sunday) => [
+  ['home', `/t/${team}/home`, '할 일'],
   ['sessions', `/t/${team}/sessions`, '다가오는 예배'],
   ['session', `/t/${team}/sessions/${sunday}`, '콘티'],
   ['songs', `/t/${team}/songs`, '곡'],
@@ -100,7 +101,7 @@ const screens = (team, sunday) => [
   await waitText(setup, '찬양팀에 들어가기');
   await type(setup, '팀 이름', '청년부 찬양팀');
   await setup.getByRole('button', { name: '만들기', exact: true }).click();
-  await waitText(setup, '다가오는 예배');
+  await waitText(setup, '할 일');
   const team = sql(`select id from public.teams order by id desc limit 1`);
   const leader = sql(`select id from auth.users where email = '${email}'`);
   seed(team, leader);
@@ -109,7 +110,7 @@ const screens = (team, sunday) => [
   for (const scheme of ['light', 'dark']) {
     const page = await (await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'ko-KR', colorScheme: scheme, deviceScaleFactor: 2 })).newPage();
     await signIn(page, { create: false });
-    await waitText(page, '다가오는 예배');
+    await waitText(page, '할 일');
     for (const [name, path, ready] of screens(team, sunday)) {
       await page.goto(BASE + path, { waitUntil: 'load' });
       await semantics(page);

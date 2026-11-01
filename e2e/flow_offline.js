@@ -46,6 +46,14 @@ async function waitText(page, text, timeout = 20000) {
 async function waitGone(page, text, timeout = 30000) {
   await page.waitForFunction((t) => ![...document.querySelectorAll('flt-semantics')].some((e) => (e.getAttribute('aria-label') || e.textContent || '').includes(t)), text, { timeout });
 }
+// The services tab shows the next service's card ("다음 예배") with its own
+// 악보 보기; wait until the session page has replaced it.
+async function onSessionPage(page) {
+  await page.waitForFunction(() => {
+    const texts = [...document.querySelectorAll('flt-semantics')].map((e) => e.getAttribute('aria-label') || e.textContent || '');
+    return !texts.some((t) => t.includes('다음 예배')) && texts.some((t) => t.includes('악보 보기'));
+  }, null, { timeout: 20000 });
+}
 async function shot(page, name) { await page.waitForTimeout(600); await page.screenshot({ path: `${SHOTS}/${name}.png` }); console.log('shot', name); }
 async function drawLine(page, x1, y1, x2, y2) {
   await page.mouse.move(x1, y1);
@@ -107,7 +115,7 @@ let pages = [];
   await waitText(a, '찬양팀에 들어가기');
   await type(a, '팀 이름', '청년부 찬양팀');
   await btn(a, '만들기').click();
-  await waitText(a, '다가오는 예배');
+  await waitText(a, '할 일');
   await load(b, '/');
   await type(b, '이메일', `b${stamp}@praise.local`);
   await type(b, '비밀번호', 'password123');
@@ -141,6 +149,7 @@ let pages = [];
   await load(b, `/t/${team}/sessions`);
   await waitText(b, '금요 기도회');
   await b.getByText('금요 기도회').or(b.getByRole('button', { name: /금요 기도회/ })).first().click();
+  await onSessionPage(b);
   await btn(b, '악보 보기').click();
   await waitText(b, '필기');
   await b.waitForTimeout(2500);
@@ -152,6 +161,7 @@ let pages = [];
   await btn(b, '뒤로').click();
   await waitText(b, '주일 2부 예배');
   await b.getByText('주일 2부 예배').or(b.getByRole('button', { name: /주일 2부 예배/ })).first().click();
+  await onSessionPage(b);
   await waitText(b, '은혜');
   await waitText(b, '오프라인이에요');
   await waitText(b, '본당 2층'); // the rehearsal, kept with the session

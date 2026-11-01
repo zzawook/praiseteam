@@ -51,8 +51,8 @@ void main() {
 
   test('active member lands on the last opened team, else the first', () {
     final both = [membership(1, MemberStatus.active), membership(2, MemberStatus.active)];
-    expect(redirect('/', memberships: both, lastTeamId: 2), '/t/2/sessions');
-    expect(redirect('/login', memberships: both, lastTeamId: 99), '/t/1/sessions');
+    expect(redirect('/', memberships: both, lastTeamId: 2), '/t/2/home');
+    expect(redirect('/login', memberships: both, lastTeamId: 99), '/t/1/home');
   });
 
   test('restores the original destination after sign-in and loading', () {
@@ -61,14 +61,14 @@ void main() {
   });
 
   test('does not restore a destination in a team the user is not active in', () {
-    expect(redirect('/splash?from=%2Ft%2F5%2Fteam', memberships: active1), '/t/1/sessions');
-    expect(redirect('/splash?from=https%3A%2F%2Fevil.example', memberships: active1), '/t/1/sessions');
-    expect(redirect('/splash?from=%2F%2Fevil.example%2Ft%2F1%2Fteam', memberships: active1), '/t/1/sessions');
+    expect(redirect('/splash?from=%2Ft%2F5%2Fteam', memberships: active1), '/t/1/home');
+    expect(redirect('/splash?from=https%3A%2F%2Fevil.example', memberships: active1), '/t/1/home');
+    expect(redirect('/splash?from=%2F%2Fevil.example%2Ft%2F1%2Fteam', memberships: active1), '/t/1/home');
   });
 
   test('a team route the user is not active in is replaced', () {
     final ms = [membership(1, MemberStatus.active), membership(3, MemberStatus.pending)];
-    expect(redirect('/t/3/team', memberships: ms, routeTeamId: 3), '/t/1/sessions');
+    expect(redirect('/t/3/team', memberships: ms, routeTeamId: 3), '/t/1/home');
     expect(redirect('/t/1/settings', memberships: ms, routeTeamId: 1), isNull);
   });
 }

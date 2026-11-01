@@ -59,7 +59,7 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await waitText(a, '찬양팀에 들어가기');
   await type(a, '팀 이름', '청년부 찬양팀');
   await btn(a, '만들기').click();
-  await waitText(a, '다가오는 예배');
+  await waitText(a, '할 일');
 
   await load(b, '/');
   await type(b, '이메일', `b${stamp}@praise.local`);

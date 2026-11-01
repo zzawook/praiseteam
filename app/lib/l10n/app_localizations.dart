@@ -2125,6 +2125,180 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'이 파트가 들어갈 채팅방'**
   String get partChatsToJoin;
+
+  /// No description provided for @navHome.
+  ///
+  /// In ko, this message translates to:
+  /// **'홈'**
+  String get navHome;
+
+  /// No description provided for @todo.
+  ///
+  /// In ko, this message translates to:
+  /// **'할 일'**
+  String get todo;
+
+  /// No description provided for @nothingToDo.
+  ///
+  /// In ko, this message translates to:
+  /// **'할 일이 없어요.'**
+  String get nothingToDo;
+
+  /// No description provided for @rehearsalRsvpTodo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{title} 연습에 오나요?'**
+  String rehearsalRsvpTodo(String title);
+
+  /// No description provided for @teamRehearsal.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 연습'**
+  String get teamRehearsal;
+
+  /// No description provided for @newAnnouncementTodo.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 공지가 있어요'**
+  String get newAnnouncementTodo;
+
+  /// No description provided for @joinRequestsCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'가입 요청 {count}명'**
+  String joinRequestsCount(int count);
+
+  /// No description provided for @readiness.
+  ///
+  /// In ko, this message translates to:
+  /// **'준비 현황'**
+  String get readiness;
+
+  /// No description provided for @setlistPublishedCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 공지됨 {count}곡'**
+  String setlistPublishedCount(int count);
+
+  /// No description provided for @setlistDraftCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 초안 {count}곡'**
+  String setlistDraftCount(int count);
+
+  /// No description provided for @setlistNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 없음'**
+  String get setlistNone;
+
+  /// No description provided for @placesFilled.
+  ///
+  /// In ko, this message translates to:
+  /// **'수락 {accepted}/{needed}'**
+  String placesFilled(int accepted, int needed);
+
+  /// No description provided for @placesUnset.
+  ///
+  /// In ko, this message translates to:
+  /// **'필요 인원 미정'**
+  String get placesUnset;
+
+  /// No description provided for @waitingCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'응답 대기 {count}'**
+  String waitingCount(int count);
+
+  /// No description provided for @declinedCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'거절 {count}'**
+  String declinedCount(int count);
+
+  /// No description provided for @unsentCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'보내지 않음 {count}'**
+  String unsentCount(int count);
+
+  /// No description provided for @rehearsalComing.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습 참석 {count}/{total}'**
+  String rehearsalComing(int count, int total);
+
+  /// No description provided for @noAnswerCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'미응답 {count}'**
+  String noAnswerCount(int count);
+
+  /// No description provided for @noRehearsal.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습 없음'**
+  String get noRehearsal;
+
+  /// No description provided for @mySchedule.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 일정'**
+  String get mySchedule;
+
+  /// No description provided for @noScheduleSoon.
+  ///
+  /// In ko, this message translates to:
+  /// **'앞으로 4주 동안 잡힌 일정이 없어요.'**
+  String get noScheduleSoon;
+
+  /// No description provided for @teamNews.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 소식'**
+  String get teamNews;
+
+  /// No description provided for @noNews.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 소식이 없어요.'**
+  String get noNews;
+
+  /// No description provided for @servingLoad.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬김 분배'**
+  String get servingLoad;
+
+  /// No description provided for @servingLoadHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 8주 동안 섬긴 횟수예요. 한 사람에게 몰리지 않는지 봐 주세요.'**
+  String get servingLoadHint;
+
+  /// No description provided for @songNotes.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 참고'**
+  String get songNotes;
+
+  /// No description provided for @mostPlayedRecently.
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 3개월 많이 한 곡'**
+  String get mostPlayedRecently;
+
+  /// No description provided for @notPlayedLately.
+  ///
+  /// In ko, this message translates to:
+  /// **'오래 안 한 곡'**
+  String get notPlayedLately;
+
+  /// No description provided for @rehearsalAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습 {when}'**
+  String rehearsalAt(String when);
 }
 
 class _AppLocalizationsDelegate

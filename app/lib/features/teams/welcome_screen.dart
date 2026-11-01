@@ -35,7 +35,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     if (!ok) return;
     ref.invalidate(myMembershipsProvider);
     await ref.read(myMembershipsProvider.future);
-    if (mounted) context.go('/t/$teamId/sessions');
+    if (mounted) context.go('/t/$teamId/home');
   }
 
   @override

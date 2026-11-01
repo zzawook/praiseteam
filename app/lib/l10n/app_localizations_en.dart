@@ -1247,4 +1247,120 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get partChatsToJoin => 'Part chats it joins';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get todo => 'To do';
+
+  @override
+  String get nothingToDo => 'Nothing to do.';
+
+  @override
+  String rehearsalRsvpTodo(String title) {
+    return 'Coming to the $title rehearsal?';
+  }
+
+  @override
+  String get teamRehearsal => 'Team rehearsal';
+
+  @override
+  String get newAnnouncementTodo => 'New announcement';
+
+  @override
+  String joinRequestsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count join requests',
+      one: '1 join request',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readiness => 'Getting ready';
+
+  @override
+  String setlistPublishedCount(int count) {
+    return 'Setlist out, $count songs';
+  }
+
+  @override
+  String setlistDraftCount(int count) {
+    return 'Draft setlist, $count songs';
+  }
+
+  @override
+  String get setlistNone => 'No setlist';
+
+  @override
+  String placesFilled(int accepted, int needed) {
+    return '$accepted/$needed accepted';
+  }
+
+  @override
+  String get placesUnset => 'No places set';
+
+  @override
+  String waitingCount(int count) {
+    return '$count waiting';
+  }
+
+  @override
+  String declinedCount(int count) {
+    return '$count declined';
+  }
+
+  @override
+  String unsentCount(int count) {
+    return '$count not sent';
+  }
+
+  @override
+  String rehearsalComing(int count, int total) {
+    return 'Rehearsal: $count/$total coming';
+  }
+
+  @override
+  String noAnswerCount(int count) {
+    return '$count no answer';
+  }
+
+  @override
+  String get noRehearsal => 'No rehearsal';
+
+  @override
+  String get mySchedule => 'My schedule';
+
+  @override
+  String get noScheduleSoon => 'Nothing in the next four weeks.';
+
+  @override
+  String get teamNews => 'Team news';
+
+  @override
+  String get noNews => 'No news.';
+
+  @override
+  String get servingLoad => 'Who\'s been serving';
+
+  @override
+  String get servingLoadHint =>
+      'Times asked to serve in the last 8 weeks, to spot anyone carrying too much.';
+
+  @override
+  String get songNotes => 'Songs';
+
+  @override
+  String get mostPlayedRecently => 'Most played, last 3 months';
+
+  @override
+  String get notPlayedLately => 'Not played lately';
+
+  @override
+  String rehearsalAt(String when) {
+    return 'Rehearsal $when';
+  }
 }
