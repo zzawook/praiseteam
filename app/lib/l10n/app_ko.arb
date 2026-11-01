@@ -709,5 +709,13 @@
   "pushAnnouncements": "공지",
   "pushChat": "채팅",
   "pushJoining": "팀 가입",
-  "pushOffHint": "꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요."
+  "pushOffHint": "꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요.",
+  "offline": "오프라인",
+  "offlineShowingSaved": "오프라인이에요. 이 기기에 저장해 둔 내용을 보여 줘요.",
+  "offlineNotesWaiting": "필기 {count}개는 연결되면 올라가요.",
+  "@offlineNotesWaiting": {"placeholders": {"count": {"type": "int"}}},
+  "notesWaiting": "필기 {count}개 대기",
+  "@notesWaiting": {"placeholders": {"count": {"type": "int"}}},
+  "unsentNotesSignOut": "아직 올라가지 않은 필기가 {count}개 있어요. 로그아웃하면 이 필기는 사라져요.",
+  "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}}
 }

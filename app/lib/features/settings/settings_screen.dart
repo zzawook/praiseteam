@@ -11,6 +11,7 @@ import '../../l10n/app_localizations.dart';
 import '../../core/providers.dart';
 import '../auth/auth.dart';
 import '../notifications/notification_prefs.dart';
+import '../offline/offline_widgets.dart';
 import '../teams/teams_providers.dart';
 import 'settings_providers.dart';
 
@@ -205,7 +206,7 @@ class SettingsScreen extends ConsumerWidget {
             const Divider(indent: 20),
             ListTile(
               title: Text(l10n.signOut),
-              onTap: () => runGuarded(context, () => ref.read(authRepositoryProvider).signOut()),
+              onTap: () => signOutHere(context, ref),
             ),
           ],
         ),

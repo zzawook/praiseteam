@@ -10,6 +10,7 @@ local Supabase stack and assert what each user can see.
 | `flow_m4.js` | rotation: auto-assign, send, member accepts |
 | `flow_m5.js` | chat: part channels, live messages, polls, announcements, unread markers |
 | `flow_m6.js` | live mode: follow page turns, cues, follow off and back on, late joiner |
+| `flow_offline.js` | offline: this week's services kept on the device; the stand opens a never-opened service without a connection; notes drawn offline upload on reconnect |
 
 ```sh
 # once
@@ -22,3 +23,7 @@ node e2e/flow_m3.js /tmp/shots                                         # screens
 ```
 
 Uses the system Chrome (`/usr/bin/google-chrome`) through playwright-core.
+
+Pages are awaited with `load`, then the text each step expects: the app's local
+database runs in a web worker, and Playwright never reports that worker's script
+request as finished, so `networkidle` would not come.

@@ -7,6 +7,8 @@ environment:
   sdk: ^3.13.7
 
 dependencies:
+  drift: ^2.35.3
+  drift_flutter: ^0.3.1
   file_picker: ^13.3.0
   firebase_core: ^5.1.0
   flutter:
@@ -23,6 +25,7 @@ dependencies:
   image: ^4.12.0
   intl: ^0.20.3
   json_annotation: ^4.12.0
+  path_provider: ^2.1.6
   pdf: ^3.13.1
   pdfrx: ^2.11.0
   perfect_freehand: ^2.5.2+1
@@ -41,6 +44,7 @@ dev_dependencies:
   riverpod_generator: ^4.0.9
   freezed: ^4.0.3
   json_serializable: ^6.15.2
+  drift_dev: ^2.35.2
 
 flutter:
   uses-material-design: true

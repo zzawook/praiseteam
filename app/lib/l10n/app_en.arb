@@ -323,5 +323,13 @@
   "pushAnnouncements": "Announcements",
   "pushChat": "Chat",
   "pushJoining": "Joining the team",
-  "pushOffHint": "Turning one off stops the push only. It still shows in your notifications and chat unread counts."
+  "pushOffHint": "Turning one off stops the push only. It still shows in your notifications and chat unread counts.",
+  "offline": "Offline",
+  "offlineShowingSaved": "You're offline. Showing what's saved on this device.",
+  "offlineNotesWaiting": "{count, plural, =1{1 note uploads} other{{count} notes upload}} when you reconnect.",
+  "@offlineNotesWaiting": {"placeholders": {"count": {"type": "int"}}},
+  "notesWaiting": "{count, plural, =1{1 note waiting} other{{count} notes waiting}}",
+  "@notesWaiting": {"placeholders": {"count": {"type": "int"}}},
+  "unsentNotesSignOut": "{count, plural, =1{1 note hasn't} other{{count} notes haven't}} uploaded yet. Signing out deletes {count, plural, =1{it} other{them}}.",
+  "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}}
 }

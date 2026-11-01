@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app/app.dart';
 import 'core/env.dart';
 import 'core/http_client.dart';
+import 'core/offline/reachability.dart';
 import 'core/providers.dart';
 
 Future<void> main() async {
@@ -20,16 +21,29 @@ Future<void> main() async {
     yield LicenseEntryWithLineBreaks(['Gowun Batang'], ofl);
   });
 
+  // Every request reports whether the server answered, so the app knows
+  // when to read the copies it keeps on the device instead.
+  final reachability = Reachability();
   await Supabase.initialize(
     url: Env.supabaseUrl,
     publishableKey: Env.supabasePublishableKey,
-    httpClient: ClockSkewRetryClient(),
+    httpClient: ReachabilityClient(
+      ClockSkewRetryClient(),
+      reachability,
+      probeUrl: Uri.parse('${Env.supabaseUrl}/auth/v1/health'),
+    ),
+    // A read with no answer in 8 s counts as offline (saved copies are
+    // shown instead); one retry rather than three, so that happens quickly.
+    postgrestOptions: const PostgrestClientOptions(retryCount: 1, requestTimeout: Duration(seconds: 8)),
   );
   final prefs = await SharedPreferences.getInstance();
 
   runApp(
     ProviderScope(
-      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        reachabilityProvider.overrideWithValue(reachability),
+      ],
       child: const PraiseTeamApp(),
     ),
   );

@@ -2041,6 +2041,36 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요.'**
   String get pushOffHint;
+
+  /// No description provided for @offline.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인'**
+  String get offline;
+
+  /// No description provided for @offlineShowingSaved.
+  ///
+  /// In ko, this message translates to:
+  /// **'오프라인이에요. 이 기기에 저장해 둔 내용을 보여 줘요.'**
+  String get offlineShowingSaved;
+
+  /// No description provided for @offlineNotesWaiting.
+  ///
+  /// In ko, this message translates to:
+  /// **'필기 {count}개는 연결되면 올라가요.'**
+  String offlineNotesWaiting(int count);
+
+  /// No description provided for @notesWaiting.
+  ///
+  /// In ko, this message translates to:
+  /// **'필기 {count}개 대기'**
+  String notesWaiting(int count);
+
+  /// No description provided for @unsentNotesSignOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 올라가지 않은 필기가 {count}개 있어요. 로그아웃하면 이 필기는 사라져요.'**
+  String unsentNotesSignOut(int count);
 }
 
 class _AppLocalizationsDelegate

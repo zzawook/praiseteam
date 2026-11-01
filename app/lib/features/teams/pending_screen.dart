@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
-import '../auth/auth.dart';
+import '../offline/offline_widgets.dart';
 import 'models.dart';
 import 'teams_providers.dart';
 
@@ -24,7 +24,7 @@ class PendingScreen extends ConsumerWidget {
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () => ref.read(authRepositoryProvider).signOut(),
+            onPressed: () => signOutHere(context, ref),
             child: Text(l10n.signOut),
           ),
         ],

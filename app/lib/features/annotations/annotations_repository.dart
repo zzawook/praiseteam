@@ -1,10 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 
+import '../../core/offline/offline_store.dart';
 import 'ink.dart';
 
 class AnnotationsRepository {
-  AnnotationsRepository(this._db);
+  AnnotationsRepository(this._db, this._offline);
   final SupabaseClient _db;
+  final ReadThrough _offline;
+
+  /// Where a session's strokes are kept on the device.
+  static String offlineKey(int sessionId) => 'strokes:$sessionId';
 
   static const _columns =
       'id, team_id, session_id, setlist_item_id, sheet_id, page_index, owner_id, visibility, tool, color, width, points, deleted_at';
@@ -12,7 +17,10 @@ class AnnotationsRepository {
   /// Every stroke of the session this user may see (RLS: team strokes and
   /// their own private ones), including erased ones so undo can restore.
   Future<List<InkStroke>> forSession(int sessionId) async {
-    final rows = await _db.from('strokes').select(_columns).eq('session_id', sessionId);
+    final rows = await _offline.list(
+      offlineKey(sessionId),
+      () => _db.from('strokes').select(_columns).eq('session_id', sessionId),
+    );
     return rows.map(InkStroke.fromRow).toList();
   }
 

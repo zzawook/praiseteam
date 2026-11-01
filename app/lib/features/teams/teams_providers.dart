@@ -2,13 +2,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/providers.dart';
 import '../auth/auth.dart';
+import '../offline/offline.dart';
 import 'models.dart';
 import 'teams_repository.dart';
 
 part 'teams_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-TeamsRepository teamsRepository(Ref ref) => TeamsRepository(ref.watch(supabaseProvider));
+TeamsRepository teamsRepository(Ref ref) =>
+    TeamsRepository(ref.watch(supabaseProvider), ref.watch(readThroughProvider));
 
 /// The signed-in user's memberships (pending and active).
 @Riverpod(keepAlive: true)

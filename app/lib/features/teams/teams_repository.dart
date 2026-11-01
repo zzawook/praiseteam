@@ -1,21 +1,27 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/offline/offline_store.dart';
 import 'models.dart';
 
 /// Team, membership and part data. Multi-step changes go through the
 /// database RPCs, which enforce the role rules (see foundation migration).
 class TeamsRepository {
-  TeamsRepository(this._db);
+  TeamsRepository(this._db, this._offline);
   final SupabaseClient _db;
+  final ReadThrough _offline;
 
   static const _teamColumns = 'id, name, timezone, invite_code, join_requires_approval';
 
+  /// Kept on the device: without it the app could not open offline.
   Future<List<Membership>> myMemberships(String userId) async {
-    final rows = await _db
-        .from('team_members')
-        .select('team_id, role, status, teams($_teamColumns)')
-        .eq('user_id', userId)
-        .order('joined_at', ascending: true);
+    final rows = await _offline.list(
+      'memberships',
+      () => _db
+          .from('team_members')
+          .select('team_id, role, status, teams($_teamColumns)')
+          .eq('user_id', userId)
+          .order('joined_at', ascending: true),
+    );
     return rows.map(Membership.fromJson).toList();
   }
 

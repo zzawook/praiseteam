@@ -1169,4 +1169,50 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pushOffHint =>
       'Turning one off stops the push only. It still shows in your notifications and chat unread counts.';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get offlineShowingSaved =>
+      'You\'re offline. Showing what\'s saved on this device.';
+
+  @override
+  String offlineNotesWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notes upload',
+      one: '1 note uploads',
+    );
+    return '$_temp0 when you reconnect.';
+  }
+
+  @override
+  String notesWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notes waiting',
+      one: '1 note waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unsentNotesSignOut(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notes haven\'t',
+      one: '1 note hasn\'t',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'them',
+      one: 'it',
+    );
+    return '$_temp0 uploaded yet. Signing out deletes $_temp1.';
+  }
 }

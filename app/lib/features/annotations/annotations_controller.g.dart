@@ -55,32 +55,35 @@ final class AnnotationsRepositoryProvider
 }
 
 String _$annotationsRepositoryHash() =>
-    r'4359a75b716b5bfbf64a26a1df46d4e36680f590';
+    r'a935885e4f3f9677357b8e69989fd8996200efbe';
 
 /// Strokes of one session, by id, kept in sync with the server.
 ///
-/// Local changes apply immediately and are sent in the background; failed
-/// sends stay queued and are retried, in order, every few seconds. Because
-/// strokes are immutable (insert, or set deleted_at) and ids come from the
-/// device, a retry can never duplicate or conflict with anything.
+/// Local changes apply at once and go to the [StrokeOutbox], which keeps
+/// them on the device until the server has them. What the screen shows is
+/// the server's strokes (or the saved copy, offline) with the waiting
+/// changes applied on top, so notes drawn offline stay visible after a
+/// restart.
 
 @ProviderFor(SessionInk)
 final sessionInkProvider = SessionInkFamily._();
 
 /// Strokes of one session, by id, kept in sync with the server.
 ///
-/// Local changes apply immediately and are sent in the background; failed
-/// sends stay queued and are retried, in order, every few seconds. Because
-/// strokes are immutable (insert, or set deleted_at) and ids come from the
-/// device, a retry can never duplicate or conflict with anything.
+/// Local changes apply at once and go to the [StrokeOutbox], which keeps
+/// them on the device until the server has them. What the screen shows is
+/// the server's strokes (or the saved copy, offline) with the waiting
+/// changes applied on top, so notes drawn offline stay visible after a
+/// restart.
 final class SessionInkProvider
     extends $AsyncNotifierProvider<SessionInk, Map<String, InkStroke>> {
   /// Strokes of one session, by id, kept in sync with the server.
   ///
-  /// Local changes apply immediately and are sent in the background; failed
-  /// sends stay queued and are retried, in order, every few seconds. Because
-  /// strokes are immutable (insert, or set deleted_at) and ids come from the
-  /// device, a retry can never duplicate or conflict with anything.
+  /// Local changes apply at once and go to the [StrokeOutbox], which keeps
+  /// them on the device until the server has them. What the screen shows is
+  /// the server's strokes (or the saved copy, offline) with the waiting
+  /// changes applied on top, so notes drawn offline stay visible after a
+  /// restart.
   SessionInkProvider._({
     required SessionInkFamily super.from,
     required int super.argument,
@@ -117,14 +120,15 @@ final class SessionInkProvider
   }
 }
 
-String _$sessionInkHash() => r'c83b7158c5cad52f21fb44cc7d0d4e1615d4634f';
+String _$sessionInkHash() => r'7324629f1c5a9ef26dc3c05a0fd498f6875e1a60';
 
 /// Strokes of one session, by id, kept in sync with the server.
 ///
-/// Local changes apply immediately and are sent in the background; failed
-/// sends stay queued and are retried, in order, every few seconds. Because
-/// strokes are immutable (insert, or set deleted_at) and ids come from the
-/// device, a retry can never duplicate or conflict with anything.
+/// Local changes apply at once and go to the [StrokeOutbox], which keeps
+/// them on the device until the server has them. What the screen shows is
+/// the server's strokes (or the saved copy, offline) with the waiting
+/// changes applied on top, so notes drawn offline stay visible after a
+/// restart.
 
 final class SessionInkFamily extends $Family
     with
@@ -146,10 +150,11 @@ final class SessionInkFamily extends $Family
 
   /// Strokes of one session, by id, kept in sync with the server.
   ///
-  /// Local changes apply immediately and are sent in the background; failed
-  /// sends stay queued and are retried, in order, every few seconds. Because
-  /// strokes are immutable (insert, or set deleted_at) and ids come from the
-  /// device, a retry can never duplicate or conflict with anything.
+  /// Local changes apply at once and go to the [StrokeOutbox], which keeps
+  /// them on the device until the server has them. What the screen shows is
+  /// the server's strokes (or the saved copy, offline) with the waiting
+  /// changes applied on top, so notes drawn offline stay visible after a
+  /// restart.
 
   SessionInkProvider call(int sessionId) =>
       SessionInkProvider._(argument: sessionId, from: this);
@@ -160,10 +165,11 @@ final class SessionInkFamily extends $Family
 
 /// Strokes of one session, by id, kept in sync with the server.
 ///
-/// Local changes apply immediately and are sent in the background; failed
-/// sends stay queued and are retried, in order, every few seconds. Because
-/// strokes are immutable (insert, or set deleted_at) and ids come from the
-/// device, a retry can never duplicate or conflict with anything.
+/// Local changes apply at once and go to the [StrokeOutbox], which keeps
+/// them on the device until the server has them. What the screen shows is
+/// the server's strokes (or the saved copy, offline) with the waiting
+/// changes applied on top, so notes drawn offline stay visible after a
+/// restart.
 
 abstract class _$SessionInk extends $AsyncNotifier<Map<String, InkStroke>> {
   late final _$args = ref.$arg as int;

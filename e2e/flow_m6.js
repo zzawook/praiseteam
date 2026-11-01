@@ -23,7 +23,7 @@ async function semantics(page) {
   await page.waitForTimeout(800);
 }
 async function load(page, path) {
-  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  await page.goto(BASE + path, { waitUntil: 'load' });
   await semantics(page);
 }
 const btn = (page, name) => page.getByRole('button', { name, exact: true });
@@ -83,7 +83,7 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   // the stand header reads "<title>\n<page> / <pages>"
   const headerText = (p) => p.evaluate(() => [...document.querySelectorAll('flt-semantics')].map((e) => (e.getAttribute('aria-label') || '').match(/(\d+ \/ \d+)/)).find(Boolean)?.[1] || '');
   for (const p of [a, b]) {
-    await p.goto(BASE + `/t/${team}/stand/${session}`, { waitUntil: 'networkidle' });
+    await p.goto(BASE + `/t/${team}/stand/${session}`, { waitUntil: 'load' });
     await semantics(p);
     await waitText(p, '1 / 2');
     await btn(p, '라이브').click();

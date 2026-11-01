@@ -3,11 +3,13 @@ import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/offline/offline_store.dart';
 import 'models.dart';
 
 class SongsRepository {
-  SongsRepository(this._db);
+  SongsRepository(this._db, this._offline);
   final SupabaseClient _db;
+  final ReadThrough _offline;
 
   static const _songColumns = 'id, team_id, title, artist, default_key, bpm, time_signature, tags, notes';
   static const _sheetColumns =
@@ -55,9 +57,14 @@ class SongsRepository {
   Future<Sheet> sheet(int sheetId) async =>
       Sheet.fromJson(await _db.from('sheets').select(_sheetColumns).eq('id', sheetId).single());
 
+  /// The sheets a setlist uses; kept on the device for the music stand.
   Future<List<Sheet>> sheetsByIds(Iterable<int> ids) async {
-    if (ids.isEmpty) return const [];
-    final rows = await _db.from('sheets').select(_sheetColumns).inFilter('id', ids.toSet().toList());
+    final unique = ids.toSet().toList()..sort();
+    if (unique.isEmpty) return const [];
+    final rows = await _offline.list(
+      'sheets:${unique.join(',')}',
+      () => _db.from('sheets').select(_sheetColumns).inFilter('id', unique),
+    );
     return rows.map(Sheet.fromJson).toList();
   }
 
@@ -122,7 +129,10 @@ class SongsRepository {
     await _db.storage.from('sheets').remove([sheet.storagePath]);
   }
 
-  Future<Uint8List> downloadSheet(String storagePath) => _db.storage.from('sheets').download(storagePath);
+  /// A sheet's PDF. Kept on the device; a path never changes content, so a
+  /// kept copy is used without asking the server.
+  Future<Uint8List> downloadSheet(String storagePath) =>
+      _offline.file(storagePath, () => _db.storage.from('sheets').download(storagePath));
 
   Future<List<TopSong>> topSongs(int teamId, DateTime from, DateTime to) async {
     final rows = await _db.rpc('top_songs', params: {

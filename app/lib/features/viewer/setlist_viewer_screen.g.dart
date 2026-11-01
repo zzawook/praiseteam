@@ -68,7 +68,7 @@ final class SessionSheetsProvider
   }
 }
 
-String _$sessionSheetsHash() => r'def81c38431ba159987bc7d141d677a8e6d21dce';
+String _$sessionSheetsHash() => r'6b9d3a046c06247edf32fb9ba5b36651b92d5774';
 
 /// Sheets used by a session's setlist, by id.
 

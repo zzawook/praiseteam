@@ -55,7 +55,7 @@ final class SessionsRepositoryProvider
 }
 
 String _$sessionsRepositoryHash() =>
-    r'b76416818eb22f6ccb85ea5a6a6cb9df641aa0d7';
+    r'6b407896506ebe4372b9c89db1b3753f58b8c3ca';
 
 @ProviderFor(upcomingSessions)
 final upcomingSessionsProvider = UpcomingSessionsFamily._();
@@ -112,7 +112,7 @@ final class UpcomingSessionsProvider
   }
 }
 
-String _$upcomingSessionsHash() => r'52373e09849d9f35ff80bf957934c407e07fdc46';
+String _$upcomingSessionsHash() => r'476475d367a204de8abe296b56cfa34a3c9a7a44';
 
 final class UpcomingSessionsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<Session>>, int> {
@@ -256,7 +256,7 @@ final class SessionProvider
   }
 }
 
-String _$sessionHash() => r'e331f08a564311cb28ceb29e92024dd51a8c5d0c';
+String _$sessionHash() => r'144791e9cf3db2b7375d7a1347f27e6857a38c66';
 
 final class SessionFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Session>, int> {
@@ -333,7 +333,7 @@ final class SetlistProvider
   }
 }
 
-String _$setlistHash() => r'552e98c944a4dd4d25316ae2bb5dfb207da127a7';
+String _$setlistHash() => r'a5b8aeb82c7838c4a016cb29fd5692a574523623';
 
 final class SetlistFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<SetlistItem>>, int> {

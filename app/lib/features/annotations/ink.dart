@@ -94,6 +94,13 @@ class InkStroke {
         'width': width,
         'points': toPgBytea(encodePoints(points)),
       };
+
+  /// The whole row, as the server returns it ([InkStroke.fromRow] reads it).
+  Map<String, Object?> toRow() => {
+        ...toInsertRow(),
+        'owner_id': ownerId,
+        'deleted_at': deletedAt?.toUtc().toIso8601String(),
+      };
 }
 
 const _bytesPerPoint = 5;

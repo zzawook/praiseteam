@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/annotations/stroke_outbox.dart';
 import '../features/announcements/announcements.dart';
 import '../features/chat/chat_providers.dart';
+import '../features/offline/offline_widgets.dart';
+import '../features/offline/prefetch.dart';
 import '../features/teams/teams_providers.dart';
 import '../l10n/app_localizations.dart';
 
@@ -52,6 +55,10 @@ class AppShell extends ConsumerWidget {
     final width = MediaQuery.sizeOf(context).width;
     final unreadChat = ref.watch(unreadChatCountProvider(teamId));
     final newAnnouncements = ref.watch(hasNewAnnouncementsProvider(teamId)).value ?? false;
+    // Keep upcoming services on the device, and send notes drawn offline.
+    ref
+      ..listen(offlinePrefetchProvider, (_, _) {})
+      ..listen(strokeOutboxProvider, (_, _) {});
 
     Widget icon(_Destination d, {required bool selected}) {
       final base = Icon(selected ? d.selectedIcon : d.icon);
@@ -64,16 +71,22 @@ class AppShell extends ConsumerWidget {
     if (width < Breakpoints.rail) {
       return Scaffold(
         body: child,
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _index,
-          onDestinationSelected: (i) => _go(context, i),
-          destinations: [
-            for (final d in _destinations)
-              NavigationDestination(
-                icon: icon(d, selected: false),
-                selectedIcon: icon(d, selected: true),
-                label: d.label(l10n),
-              ),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const OfflineBanner(),
+            NavigationBar(
+              selectedIndex: _index,
+              onDestinationSelected: (i) => _go(context, i),
+              destinations: [
+                for (final d in _destinations)
+                  NavigationDestination(
+                    icon: icon(d, selected: false),
+                    selectedIcon: icon(d, selected: true),
+                    label: d.label(l10n),
+                  ),
+              ],
+            ),
           ],
         ),
       );
@@ -102,7 +115,14 @@ class AppShell extends ConsumerWidget {
             ],
           ),
           const VerticalDivider(),
-          Expanded(child: child),
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(child: child),
+                const OfflineBanner(),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -15,6 +15,7 @@ import '../../l10n/app_localizations.dart';
 import '../annotations/annotation_layer.dart';
 import '../annotations/annotations_controller.dart';
 import '../annotations/ink.dart';
+import '../annotations/stroke_outbox.dart';
 import '../auth/auth.dart';
 import '../live/cue_widgets.dart';
 import '../live/live_clock.dart';
@@ -31,6 +32,7 @@ part 'setlist_viewer_screen.g.dart';
 /// Sheets used by a session's setlist, by id.
 @riverpod
 Future<Map<int, Sheet>> sessionSheets(Ref ref, int sessionId) async {
+  ref.watch(onlineStatusProvider.select((s) => s.epoch)); // refresh on reconnect
   final items = await ref.watch(setlistProvider(sessionId).future);
   final sheets = await ref.watch(songsRepositoryProvider).sheetsByIds([for (final i in items) ?i.sheetId]);
   return {for (final s in sheets) s.id: s};
@@ -251,6 +253,8 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   Widget _stand(List<StandPage> pages, StandPage page) {
     final isLeader = ref.watch(activeMembershipProvider(widget.teamId))?.role.isLeader ?? false;
     final me = ref.watch(currentUserIdProvider);
+    final online = ref.watch(onlineStatusProvider.select((s) => s.online));
+    final waiting = ref.watch(strokeOutboxProvider);
     // While drawing with a finger the pages must not slide; with a stylus,
     // fingers keep turning pages and only the pen draws.
     final physics = _ink.drawing && !_ink.stylusOnly ? const NeverScrollableScrollPhysics() : const PageScrollPhysics();
@@ -267,6 +271,8 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
             live: _live,
             follow: _follow,
             onFollow: _setFollow,
+            online: online,
+            waiting: waiting,
           ),
           Expanded(
             // expand: the pages fill the slot. A loose Stack would size
@@ -339,6 +345,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
             onRedo: _applyRedo,
             onCopyPrevious: () => _copyPrevious(page.item),
             live: _live != null,
+            online: online,
             onLive: () => _live == null ? _startLive() : _leaveLive(),
             onCue: _cue,
           ),
@@ -358,8 +365,15 @@ class _Header extends StatelessWidget {
     required this.live,
     required this.follow,
     required this.onFollow,
+    required this.online,
+    required this.waiting,
   });
   final LiveSession? live;
+
+  /// Offline, the stand shows the copy kept on the device; notes drawn
+  /// meanwhile wait to be sent ([waiting] of them).
+  final bool online;
+  final int waiting;
   final bool follow;
   final ValueChanged<bool> onFollow;
   final StandPage page;
@@ -423,6 +437,15 @@ class _Header extends StatelessWidget {
                   Switch(value: follow, onChanged: onFollow, activeThumbColor: AppColors.stageAmber),
                 ],
               ),
+            ),
+          ],
+          if (!online || waiting > 0) ...[
+            const SizedBox(width: 16),
+            Icon(online ? Icons.cloud_upload_outlined : Icons.cloud_off_outlined, size: 18, color: fg),
+            const SizedBox(width: 6),
+            Text(
+              waiting > 0 ? l10n.notesWaiting(waiting) : l10n.offline,
+              style: theme.textTheme.labelMedium?.copyWith(color: fg),
             ),
           ],
           const SizedBox(width: 16),
@@ -544,10 +567,14 @@ class _Toolbar extends StatelessWidget {
     required this.onRedo,
     required this.onCopyPrevious,
     required this.live,
+    required this.online,
     required this.onLive,
     required this.onCue,
   });
   final bool live;
+
+  /// Live mode and copying earlier notes need the server.
+  final bool online;
   final VoidCallback onLive;
   final VoidCallback onCue;
   final InkSettings ink;
@@ -591,13 +618,13 @@ class _Toolbar extends StatelessWidget {
             if (hasSheet)
               TextButton.icon(
                 style: buttonStyle,
-                onPressed: onCopyPrevious,
+                onPressed: online ? onCopyPrevious : null,
                 icon: const Icon(Icons.history),
                 label: Text(l10n.copyPreviousInk),
               ),
             TextButton.icon(
               style: buttonStyle,
-              onPressed: onLive,
+              onPressed: live || online ? onLive : null,
               icon: Icon(live ? Icons.stop_circle_outlined : Icons.sensors, color: live ? AppColors.stageAmber : null),
               label: Text(live ? l10n.liveLeave : l10n.liveStart),
             ),

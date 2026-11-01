@@ -28,7 +28,7 @@ async function semantics(page) {
   await page.waitForTimeout(800);
 }
 async function load(page, path) {
-  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  await page.goto(BASE + path, { waitUntil: 'load' });
   await semantics(page);
 }
 const btn = (page, name) => page.getByRole('button', { name, exact: true });
@@ -80,7 +80,7 @@ let pages = [];
   await shot(b, '04-pending-mobile');
 
   // A: sees request (+ live notification badge), approves
-  await a.goto(BASE + '/t/1/team', { waitUntil: 'networkidle' });
+  await a.goto(BASE + '/t/1/team', { waitUntil: 'load' });
   await semantics(a);
   await waitText(a, '가입 요청');
   await shot(a, '05-request-desktop');
@@ -102,7 +102,7 @@ let pages = [];
   await load(b, '/t/1/sessions');
 
   // A: add a song with a sheet (photo -> PDF)
-  await a.goto(BASE + '/t/1/songs', { waitUntil: 'networkidle' });
+  await a.goto(BASE + '/t/1/songs', { waitUntil: 'load' });
   await semantics(a);
   await btn(a, '곡 추가').click();
   await type(a, '곡 이름', '주의 집에 거하는 자');
@@ -122,7 +122,7 @@ let pages = [];
   await shot(a, '12-song-detail-desktop');
 
   // A: create a session, build and announce its setlist
-  await a.goto(BASE + '/t/1/sessions', { waitUntil: 'networkidle' });
+  await a.goto(BASE + '/t/1/sessions', { waitUntil: 'load' });
   await semantics(a);
   await btn(a, '예배 추가').click();
   await type(a, '예배 이름', '주일 2부 예배');
@@ -139,7 +139,7 @@ let pages = [];
   await shot(a, '14-setlist-published-desktop');
 
   // B: notified, opens the setlist
-  await b.reload({ waitUntil: 'networkidle' });
+  await b.reload({ waitUntil: 'load' });
   await semantics(b);
   await b.getByRole('button', { name: /알림/ }).first().click();
   await waitText(b, '주일 2부 예배 콘티');

@@ -1081,4 +1081,25 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pushOffHint => '꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요.';
+
+  @override
+  String get offline => '오프라인';
+
+  @override
+  String get offlineShowingSaved => '오프라인이에요. 이 기기에 저장해 둔 내용을 보여 줘요.';
+
+  @override
+  String offlineNotesWaiting(int count) {
+    return '필기 $count개는 연결되면 올라가요.';
+  }
+
+  @override
+  String notesWaiting(int count) {
+    return '필기 $count개 대기';
+  }
+
+  @override
+  String unsentNotesSignOut(int count) {
+    return '아직 올라가지 않은 필기가 $count개 있어요. 로그아웃하면 이 필기는 사라져요.';
+  }
 }

@@ -49,7 +49,7 @@ final class SongsRepositoryProvider
   }
 }
 
-String _$songsRepositoryHash() => r'2319bd710cd640ef1a1b3118a21b472251ec55bb';
+String _$songsRepositoryHash() => r'ec98047322e3965f0a009ed4410ac5db43e686a9';
 
 @ProviderFor(songLibrary)
 final songLibraryProvider = SongLibraryFamily._();

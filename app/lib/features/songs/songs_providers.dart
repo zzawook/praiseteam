@@ -3,13 +3,15 @@ import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/providers.dart';
+import '../offline/offline.dart';
 import 'models.dart';
 import 'songs_repository.dart';
 
 part 'songs_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-SongsRepository songsRepository(Ref ref) => SongsRepository(ref.watch(supabaseProvider));
+SongsRepository songsRepository(Ref ref) =>
+    SongsRepository(ref.watch(supabaseProvider), ref.watch(readThroughProvider));
 
 @riverpod
 Future<List<SongEntry>> songLibrary(Ref ref, int teamId) =>

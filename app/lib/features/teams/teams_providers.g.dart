@@ -49,7 +49,7 @@ final class TeamsRepositoryProvider
   }
 }
 
-String _$teamsRepositoryHash() => r'deb7a1fc472127fc5573e7344cc683fead7529a7';
+String _$teamsRepositoryHash() => r'75946a12b47672cef842f1bd86388f30f4321b7b';
 
 /// The signed-in user's memberships (pending and active).
 

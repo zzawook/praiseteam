@@ -23,7 +23,7 @@ async function semantics(page) {
   await page.waitForTimeout(800);
 }
 async function load(page, path) {
-  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  await page.goto(BASE + path, { waitUntil: 'load' });
   await semantics(page);
 }
 const btn = (page, name) => page.getByRole('button', { name, exact: true });
@@ -74,7 +74,7 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   sql(`insert into public.sessions (team_id, title, starts_at) values (${team}, '주일 2부 예배', now() + interval '5 days')`);
 
   // A: rotation -> auto-assign -> send
-  await a.goto(BASE + `/t/${team}/rotation`, { waitUntil: 'networkidle' });
+  await a.goto(BASE + `/t/${team}/rotation`, { waitUntil: 'load' });
   await semantics(a);
   await waitText(a, '주일 2부 예배');
   await a.getByRole('button', { name: /Show menu|메뉴|더보기/ }).last().click().catch(async () => {
@@ -90,7 +90,7 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   console.log('after send:', sql(`select status from public.assignments`));
 
   // B: accepts from "I'm serving"
-  await b.goto(BASE + `/t/${team}/sessions`, { waitUntil: 'networkidle' });
+  await b.goto(BASE + `/t/${team}/sessions`, { waitUntil: 'load' });
   await semantics(b);
   await waitText(b, '내 섬김');
   await shot(b, '22-my-serving-mobile');

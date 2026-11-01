@@ -1,39 +1,62 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderListenableSelect;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/providers.dart';
 import '../auth/auth.dart';
+import '../offline/offline.dart';
 import 'annotations_repository.dart';
 import 'ink.dart';
+import 'stroke_outbox.dart';
 
 part 'annotations_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-AnnotationsRepository annotationsRepository(Ref ref) => AnnotationsRepository(ref.watch(supabaseProvider));
+AnnotationsRepository annotationsRepository(Ref ref) =>
+    AnnotationsRepository(ref.watch(supabaseProvider), ref.watch(readThroughProvider));
 
 /// Strokes of one session, by id, kept in sync with the server.
 ///
-/// Local changes apply immediately and are sent in the background; failed
-/// sends stay queued and are retried, in order, every few seconds. Because
-/// strokes are immutable (insert, or set deleted_at) and ids come from the
-/// device, a retry can never duplicate or conflict with anything.
+/// Local changes apply at once and go to the [StrokeOutbox], which keeps
+/// them on the device until the server has them. What the screen shows is
+/// the server's strokes (or the saved copy, offline) with the waiting
+/// changes applied on top, so notes drawn offline stay visible after a
+/// restart.
 @riverpod
 class SessionInk extends _$SessionInk {
-  final _queue = <Future<void> Function()>[];
-  Timer? _retry;
+  Timer? _saveSoon;
 
   @override
   Future<Map<String, InkStroke>> build(int sessionId) async {
     final repo = ref.watch(annotationsRepositoryProvider);
     final channel = repo.watch(sessionId, _merge);
+    // Back online: catch up on what others drew meanwhile.
+    ref.listen(onlineStatusProvider.select((s) => s.epoch), (_, _) => _refresh());
     ref.onDispose(() {
       channel.unsubscribe();
-      _retry?.cancel();
+      _saveSoon?.cancel();
     });
-    final strokes = await repo.forSession(sessionId);
-    return {for (final s in strokes) s.id: s};
+    return _load();
+  }
+
+  Future<Map<String, InkStroke>> _load() async {
+    final strokes = await ref.read(annotationsRepositoryProvider).forSession(sessionId);
+    final shown = {for (final s in strokes) s.id: s};
+    for (final op in await ref.read(strokeOutboxProvider.notifier).pendingFor(sessionId)) {
+      op.applyTo(shown);
+    }
+    return shown;
+  }
+
+  Future<void> _refresh() async {
+    try {
+      final fresh = await _load();
+      state = AsyncData({...?state.value, ...fresh});
+    } catch (_) {
+      // Still unreachable: keep what is shown.
+    }
   }
 
   String? get _me => ref.read(currentUserIdProvider);
@@ -42,27 +65,23 @@ class SessionInk extends _$SessionInk {
     final current = state.value;
     if (current == null) return;
     state = AsyncData({...current, stroke.id: stroke});
+    _saveLater();
   }
 
-  /// Number of local changes not yet confirmed by the server.
-  int get pending => _queue.length;
-
-  void _enqueue(Future<void> Function() send) {
-    _queue.add(send);
-    _drain();
-  }
-
-  Future<void> _drain() async {
-    _retry?.cancel();
-    while (_queue.isNotEmpty) {
-      try {
-        await _queue.first();
-        _queue.removeAt(0);
-      } catch (_) {
-        _retry = Timer(const Duration(seconds: 5), _drain);
-        return;
-      }
-    }
+  /// Keeps the device's copy current with strokes that arrive live, so
+  /// they are there after a restart without a connection.
+  void _saveLater() {
+    _saveSoon?.cancel();
+    _saveSoon = Timer(const Duration(seconds: 2), () {
+      final strokes = state.value;
+      final owner = _me;
+      if (strokes == null || owner == null) return;
+      ref.read(offlineStoreProvider).saveSnapshot(
+        owner,
+        AnnotationsRepository.offlineKey(sessionId),
+        [for (final s in strokes.values) s.toRow()],
+      );
+    });
   }
 
   InkStroke add({
@@ -91,8 +110,7 @@ class SessionInk extends _$SessionInk {
       points: simplify(points),
     );
     _merge(stroke);
-    final repo = ref.read(annotationsRepositoryProvider);
-    _enqueue(() => repo.save(stroke));
+    ref.read(strokeOutboxProvider.notifier).add(SaveStroke(stroke));
     return stroke;
   }
 
@@ -101,8 +119,7 @@ class SessionInk extends _$SessionInk {
     if (stroke == null) return;
     final at = deleted ? DateTime.now() : null;
     _merge(stroke.withDeletedAt(at));
-    final repo = ref.read(annotationsRepositoryProvider);
-    _enqueue(() => repo.setDeleted(strokeId, at));
+    ref.read(strokeOutboxProvider.notifier).add(EraseStroke(sessionId, strokeId, at));
   }
 
   /// Whether the current user may erase [stroke] (mirrors the RLS policy).
@@ -111,10 +128,7 @@ class SessionInk extends _$SessionInk {
 
   Future<int> copyPrevious(int itemId) async {
     final count = await ref.read(annotationsRepositoryProvider).copyPrevious(itemId);
-    if (count > 0) {
-      final strokes = await ref.read(annotationsRepositoryProvider).forSession(sessionId);
-      state = AsyncData({for (final s in strokes) s.id: s});
-    }
+    if (count > 0) state = AsyncData(await _load());
     return count;
   }
 }

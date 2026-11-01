@@ -1,11 +1,15 @@
 // supabase_flutter's auth Session is not the worship session model here.
 import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 
+import '../../core/offline/offline_store.dart';
 import 'models.dart';
 
+/// Sessions and setlists. The reads the music stand needs are kept on the
+/// device ([ReadThrough]) so they work without a connection.
 class SessionsRepository {
-  SessionsRepository(this._db);
+  SessionsRepository(this._db, this._offline);
   final SupabaseClient _db;
+  final ReadThrough _offline;
 
   static const _sessionColumns =
       'id, team_id, title, starts_at, location, theme, notes, setlist_status, published_at, setlist_items(count)';
@@ -16,13 +20,16 @@ class SessionsRepository {
   static DateTime get _upcomingCutoff => DateTime.now().subtract(const Duration(hours: 12)).toUtc();
 
   Future<List<Session>> upcoming(int teamId) async {
-    final rows = await _db
-        .from('sessions')
-        .select(_sessionColumns)
-        .eq('team_id', teamId)
-        .gte('starts_at', _upcomingCutoff.toIso8601String())
-        .order('starts_at', ascending: true)
-        .limit(100);
+    final rows = await _offline.list(
+      'sessions:upcoming:$teamId',
+      () => _db
+          .from('sessions')
+          .select(_sessionColumns)
+          .eq('team_id', teamId)
+          .gte('starts_at', _upcomingCutoff.toIso8601String())
+          .order('starts_at', ascending: true)
+          .limit(100),
+    );
     return rows.map(Session.fromJson).toList();
   }
 
@@ -37,15 +44,16 @@ class SessionsRepository {
     return rows.map(Session.fromJson).toList();
   }
 
-  Future<Session> session(int sessionId) async =>
-      Session.fromJson(await _db.from('sessions').select(_sessionColumns).eq('id', sessionId).single());
+  Future<Session> session(int sessionId) async => Session.fromJson(await _offline.single(
+        'session:$sessionId',
+        () => _db.from('sessions').select(_sessionColumns).eq('id', sessionId).single(),
+      ));
 
   Future<List<SetlistItem>> setlist(int sessionId) async {
-    final rows = await _db
-        .from('setlist_items')
-        .select(_itemColumns)
-        .eq('session_id', sessionId)
-        .order('position', ascending: true);
+    final rows = await _offline.list(
+      'setlist:$sessionId',
+      () => _db.from('setlist_items').select(_itemColumns).eq('session_id', sessionId).order('position', ascending: true),
+    );
     return rows.map(SetlistItem.fromJson).toList();
   }
 

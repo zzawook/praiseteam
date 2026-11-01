@@ -23,7 +23,7 @@ async function semantics(page) {
   await page.waitForTimeout(800);
 }
 async function load(page, path) {
-  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  await page.goto(BASE + path, { waitUntil: 'load' });
   await semantics(page);
 }
 const btn = (page, name) => page.getByRole('button', { name, exact: true });
@@ -76,10 +76,10 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
 
   // channels by part
   const labels = async (p) => p.evaluate(() => [...document.querySelectorAll('flt-semantics')].map((e) => (e.getAttribute('aria-label') || e.textContent || '').trim()).filter(Boolean));
-  await a.goto(BASE + `/t/${team}/chat`, { waitUntil: 'networkidle' });
+  await a.goto(BASE + `/t/${team}/chat`, { waitUntil: 'load' });
   await semantics(a);
   await waitText(a, '악기팀');
-  await b.goto(BASE + `/t/${team}/chat`, { waitUntil: 'networkidle' });
+  await b.goto(BASE + `/t/${team}/chat`, { waitUntil: 'load' });
   await semantics(b);
   await waitText(b, '싱어팀');
   const bSees = (await labels(b)).join(' | ');
@@ -98,8 +98,8 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await shot(b, '30-chat-mobile');
 
   // B makes a poll in the team channel; A votes
-  await b.goBack({ waitUntil: 'networkidle' }).catch(() => {});
-  await b.goto(BASE + `/t/${team}/chat`, { waitUntil: 'networkidle' });
+  await b.goBack({ waitUntil: 'load' }).catch(() => {});
+  await b.goto(BASE + `/t/${team}/chat`, { waitUntil: 'load' });
   await semantics(b);
   await b.getByText('전체').or(b.getByRole('button', { name: /전체/ })).first().click();
   await waitText(b, '첫 메시지를 남겨보세요.');
@@ -109,7 +109,7 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await type(b, '선택지 2', '토요일');
   await btn(b, '만들기').click();
   await waitText(b, '회식 언제 할까요?');
-  await a.goto(BASE + `/t/${team}/chat`, { waitUntil: 'networkidle' });
+  await a.goto(BASE + `/t/${team}/chat`, { waitUntil: 'load' });
   await semantics(a);
   await a.getByText('전체').or(a.getByRole('button', { name: /전체/ })).first().click();
   await waitText(a, '회식 언제 할까요?');
@@ -119,13 +119,13 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   console.log('votes:', sql(`select o.label || ':' || count(v.*) from public.poll_options o left join public.poll_votes v on v.option_id = o.id group by o.label order by o.label`).replace(/\n/g, ' '));
 
   // A posts an announcement; B sees it as new
-  await a.goto(BASE + `/t/${team}/announcements`, { waitUntil: 'networkidle' });
+  await a.goto(BASE + `/t/${team}/announcements`, { waitUntil: 'load' });
   await semantics(a);
   await btn(a, '공지 쓰기').click();
   await type(a, '제목', '수련회 신청 마감');
   await btn(a, '저장').click();
   await waitText(a, '수련회 신청 마감');
-  await b.goto(BASE + `/t/${team}/chat`, { waitUntil: 'networkidle' });
+  await b.goto(BASE + `/t/${team}/chat`, { waitUntil: 'load' });
   await semantics(b);
   await waitText(b, '새 글');
   await shot(b, '32-chat-tab-new-announcement-mobile');
