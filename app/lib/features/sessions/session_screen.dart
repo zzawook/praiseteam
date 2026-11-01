@@ -56,6 +56,7 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
             songId: entry.song.id,
             position: position,
             key: entry.displayKey,
+            bpm: entry.song.bpm,
             sheetId: sheet?.id,
           );
     });
@@ -372,7 +373,22 @@ class _SetlistRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Padding(padding: const EdgeInsets.only(top: 2), child: KeyBadge(item.effectiveKey, emphasized: true)),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                children: [
+                  KeyBadge(item.effectiveKey, emphasized: true),
+                  if (item.effectiveBpm case final bpm?)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        '$bpm BPM',
+                        style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      ),
+                    ),
+                ],
+              ),
+            ),
             if (draggable)
               ReorderableDragStartListener(
                 index: index,

@@ -234,6 +234,8 @@
       }
     }
   },
+  "changeTempo": "템포: {changes}",
+  "@changeTempo": {"placeholders": {"changes": {"type": "String"}}},
   "changeOrder": "순서 변경",
   "notifSetlistTitle": "{session} 콘티",
   "@notifSetlistTitle": {
@@ -426,6 +428,10 @@
     }
   },
   "rotation": "로테이션",
+  "rotationList": "목록",
+  "rotationTable": "표",
+  "openPlaces": "빈 자리 {count}",
+  "@openPlaces": {"placeholders": {"count": {"type": "int"}}},
   "myServing": "내 섬김",
   "noServing": "다가오는 섬김이 없어요.",
   "accept": "수락",

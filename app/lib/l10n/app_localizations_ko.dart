@@ -456,6 +456,11 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String changeTempo(String changes) {
+    return '템포: $changes';
+  }
+
+  @override
   String get changeOrder => '순서 변경';
 
   @override
@@ -698,6 +703,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get rotation => '로테이션';
+
+  @override
+  String get rotationList => '목록';
+
+  @override
+  String get rotationTable => '표';
+
+  @override
+  String openPlaces(int count) {
+    return '빈 자리 $count';
+  }
 
   @override
   String get myServing => '내 섬김';

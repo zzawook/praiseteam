@@ -112,7 +112,17 @@ class SongDetailScreen extends ConsumerWidget {
                   onTap: () => context.push('/t/$teamId/sessions/${h.sessionId}'),
                   title: Text(h.sessionTitle),
                   subtitle: Text(DateFormats(context).fullDate(h.startsAt)),
-                  trailing: KeyBadge(h.key),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (h.bpm case final bpm?)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Text('$bpm BPM', style: Theme.of(context).textTheme.labelSmall),
+                        ),
+                      KeyBadge(h.key),
+                    ],
+                  ),
                 ),
               if (d.history.isEmpty)
                 Padding(

@@ -134,6 +134,20 @@ let pages = [];
   await waitText(a, '아직 안 했어요');
   await a.getByText('주의 집에 거하는 자', { exact: true }).or(a.getByRole('button', { name: /주의 집에 거하는 자/ })).first().click();
   await a.waitForTimeout(1500);
+  // this service plays the song at its own tempo
+  await a.getByRole('button', { name: /주의 집에 거하는 자/ }).last().click();
+  const bpm = a.locator('input[aria-label^="BPM"]').last();
+  await bpm.click();
+  await a.waitForFunction(() => document.activeElement?.tagName === 'INPUT', null, { timeout: 5000 });
+  await a.waitForTimeout(250);
+  await a.keyboard.press('Control+A');
+  await a.keyboard.type('76', { delay: 15 });
+  await btn(a, '저장').last().click();
+  await waitText(a, '76 BPM');
+  const itemBpm = require('child_process').execSync(
+    `docker exec supabase_db_praiseteam psql -U postgres -d postgres -Atc "select bpm from public.setlist_items order by id desc limit 1"`,
+  ).toString().trim();
+  if (itemBpm !== '76') throw new Error(`setlist item tempo: expected 76, got ${itemBpm}`);
   await shot(a, '13-setlist-draft-desktop');
   await btn(a, '콘티 공지하기').first().click();
   await btn(a, '콘티 공지하기').last().click();

@@ -105,6 +105,7 @@ _SongHistoryEntry _$SongHistoryEntryFromJson(Map<String, dynamic> json) =>
       sessionTitle: json['session_title'] as String,
       startsAt: DateTime.parse(json['starts_at'] as String),
       key: json['key'] as String?,
+      bpm: (json['bpm'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$SongHistoryEntryToJson(_SongHistoryEntry instance) =>
@@ -113,4 +114,5 @@ Map<String, dynamic> _$SongHistoryEntryToJson(_SongHistoryEntry instance) =>
       'session_title': instance.sessionTitle,
       'starts_at': instance.startsAt.toIso8601String(),
       'key': instance.key,
+      'bpm': instance.bpm,
     };

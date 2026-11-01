@@ -91,6 +91,9 @@ abstract class SetlistItem with _$SetlistItem {
     required int position,
     required int songId,
     String? key,
+
+    /// This service's tempo; null plays it at the song's own.
+    int? bpm,
     int? sheetId,
     String? songForm,
     String? notes,
@@ -99,6 +102,9 @@ abstract class SetlistItem with _$SetlistItem {
 
   /// The key for this service, falling back to the song's default.
   String? get effectiveKey => key ?? song.defaultKey;
+
+  /// The tempo for this service, falling back to the song's.
+  int? get effectiveBpm => bpm ?? song.bpm;
 
   factory SetlistItem.fromJson(Map<String, dynamic> json) => _$SetlistItemFromJson(json);
 }
@@ -109,6 +115,7 @@ class SetlistChanges {
     this.added = const [],
     this.removed = const [],
     this.keyChanged = const [],
+    this.tempoChanged = const [],
     this.reordered = false,
   });
 
@@ -119,13 +126,18 @@ class SetlistChanges {
           for (final k in (json?['key_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
             (title: k['title'].toString(), from: k['from'] as String?, to: k['to'] as String?),
         ],
+        tempoChanged: [
+          for (final t in (json?['tempo_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
+            (title: t['title'].toString(), from: t['from'] as int?, to: t['to'] as int?),
+        ],
         reordered: json?['reordered'] == true,
       );
 
   final List<String> added;
   final List<String> removed;
   final List<({String title, String? from, String? to})> keyChanged;
+  final List<({String title, int? from, int? to})> tempoChanged;
   final bool reordered;
 
-  bool get isEmpty => added.isEmpty && removed.isEmpty && keyChanged.isEmpty && !reordered;
+  bool get isEmpty => added.isEmpty && removed.isEmpty && keyChanged.isEmpty && tempoChanged.isEmpty && !reordered;
 }

@@ -40,7 +40,7 @@ class SongsRepository {
       _db.from('sheets').select(_sheetColumns).eq('song_id', songId).order('created_at', ascending: true),
       _db
           .from('song_history')
-          .select('session_id, session_title, starts_at, key')
+          .select('session_id, session_title, starts_at, key, bpm')
           .eq('song_id', songId)
           .order('starts_at', ascending: false)
           .limit(50),

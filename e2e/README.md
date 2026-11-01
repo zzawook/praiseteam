@@ -7,7 +7,7 @@ local Supabase stack and assert what each user can see.
 |---|---|
 | `flow_m2.js` | sign-up, create team, join by code, approval (deep link), opt in to every setlist, songs, sheet upload (photo -> PDF), sessions, setlist, announcement, notification |
 | `flow_m3.js` | annotations: private vs team strokes, live sync to another member |
-| `flow_m4.js` | rotation: auto-assign, send, member accepts |
+| `flow_m4.js` | rotation: auto-assign, send, member accepts; the rotation as a table, a cell opening its part of the service |
 | `flow_m5.js` | chat: part channels, live messages, polls, announcements, unread markers |
 | `flow_m6.js` | live mode: follow page turns, cues, follow off and back on, late joiner |
 | `flow_offline.js` | offline: this week's services kept on the device; the stand opens a never-opened service without a connection; notes drawn offline upload on reconnect |

@@ -477,6 +477,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String changeTempo(String changes) {
+    return 'Tempo: $changes';
+  }
+
+  @override
   String get changeOrder => 'New order';
 
   @override
@@ -763,6 +768,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rotation => 'Rotation';
+
+  @override
+  String get rotationList => 'List';
+
+  @override
+  String get rotationTable => 'Table';
+
+  @override
+  String openPlaces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count open',
+      one: '1 open',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get myServing => 'I\'m serving';

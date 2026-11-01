@@ -19,10 +19,11 @@ type Summary = {
   added?: string[];
   removed?: string[];
   key_changed?: Array<{ title: string; from: string | null; to: string | null }>;
+  tempo_changed?: Array<{ title: string; from?: number | null; to?: number | null }>;
   reordered?: boolean;
 };
 
-/** "추가: A, B / 키: C(G→A) / 순서 변경" */
+/** "추가: A, B / 키: C(G→A) / 템포: D(68→72) / 순서 변경" */
 export function describeChanges(summary: Summary | undefined, locale: Locale): string {
   if (!summary) return "";
   const ko = locale === "ko";
@@ -32,6 +33,10 @@ export function describeChanges(summary: Summary | undefined, locale: Locale): s
   if (summary.key_changed?.length) {
     const keys = summary.key_changed.map((k) => `${k.title}(${k.from ?? "?"}→${k.to ?? "?"})`);
     parts.push(`${ko ? "키" : "Key"}: ${keys.join(", ")}`);
+  }
+  if (summary.tempo_changed?.length) {
+    const tempos = summary.tempo_changed.map((t) => `${t.title}(${t.from ?? "?"}→${t.to ?? "?"})`);
+    parts.push(`${ko ? "템포" : "Tempo"}: ${tempos.join(", ")}`);
   }
   if (summary.reordered) parts.push(ko ? "순서 변경" : "New order");
   return parts.join(" / ");

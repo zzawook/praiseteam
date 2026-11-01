@@ -94,6 +94,7 @@ abstract class SongHistoryEntry with _$SongHistoryEntry {
     required String sessionTitle,
     required DateTime startsAt,
     String? key,
+    int? bpm,
   }) = _SongHistoryEntry;
 
   factory SongHistoryEntry.fromJson(Map<String, dynamic> json) => _$SongHistoryEntryFromJson(json);

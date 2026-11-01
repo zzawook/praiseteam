@@ -102,6 +102,18 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   console.log('B notified:', sql(`select string_agg(category, ',') from public.notifications where user_id = '${bId}'`));
   await shot(b, '23-accepted-mobile');
 
+  // A: the same rotation as a table; a cell opens that part of the service
+  const bName = sql(`select display_name from public.profiles where id = '${bId}'`);
+  await a.goto(BASE + `/t/${team}/rotation`, { waitUntil: 'load' });
+  await semantics(a);
+  await waitText(a, '주일 2부 예배');
+  await a.getByRole('radio', { name: /^표/ }).or(a.getByRole('button', { name: /^표/ })).or(a.getByRole('checkbox', { name: /^표/ })).first().click();
+  await waitText(a, bName);
+  await shot(a, '24-rotation-table-desktop');
+  await a.locator('flt-semantics').filter({ hasText: bName }).last().click();
+  await a.getByRole('button', { name: new RegExp(bName) }).last().waitFor({ timeout: 10000 });
+  await shot(a, '25-rotation-cell-desktop');
+
   await browser.close();
   console.log('FLOW M4 OK');
 })().catch(async (e) => {

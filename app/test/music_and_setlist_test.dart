@@ -62,6 +62,18 @@ void main() {
       expect(describeSetlistChanges(en, changes), 'Added: 은혜 / Key: 주의 집에 거하는 자(G→A) / New order');
     });
 
+    test('a changed tempo is part of the summary', () {
+      final changes = SetlistChanges.fromJson({
+        'tempo_changed': [
+          {'title': '은혜', 'from': 68, 'to': 72},
+          {'title': '주의 집에 거하는 자', 'to': 76}, // nulls are stripped
+        ],
+      });
+      expect(changes.isEmpty, isFalse);
+      expect(describeSetlistChanges(ko, changes), '템포: 은혜(68→72), 주의 집에 거하는 자(?→76)');
+      expect(describeSetlistChanges(en, changes), 'Tempo: 은혜(68→72), 주의 집에 거하는 자(?→76)');
+    });
+
     test('empty summary means nothing changed', () {
       expect(SetlistChanges.fromJson(const {}).isEmpty, isTrue);
       expect(SetlistChanges.fromJson(null).isEmpty, isTrue);

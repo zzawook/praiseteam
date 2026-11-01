@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/theme.dart';
 import '../../core/dates.dart';
+import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth.dart';
@@ -13,6 +14,7 @@ import '../teams/teams_providers.dart';
 import 'auto_assign.dart';
 import 'rotation_providers.dart';
 import 'rotation_repository.dart';
+import 'rotation_table.dart';
 
 String statusLabel(AppLocalizations l10n, AssignmentStatus s) => switch (s) {
       AssignmentStatus.draft => l10n.statusDraft,
@@ -33,15 +35,32 @@ String statusLabel(AppLocalizations l10n, AssignmentStatus s) => switch (s) {
   };
 }
 
-/// The schedule for the coming weeks: who serves where. Leaders fill it
-/// (by hand or auto-assign), edit drafts freely, then send; members answer
-/// and swap.
-class RotationScreen extends ConsumerWidget {
+/// The schedule for the coming weeks: who serves where, as a list by
+/// service or as a table. Leaders fill it (by hand or auto-assign), edit
+/// drafts freely, then send; members answer and swap.
+class RotationScreen extends ConsumerStatefulWidget {
   const RotationScreen({super.key, required this.teamId});
   final int teamId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RotationScreen> createState() => _RotationScreenState();
+}
+
+class _RotationScreenState extends ConsumerState<RotationScreen> {
+  static const _tableKey = 'rotation.table';
+
+  /// Each device remembers whether it last showed the table.
+  late bool _table = ref.read(sharedPreferencesProvider).getBool(_tableKey) ?? false;
+
+  void _setTable(bool table) {
+    setState(() => _table = table);
+    ref.read(sharedPreferencesProvider).setBool(_tableKey, table);
+  }
+
+  int get teamId => widget.teamId;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isLeader = ref.watch(activeMembershipProvider(teamId))?.role.isLeader ?? false;
     final board = ref.watch(rotationBoardProvider(teamId));
@@ -92,22 +111,53 @@ class RotationScreen extends ConsumerWidget {
       body: AsyncBody(
         value: board,
         onRetry: () => ref.invalidate(rotationBoardProvider(teamId)),
-        data: (b) => RefreshIndicator(
-          onRefresh: () async => ref.invalidate(rotationBoardProvider(teamId)),
-          child: ContentWidth(
-            child: ListView(
-              padding: const EdgeInsets.only(bottom: 48),
-              children: [
-                if (isLeader && b.sessions.isNotEmpty && b.slots.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                    child: OutlinedButton(onPressed: () => _editDefaults(context, ref, parts), child: Text(l10n.defaultNeeded)),
-                  ),
-                for (final s in b.sessions) _SessionBlock(teamId: teamId, session: s, board: b, parts: parts, isLeader: isLeader),
-              ],
+        data: (b) {
+          final top = [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SegmentedButton<bool>(
+                  segments: [
+                    ButtonSegment(value: false, icon: const Icon(Icons.view_agenda_outlined), label: Text(l10n.rotationList)),
+                    ButtonSegment(value: true, icon: const Icon(Icons.table_chart_outlined), label: Text(l10n.rotationTable)),
+                  ],
+                  selected: {_table},
+                  showSelectedIcon: false,
+                  onSelectionChanged: (v) => _setTable(v.first),
+                ),
+              ),
             ),
-          ),
-        ),
+            if (isLeader && b.sessions.isNotEmpty && b.slots.isEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                child: OutlinedButton(onPressed: () => _editDefaults(context, ref, parts), child: Text(l10n.defaultNeeded)),
+              ),
+          ];
+          return RefreshIndicator(
+            onRefresh: () async => ref.invalidate(rotationBoardProvider(teamId)),
+            // The table takes the whole width; the list keeps reading width.
+            child: _table
+                ? ListView(
+                    padding: const EdgeInsets.only(bottom: 48),
+                    children: [
+                      ...top,
+                      const SizedBox(height: 8),
+                      RotationTable(teamId: teamId, board: b, parts: parts, isLeader: isLeader),
+                    ],
+                  )
+                : ContentWidth(
+                    child: ListView(
+                      padding: const EdgeInsets.only(bottom: 48),
+                      children: [
+                        ...top,
+                        for (final s in b.sessions)
+                          _SessionBlock(teamId: teamId, session: s, board: b, parts: parts, isLeader: isLeader),
+                      ],
+                    ),
+                  ),
+          );
+        },
       ),
     );
   }
@@ -164,6 +214,68 @@ class RotationScreen extends ConsumerWidget {
       }
     });
     ref.invalidate(rotationBoardProvider(teamId));
+  }
+}
+
+/// One part of one service, as the list shows it: opened from a table cell
+/// to fill the places or answer. Follows the board as it changes.
+Future<void> showServingSheet(
+  BuildContext context, {
+  required int teamId,
+  required Session session,
+  required Part part,
+  required bool isLeader,
+}) => showModalBottomSheet<void>(
+  context: context,
+  showDragHandle: true,
+  builder: (_) => _ServingSheet(teamId: teamId, session: session, part: part, isLeader: isLeader),
+);
+
+class _ServingSheet extends ConsumerWidget {
+  const _ServingSheet({required this.teamId, required this.session, required this.part, required this.isLeader});
+  final int teamId;
+  final Session session;
+  final Part part;
+  final bool isLeader;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final formats = DateFormats(context);
+    final board = ref.watch(rotationBoardProvider(teamId)).value;
+    final local = session.startsAt.toLocal();
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(session.title, style: theme.textTheme.titleMedium),
+                  Text('${formats.dayWithWeekday(local)} ${formats.time(local)}', style: theme.textTheme.bodySmall),
+                ],
+              ),
+            ),
+            if (board != null)
+              _PartRow(
+                teamId: teamId,
+                session: session,
+                part: part,
+                needed: board.slots[(session.id, part.id)] ?? 0,
+                people: board.of(session.id, part.id),
+                swaps: board.swaps,
+                isLeader: isLeader,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

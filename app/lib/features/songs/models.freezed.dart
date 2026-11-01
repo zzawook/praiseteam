@@ -1186,7 +1186,7 @@ as DateTime,
 /// @nodoc
 mixin _$SongHistoryEntry {
 
- int get sessionId; String get sessionTitle; DateTime get startsAt; String? get key;
+ int get sessionId; String get sessionTitle; DateTime get startsAt; String? get key; int? get bpm;
 /// Create a copy of SongHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1200,20 +1200,20 @@ $SongHistoryEntryCopyWith<SongHistoryEntry> get copyWith => _$SongHistoryEntryCo
 @override
 bool operator ==(Object other) {
   final _this = this as SongHistoryEntry;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SongHistoryEntry&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&(identical(other.sessionTitle, _this.sessionTitle) || other.sessionTitle == _this.sessionTitle)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.key, _this.key) || other.key == _this.key));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SongHistoryEntry&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&(identical(other.sessionTitle, _this.sessionTitle) || other.sessionTitle == _this.sessionTitle)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SongHistoryEntry;
-  return Object.hash(runtimeType,_this.sessionId,_this.sessionTitle,_this.startsAt,_this.key);
+  return Object.hash(runtimeType,_this.sessionId,_this.sessionTitle,_this.startsAt,_this.key,_this.bpm);
 }
 
 @override
 String toString() {
   final _this = this as SongHistoryEntry;
-  return 'SongHistoryEntry(sessionId: ${_this.sessionId}, sessionTitle: ${_this.sessionTitle}, startsAt: ${_this.startsAt}, key: ${_this.key})';
+  return 'SongHistoryEntry(sessionId: ${_this.sessionId}, sessionTitle: ${_this.sessionTitle}, startsAt: ${_this.startsAt}, key: ${_this.key}, bpm: ${_this.bpm})';
 }
 
 
@@ -1224,7 +1224,7 @@ abstract mixin class $SongHistoryEntryCopyWith<$Res>  {
   factory $SongHistoryEntryCopyWith(SongHistoryEntry value, $Res Function(SongHistoryEntry) _then) = _$SongHistoryEntryCopyWithImpl;
 @useResult
 $Res call({
- int sessionId, String sessionTitle, DateTime startsAt, String? key
+ int sessionId, String sessionTitle, DateTime startsAt, String? key, int? bpm
 });
 
 
@@ -1241,13 +1241,14 @@ class _$SongHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of SongHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? sessionTitle = null,Object? startsAt = null,Object? key = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? sessionTitle = null,Object? startsAt = null,Object? key = freezed,Object? bpm = freezed,}) {
   return _then(SongHistoryEntry(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as int,sessionTitle: null == sessionTitle ? _self.sessionTitle : sessionTitle // ignore: cast_nullable_to_non_nullable
 as String,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
 as DateTime,key: freezed == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -1332,10 +1333,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int sessionId,  String sessionTitle,  DateTime startsAt,  String? key)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int sessionId,  String sessionTitle,  DateTime startsAt,  String? key,  int? bpm)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SongHistoryEntry() when $default != null:
-return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key);case _:
+return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key,_that.bpm);case _:
   return orElse();
 
 }
@@ -1353,10 +1354,10 @@ return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int sessionId,  String sessionTitle,  DateTime startsAt,  String? key)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int sessionId,  String sessionTitle,  DateTime startsAt,  String? key,  int? bpm)  $default,) {final _that = this;
 switch (_that) {
 case _SongHistoryEntry():
-return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key);case _:
+return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key,_that.bpm);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1373,10 +1374,10 @@ return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int sessionId,  String sessionTitle,  DateTime startsAt,  String? key)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int sessionId,  String sessionTitle,  DateTime startsAt,  String? key,  int? bpm)?  $default,) {final _that = this;
 switch (_that) {
 case _SongHistoryEntry() when $default != null:
-return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key);case _:
+return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key,_that.bpm);case _:
   return null;
 
 }
@@ -1388,13 +1389,14 @@ return $default(_that.sessionId,_that.sessionTitle,_that.startsAt,_that.key);cas
 @JsonSerializable()
 
 class _SongHistoryEntry implements SongHistoryEntry {
-  const _SongHistoryEntry({required this.sessionId, required this.sessionTitle, required this.startsAt, this.key});
+  const _SongHistoryEntry({required this.sessionId, required this.sessionTitle, required this.startsAt, this.key, this.bpm});
   factory _SongHistoryEntry.fromJson(Map<String, dynamic> json) => _$SongHistoryEntryFromJson(json);
 
 @override final  int sessionId;
 @override final  String sessionTitle;
 @override final  DateTime startsAt;
 @override final  String? key;
+@override final  int? bpm;
 
 /// Create a copy of SongHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -1409,18 +1411,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SongHistoryEntry&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.sessionTitle, sessionTitle) || other.sessionTitle == sessionTitle)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.key, key) || other.key == key));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SongHistoryEntry&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.sessionTitle, sessionTitle) || other.sessionTitle == sessionTitle)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.key, key) || other.key == key)&&(identical(other.bpm, bpm) || other.bpm == bpm));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,sessionId,sessionTitle,startsAt,key);
+    return Object.hash(runtimeType,sessionId,sessionTitle,startsAt,key,bpm);
 }
 
 @override
 String toString() {
-    return 'SongHistoryEntry(sessionId: $sessionId, sessionTitle: $sessionTitle, startsAt: $startsAt, key: $key)';
+    return 'SongHistoryEntry(sessionId: $sessionId, sessionTitle: $sessionTitle, startsAt: $startsAt, key: $key, bpm: $bpm)';
 }
 
 
@@ -1431,7 +1433,7 @@ abstract mixin class _$SongHistoryEntryCopyWith<$Res> implements $SongHistoryEnt
   factory _$SongHistoryEntryCopyWith(_SongHistoryEntry value, $Res Function(_SongHistoryEntry) _then) = __$SongHistoryEntryCopyWithImpl;
 @override @useResult
 $Res call({
- int sessionId, String sessionTitle, DateTime startsAt, String? key
+ int sessionId, String sessionTitle, DateTime startsAt, String? key, int? bpm
 });
 
 
@@ -1448,13 +1450,14 @@ class __$SongHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of SongHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? sessionTitle = null,Object? startsAt = null,Object? key = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? sessionTitle = null,Object? startsAt = null,Object? key = freezed,Object? bpm = freezed,}) {
   return _then(_SongHistoryEntry(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as int,sessionTitle: null == sessionTitle ? _self.sessionTitle : sessionTitle // ignore: cast_nullable_to_non_nullable
 as String,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
 as DateTime,key: freezed == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

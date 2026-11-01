@@ -9,7 +9,7 @@ import '../songs/songs_providers.dart';
 import 'models.dart';
 import 'sessions_providers.dart';
 
-/// Key, sheet, song form and notes of one song in the setlist.
+/// Key, tempo, sheet, song form and notes of one song in the setlist.
 Future<void> showSetlistItemEditor(BuildContext context, {required SetlistItem item}) =>
     showModalBottomSheet<void>(
       context: context,
@@ -31,6 +31,8 @@ class _ItemEditor extends ConsumerStatefulWidget {
 
 class _ItemEditorState extends ConsumerState<_ItemEditor> {
   late String? _key = widget.item.effectiveKey;
+  late final _bpm = TextEditingController(text: widget.item.effectiveBpm?.toString());
+  String? _bpmError;
   late int? _sheetId = widget.item.sheetId;
   late final _form = TextEditingController(text: widget.item.songForm);
   late final _notes = TextEditingController(text: widget.item.notes);
@@ -38,6 +40,7 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
 
   @override
   void dispose() {
+    _bpm.dispose();
     _form.dispose();
     _notes.dispose();
     super.dispose();
@@ -49,14 +52,21 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
   }
 
   Future<void> _save() async {
+    final bpmText = _bpm.text.trim();
+    final bpm = int.tryParse(bpmText);
+    if (bpmText.isNotEmpty && (bpm == null || bpm < 20 || bpm > 300)) {
+      setState(() => _bpmError = '20–300');
+      return;
+    }
     setState(() => _busy = true);
     final form = normalizeSongForm(_form.text);
     final ok = await runGuarded(
       context,
       () => ref.read(sessionsRepositoryProvider).updateItem(widget.item.id, {
-        // Stored explicitly so history keeps this service's key even if
-        // the song's default key changes later.
+        // Stored explicitly so history keeps this service's key and tempo
+        // even if the song's own change later.
         'key': _key,
+        'bpm': bpm,
         'sheet_id': _sheetId,
         'song_form': form.isEmpty ? null : form,
         'notes': _notes.text.trim().isEmpty ? null : _notes.text.trim(),
@@ -87,7 +97,21 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
           children: [
             Text(widget.item.song.title, style: theme.textTheme.titleLarge),
             const SizedBox(height: 16),
-            KeyField(value: _key, onChanged: (k) => setState(() => _key = k)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: KeyField(value: _key, onChanged: (k) => setState(() => _key = k))),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _bpm,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: l10n.bpm, errorText: _bpmError),
+                    onChanged: (_) => _bpmError == null ? null : setState(() => _bpmError = null),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
             DropdownButtonFormField<int?>(
               initialValue: sheets.any((s) => s.id == _sheetId) ? _sheetId : null,

@@ -452,6 +452,10 @@ class _Header extends StatelessWidget {
             data: theme.copyWith(colorScheme: theme.colorScheme.copyWith(primary: fg)),
             child: KeyBadge(page.item.effectiveKey, emphasized: true),
           ),
+        if (page.item.effectiveBpm case final bpm?) ...[
+          const SizedBox(width: 8),
+          Text('$bpm BPM', style: theme.textTheme.labelMedium?.copyWith(color: fg.withValues(alpha: 0.85))),
+        ],
         if (!online || waiting > 0) ...[
           const SizedBox(width: 12),
           Icon(online ? Icons.cloud_upload_outlined : Icons.cloud_off_outlined, size: 18, color: fg),

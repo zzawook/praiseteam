@@ -932,6 +932,12 @@ abstract class AppLocalizations {
   /// **'키: {changes}'**
   String changeKey(String changes);
 
+  /// No description provided for @changeTempo.
+  ///
+  /// In ko, this message translates to:
+  /// **'템포: {changes}'**
+  String changeTempo(String changes);
+
   /// No description provided for @changeOrder.
   ///
   /// In ko, this message translates to:
@@ -1351,6 +1357,24 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'로테이션'**
   String get rotation;
+
+  /// No description provided for @rotationList.
+  ///
+  /// In ko, this message translates to:
+  /// **'목록'**
+  String get rotationList;
+
+  /// No description provided for @rotationTable.
+  ///
+  /// In ko, this message translates to:
+  /// **'표'**
+  String get rotationTable;
+
+  /// No description provided for @openPlaces.
+  ///
+  /// In ko, this message translates to:
+  /// **'빈 자리 {count}'**
+  String openPlaces(int count);
 
   /// No description provided for @myServing.
   ///
