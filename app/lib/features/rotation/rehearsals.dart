@@ -12,6 +12,7 @@ import '../auth/auth.dart';
 import '../offline/offline.dart';
 import 'rotation_providers.dart';
 import 'rotation_repository.dart';
+import 'rotation_screen.dart' show statusLook;
 
 part 'rehearsals.g.dart';
 
@@ -137,7 +138,18 @@ class SessionServingSection extends ConsumerWidget {
               spacing: 6,
               runSpacing: 6,
               children: [
-                for (final a in serving) Chip(label: Text('${partNames[a.partId] ?? ''} ${a.userName}')),
+                for (final a in serving)
+                  Builder(
+                    builder: (context) {
+                      final (color, icon) = statusLook(context, a.status);
+                      return Chip(
+                        avatar: Icon(icon, size: 16, color: color),
+                        label: Text('${partNames[a.partId] ?? ''} ${a.userName}'),
+                        backgroundColor: a.status == AssignmentStatus.accepted ? color.withValues(alpha: 0.14) : null,
+                        side: BorderSide(color: color.withValues(alpha: a.status == AssignmentStatus.accepted ? 0.0 : 0.6)),
+                      );
+                    },
+                  ),
               ],
             ),
           ),

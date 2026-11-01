@@ -721,5 +721,13 @@
   "open": "보기",
   "pushThisDevice": "이 기기에서 푸시 받기",
   "pushBlocked": "기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요.",
-  "privacyPolicy": "개인정보처리방침"
+  "privacyPolicy": "개인정보처리방침",
+  "nextService": "다음 예배",
+  "tomorrow": "내일",
+  "inDays": "{count}일 후",
+  "@inDays": {"placeholders": {"count": {"type": "int"}}},
+  "setlistComing": "콘티 준비 중",
+  "moreSongs": "외 {count}곡",
+  "@moreSongs": {"placeholders": {"count": {"type": "int"}}},
+  "partChatsToJoin": "이 파트가 들어갈 채팅방"
 }

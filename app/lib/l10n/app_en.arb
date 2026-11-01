@@ -335,5 +335,13 @@
   "open": "View",
   "pushThisDevice": "Push on this device",
   "pushBlocked": "Notifications for this app are turned off in your device or browser settings.",
-  "privacyPolicy": "Privacy policy"
+  "privacyPolicy": "Privacy policy",
+  "nextService": "Next service",
+  "tomorrow": "Tomorrow",
+  "inDays": "In {count} days",
+  "@inDays": {"placeholders": {"count": {"type": "int"}}},
+  "setlistComing": "Setlist coming soon",
+  "moreSongs": "{count} more",
+  "@moreSongs": {"placeholders": {"count": {"type": "int"}}},
+  "partChatsToJoin": "Part chats it joins"
 }

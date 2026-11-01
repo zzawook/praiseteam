@@ -1225,4 +1225,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get nextService => 'Next service';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String inDays(int count) {
+    return 'In $count days';
+  }
+
+  @override
+  String get setlistComing => 'Setlist coming soon';
+
+  @override
+  String moreSongs(int count) {
+    return '$count more';
+  }
+
+  @override
+  String get partChatsToJoin => 'Part chats it joins';
 }

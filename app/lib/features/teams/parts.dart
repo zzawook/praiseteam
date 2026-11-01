@@ -7,10 +7,10 @@ import 'models.dart';
 import 'teams_providers.dart';
 
 String partKindLabel(AppLocalizations l10n, PartKind kind) => switch (kind) {
-      PartKind.vocal => l10n.partKindVocal,
-      PartKind.instrument => l10n.partKindInstrument,
-      PartKind.tech => l10n.partKindTech,
-    };
+  PartKind.vocal => l10n.partKindVocal,
+  PartKind.instrument => l10n.partKindInstrument,
+  PartKind.tech => l10n.partKindTech,
+};
 
 /// Bottom sheet to choose which parts a member can serve.
 Future<void> showPartsPicker(
@@ -19,13 +19,12 @@ Future<void> showPartsPicker(
   required String userId,
   required List<int> selected,
   String? title, // defaults to "My parts"; leaders editing others pass the name
-}) =>
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (_) => _PartsPicker(teamId: teamId, userId: userId, initial: selected.toSet(), title: title),
-    );
+}) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  showDragHandle: true,
+  builder: (_) => _PartsPicker(teamId: teamId, userId: userId, initial: selected.toSet(), title: title),
+);
 
 class _PartsPicker extends ConsumerStatefulWidget {
   const _PartsPicker({required this.teamId, required this.userId, required this.initial, this.title});
@@ -88,9 +87,7 @@ class _PartsPickerState extends ConsumerState<_PartsPicker> {
                         FilterChip(
                           label: Text(part.name),
                           selected: _selected.contains(part.id),
-                          onSelected: (on) => setState(
-                            () => on ? _selected.add(part.id) : _selected.remove(part.id),
-                          ),
+                          onSelected: (on) => setState(() => on ? _selected.add(part.id) : _selected.remove(part.id)),
                         ),
                     ],
                   ),
@@ -134,6 +131,62 @@ class PartsScreen extends ConsumerWidget {
     );
   }
 
+  /// Name of the new part and the part chats it joins. Chats made only of
+  /// parts of the same kind (싱어팀 for a new vocal part) start ticked.
+  Future<({String name, Set<int> chatIds})?> _askNewPart(
+    BuildContext context,
+    WidgetRef ref,
+    PartKind kind,
+    List<Part> parts,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final chats = await runGuardedValue(context, () => ref.read(teamsRepositoryProvider).partChats(teamId));
+    if (chats == null || !context.mounted) return null;
+    final kinds = {for (final p in parts) p.id: p.kind};
+    final picked = {
+      for (final c in chats)
+        if (c.partIds.isNotEmpty && c.partIds.every((id) => kinds[id] == kind)) c.id,
+    };
+    final name = TextEditingController();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(l10n.addPart),
+          scrollable: true,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: name,
+                autofocus: true,
+                maxLength: 30,
+                decoration: InputDecoration(labelText: l10n.partName),
+              ),
+              if (chats.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(l10n.partChatsToJoin, style: Theme.of(context).textTheme.labelLarge),
+                for (final c in chats)
+                  CheckboxListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(c.name),
+                    value: picked.contains(c.id),
+                    onChanged: (on) => setState(() => on == true ? picked.add(c.id) : picked.remove(c.id)),
+                  ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.cancel)),
+            FilledButton(onPressed: () => Navigator.pop(context, name.text.trim().isNotEmpty), child: Text(l10n.save)),
+          ],
+        ),
+      ),
+    );
+    return ok == true ? (name: name.text, chatIds: picked) : null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -156,10 +209,14 @@ class PartsScreen extends ConsumerWidget {
                     tooltip: l10n.addPart,
                     icon: const Icon(Icons.add),
                     onPressed: () async {
-                      final name = await _askName(context);
-                      if (name == null || name.trim().isEmpty || !context.mounted) return;
-                      final order = parts.isEmpty ? 10 : parts.map((p) => p.sortOrder).reduce((a, b) => a > b ? a : b) + 10;
-                      if (await runGuarded(context, () => repo.addPart(teamId, name, kind, order))) refresh();
+                      final added = await _askNewPart(context, ref, kind, parts);
+                      if (added == null || !context.mounted) return;
+                      if (await runGuarded(
+                        context,
+                        () => repo.addPart(teamId, added.name, kind, chatIds: added.chatIds),
+                      )) {
+                        refresh();
+                      }
                     },
                   ),
                 ),

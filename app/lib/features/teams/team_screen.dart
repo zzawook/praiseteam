@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/shell.dart';
 import '../../core/widgets.dart';
+import '../../core/avatars.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth.dart';
 import 'models.dart';
@@ -274,7 +275,7 @@ class _PendingRow extends ConsumerWidget {
     final repo = ref.read(teamsRepositoryProvider);
     void refresh() => ref.invalidate(teamMembersProvider(teamId));
     return ListTile(
-      leading: _Initial(name: member.profile.displayName),
+      leading: PersonAvatar(name: member.profile.displayName, id: member.userId),
       title: Text(member.profile.displayName),
       trailing: Wrap(
         spacing: 8,
@@ -311,7 +312,7 @@ class _MemberRow extends StatelessWidget {
     final name = isMe ? '${member.profile.displayName} (${l10n.you})' : member.profile.displayName;
     return ListTile(
       onTap: onTap,
-      leading: _Initial(name: member.profile.displayName),
+      leading: PersonAvatar(name: member.profile.displayName, id: member.userId),
       title: Text(name),
       subtitle: Text(
         partNames.isEmpty ? l10n.noPartsYet : partNames.join(', '),
@@ -320,21 +321,6 @@ class _MemberRow extends StatelessWidget {
       trailing: member.role == TeamRole.member
           ? null
           : Text(roleLabel(l10n, member.role), style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.primary)),
-    );
-  }
-}
-
-class _Initial extends StatelessWidget {
-  const _Initial({required this.name});
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return CircleAvatar(
-      backgroundColor: scheme.surfaceContainerHighest,
-      foregroundColor: scheme.onSurface,
-      child: Text(name.isEmpty ? '?' : name.characters.first),
     );
   }
 }

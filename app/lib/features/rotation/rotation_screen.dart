@@ -21,6 +21,18 @@ String statusLabel(AppLocalizations l10n, AssignmentStatus s) => switch (s) {
       AssignmentStatus.declined => l10n.statusDeclined,
     };
 
+/// Where a serving request stands, in the same color and icon everywhere:
+/// drafts in pencil, waiting in amber, accepted in green, declined in red.
+(Color, IconData) statusLook(BuildContext context, AssignmentStatus status) {
+  final palette = AppPalette.of(context);
+  return switch (status) {
+    AssignmentStatus.draft => (palette.draft, Icons.edit_outlined),
+    AssignmentStatus.pending => (palette.pending, Icons.schedule),
+    AssignmentStatus.accepted => (palette.accepted, Icons.check),
+    AssignmentStatus.declined => (palette.declined, Icons.close),
+  };
+}
+
 /// The schedule for the coming weeks: who serves where. Leaders fill it
 /// (by hand or auto-assign), edit drafts freely, then send; members answer
 /// and swap.
@@ -369,17 +381,10 @@ class _PersonChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     final a = assignment;
     final repo = ref.read(rotationRepositoryProvider);
 
-    // Drafts are pencil (leaders only); sent requests are team ink.
-    final (Color color, IconData icon) = switch (a.status) {
-      AssignmentStatus.draft => (AppColors.myPencil, Icons.edit_outlined),
-      AssignmentStatus.pending => (AppColors.teamInk, Icons.schedule),
-      AssignmentStatus.accepted => (AppColors.teamInk, Icons.check),
-      AssignmentStatus.declined => (theme.colorScheme.error, Icons.close),
-    };
+    final (color, icon) = statusLook(context, a.status);
 
     final actions = <(String, Future<void> Function())>[
       if (isMe && a.status != AssignmentStatus.draft) ...[
@@ -412,9 +417,12 @@ class _PersonChip extends ConsumerWidget {
       label: Text(swap == null ? a.userName : '${a.userName} (${l10n.swapOpen})'),
       labelStyle: TextStyle(
         color: color,
+        fontWeight: FontWeight.w600,
         decoration: a.status == AssignmentStatus.declined ? TextDecoration.lineThrough : null,
       ),
-      side: BorderSide(color: color.withValues(alpha: 0.5)),
+      // Accepted is settled, so it is filled; the rest are open questions.
+      backgroundColor: a.status == AssignmentStatus.accepted ? color.withValues(alpha: 0.14) : null,
+      side: BorderSide(color: color.withValues(alpha: a.status == AssignmentStatus.accepted ? 0.0 : 0.6)),
       tooltip: statusLabel(l10n, a.status),
       onPressed: actions.isEmpty
           ? null

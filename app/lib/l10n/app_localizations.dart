@@ -2089,6 +2089,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'개인정보처리방침'**
   String get privacyPolicy;
+
+  /// No description provided for @nextService.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 예배'**
+  String get nextService;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In ko, this message translates to:
+  /// **'내일'**
+  String get tomorrow;
+
+  /// No description provided for @inDays.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}일 후'**
+  String inDays(int count);
+
+  /// No description provided for @setlistComing.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 준비 중'**
+  String get setlistComing;
+
+  /// No description provided for @moreSongs.
+  ///
+  /// In ko, this message translates to:
+  /// **'외 {count}곡'**
+  String moreSongs(int count);
+
+  /// No description provided for @partChatsToJoin.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 파트가 들어갈 채팅방'**
+  String get partChatsToJoin;
 }
 
 class _AppLocalizationsDelegate

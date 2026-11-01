@@ -9,6 +9,7 @@ import '../features/offline/offline_widgets.dart';
 import '../features/offline/prefetch.dart';
 import '../features/teams/teams_providers.dart';
 import '../l10n/app_localizations.dart';
+import 'theme.dart';
 
 /// Breakpoints: phones get a bottom bar; tablets and laptops a side rail.
 abstract final class Breakpoints {
@@ -169,7 +170,10 @@ class TeamSwitcher extends ConsumerWidget {
                     child: Text(
                       name,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontFamily: AppType.setlistFamily,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const Icon(Icons.unfold_more, size: 18),

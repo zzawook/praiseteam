@@ -84,13 +84,31 @@ class TeamsRepository {
     return rows.map(Part.fromJson).toList();
   }
 
-  Future<void> addPart(int teamId, String name, PartKind kind, int sortOrder) =>
-      _db.from('parts').insert({
-        'team_id': teamId,
-        'name': name.trim(),
-        'kind': kind.name,
-        'sort_order': sortOrder,
-      });
+  /// Adds a part, listed last, and links it to the given part chats in the
+  /// same step (add_part).
+  Future<void> addPart(int teamId, String name, PartKind kind, {Iterable<int> chatIds = const []}) => _db.rpc(
+    'add_part',
+    params: {'p_team_id': teamId, 'p_name': name.trim(), 'p_kind': kind.name, 'p_channel_ids': chatIds.toList()},
+  );
+
+  /// The team's part chats (e.g. 싱어팀) and the parts each one is for.
+  Future<List<({int id, String name, Set<int> partIds})>> partChats(int teamId) async {
+    final rows = await _db
+        .from('channels')
+        .select('id, name, channel_parts(part_id)')
+        .eq('team_id', teamId)
+        .eq('kind', 'parts')
+        .isFilter('archived_at', null)
+        .order('id', ascending: true);
+    return [
+      for (final r in rows)
+        (
+          id: r['id'] as int,
+          name: r['name'] as String,
+          partIds: {for (final p in r['channel_parts'] as List) (p as Map)['part_id'] as int},
+        ),
+    ];
+  }
 
   Future<void> renamePart(int partId, String name) =>
       _db.from('parts').update({'name': name.trim()}).eq('id', partId);

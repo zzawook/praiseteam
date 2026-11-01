@@ -150,6 +150,13 @@ class _ChannelRow extends StatelessWidget {
       'session' => Icons.event_note_outlined,
       _ => Icons.queue_music_outlined,
     };
+    // Whole team in ink, part groups in violet, one service in amber.
+    final palette = AppPalette.of(context);
+    final kindColor = switch (c.kind) {
+      'team' => theme.colorScheme.primary,
+      'session' => palette.pending,
+      _ => palette.people[1],
+    };
     final last = c.lastBody ?? '';
     final subtitle = c.archived
         ? l10n.archivedChannel
@@ -159,8 +166,8 @@ class _ChannelRow extends StatelessWidget {
     return ListTile(
       onTap: () => context.push('/t/$teamId/chat/${c.id}'),
       leading: CircleAvatar(
-        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-        foregroundColor: c.archived ? theme.colorScheme.onSurfaceVariant : AppColors.teamInk,
+        backgroundColor: c.archived ? theme.colorScheme.surfaceContainerHighest : kindColor.withValues(alpha: 0.16),
+        foregroundColor: c.archived ? theme.colorScheme.onSurfaceVariant : kindColor,
         child: Icon(icon, size: 20),
       ),
       title: Row(

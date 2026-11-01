@@ -1111,4 +1111,26 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get privacyPolicy => '개인정보처리방침';
+
+  @override
+  String get nextService => '다음 예배';
+
+  @override
+  String get tomorrow => '내일';
+
+  @override
+  String inDays(int count) {
+    return '$count일 후';
+  }
+
+  @override
+  String get setlistComing => '콘티 준비 중';
+
+  @override
+  String moreSongs(int count) {
+    return '외 $count곡';
+  }
+
+  @override
+  String get partChatsToJoin => '이 파트가 들어갈 채팅방';
 }

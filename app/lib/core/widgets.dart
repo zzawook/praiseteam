@@ -133,3 +133,14 @@ Future<bool> runGuarded(BuildContext context, Future<void> Function() action) as
     return false;
   }
 }
+
+/// [runGuarded] for an action with a result: null when it failed (and the
+/// error was shown).
+Future<T?> runGuardedValue<T>(BuildContext context, Future<T> Function() action) async {
+  try {
+    return await action();
+  } catch (e) {
+    if (context.mounted) showError(context, e);
+    return null;
+  }
+}
