@@ -40,6 +40,26 @@ const _$SetlistStatusEnumMap = {
   SetlistStatus.published: 'published',
 };
 
+_SessionTemplate _$SessionTemplateFromJson(Map<String, dynamic> json) =>
+    _SessionTemplate(
+      id: (json['id'] as num).toInt(),
+      teamId: (json['team_id'] as num).toInt(),
+      title: json['title'] as String,
+      weekday: (json['weekday'] as num).toInt(),
+      startTime: json['start_time'] as String,
+      location: json['location'] as String?,
+    );
+
+Map<String, dynamic> _$SessionTemplateToJson(_SessionTemplate instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'team_id': instance.teamId,
+      'title': instance.title,
+      'weekday': instance.weekday,
+      'start_time': instance.startTime,
+      'location': instance.location,
+    };
+
 _SetlistSong _$SetlistSongFromJson(Map<String, dynamic> json) => _SetlistSong(
   title: json['title'] as String,
   artist: json['artist'] as String?,

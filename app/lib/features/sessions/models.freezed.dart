@@ -311,6 +311,295 @@ as int,
 
 
 /// @nodoc
+mixin _$SessionTemplate {
+
+ int get id; int get teamId; String get title;/// ISO 8601, as [DateTime.weekday]: 1 = Monday ... 7 = Sunday.
+ int get weekday;/// Wall-clock 'HH:MM:SS' where the team meets.
+ String get startTime; String? get location;
+/// Create a copy of SessionTemplate
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SessionTemplateCopyWith<SessionTemplate> get copyWith => _$SessionTemplateCopyWithImpl<SessionTemplate>(this as SessionTemplate, _$identity);
+
+  /// Serializes this SessionTemplate to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as SessionTemplate;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionTemplate&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.teamId, _this.teamId) || other.teamId == _this.teamId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.weekday, _this.weekday) || other.weekday == _this.weekday)&&(identical(other.startTime, _this.startTime) || other.startTime == _this.startTime)&&(identical(other.location, _this.location) || other.location == _this.location));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as SessionTemplate;
+  return Object.hash(runtimeType,_this.id,_this.teamId,_this.title,_this.weekday,_this.startTime,_this.location);
+}
+
+@override
+String toString() {
+  final _this = this as SessionTemplate;
+  return 'SessionTemplate(id: ${_this.id}, teamId: ${_this.teamId}, title: ${_this.title}, weekday: ${_this.weekday}, startTime: ${_this.startTime}, location: ${_this.location})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SessionTemplateCopyWith<$Res>  {
+  factory $SessionTemplateCopyWith(SessionTemplate value, $Res Function(SessionTemplate) _then) = _$SessionTemplateCopyWithImpl;
+@useResult
+$Res call({
+ int id, int teamId, String title, int weekday, String startTime, String? location
+});
+
+
+
+
+}
+/// @nodoc
+class _$SessionTemplateCopyWithImpl<$Res>
+    implements $SessionTemplateCopyWith<$Res> {
+  _$SessionTemplateCopyWithImpl(this._self, this._then);
+
+  final SessionTemplate _self;
+  final $Res Function(SessionTemplate) _then;
+
+/// Create a copy of SessionTemplate
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? teamId = null,Object? title = null,Object? weekday = null,Object? startTime = null,Object? location = freezed,}) {
+  return _then(SessionTemplate(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,teamId: null == teamId ? _self.teamId : teamId // ignore: cast_nullable_to_non_nullable
+as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,weekday: null == weekday ? _self.weekday : weekday // ignore: cast_nullable_to_non_nullable
+as int,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as String,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [SessionTemplate].
+extension SessionTemplatePatterns on SessionTemplate {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SessionTemplate value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SessionTemplate() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SessionTemplate value)  $default,){
+final _that = this;
+switch (_that) {
+case _SessionTemplate():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SessionTemplate value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SessionTemplate() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int teamId,  String title,  int weekday,  String startTime,  String? location)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SessionTemplate() when $default != null:
+return $default(_that.id,_that.teamId,_that.title,_that.weekday,_that.startTime,_that.location);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int teamId,  String title,  int weekday,  String startTime,  String? location)  $default,) {final _that = this;
+switch (_that) {
+case _SessionTemplate():
+return $default(_that.id,_that.teamId,_that.title,_that.weekday,_that.startTime,_that.location);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int teamId,  String title,  int weekday,  String startTime,  String? location)?  $default,) {final _that = this;
+switch (_that) {
+case _SessionTemplate() when $default != null:
+return $default(_that.id,_that.teamId,_that.title,_that.weekday,_that.startTime,_that.location);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _SessionTemplate extends SessionTemplate {
+  const _SessionTemplate({required this.id, required this.teamId, required this.title, required this.weekday, required this.startTime, this.location}): super._();
+  factory _SessionTemplate.fromJson(Map<String, dynamic> json) => _$SessionTemplateFromJson(json);
+
+@override final  int id;
+@override final  int teamId;
+@override final  String title;
+/// ISO 8601, as [DateTime.weekday]: 1 = Monday ... 7 = Sunday.
+@override final  int weekday;
+/// Wall-clock 'HH:MM:SS' where the team meets.
+@override final  String startTime;
+@override final  String? location;
+
+/// Create a copy of SessionTemplate
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SessionTemplateCopyWith<_SessionTemplate> get copyWith => __$SessionTemplateCopyWithImpl<_SessionTemplate>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$SessionTemplateToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.teamId, teamId) || other.teamId == teamId)&&(identical(other.title, title) || other.title == title)&&(identical(other.weekday, weekday) || other.weekday == weekday)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.location, location) || other.location == location));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,id,teamId,title,weekday,startTime,location);
+}
+
+@override
+String toString() {
+    return 'SessionTemplate(id: $id, teamId: $teamId, title: $title, weekday: $weekday, startTime: $startTime, location: $location)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SessionTemplateCopyWith<$Res> implements $SessionTemplateCopyWith<$Res> {
+  factory _$SessionTemplateCopyWith(_SessionTemplate value, $Res Function(_SessionTemplate) _then) = __$SessionTemplateCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, int teamId, String title, int weekday, String startTime, String? location
+});
+
+
+
+
+}
+/// @nodoc
+class __$SessionTemplateCopyWithImpl<$Res>
+    implements _$SessionTemplateCopyWith<$Res> {
+  __$SessionTemplateCopyWithImpl(this._self, this._then);
+
+  final _SessionTemplate _self;
+  final $Res Function(_SessionTemplate) _then;
+
+/// Create a copy of SessionTemplate
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? teamId = null,Object? title = null,Object? weekday = null,Object? startTime = null,Object? location = freezed,}) {
+  return _then(_SessionTemplate(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,teamId: null == teamId ? _self.teamId : teamId // ignore: cast_nullable_to_non_nullable
+as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,weekday: null == weekday ? _self.weekday : weekday // ignore: cast_nullable_to_non_nullable
+as int,startTime: null == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as String,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$SetlistSong {
 
  String get title; String? get artist; String? get defaultKey; int? get bpm;

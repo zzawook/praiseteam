@@ -30,6 +30,10 @@ Future<Session> session(Ref ref, int sessionId) {
 }
 
 @riverpod
+Future<List<SessionTemplate>> sessionTemplates(Ref ref, int teamId) =>
+    ref.watch(sessionsRepositoryProvider).templates(teamId);
+
+@riverpod
 Future<List<SetlistItem>> setlist(Ref ref, int sessionId) {
   ref.watch(onlineStatusProvider.select((s) => s.epoch));
   return ref.watch(sessionsRepositoryProvider).setlist(sessionId);

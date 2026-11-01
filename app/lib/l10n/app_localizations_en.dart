@@ -356,6 +356,46 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get templates => 'Templates';
+
+  @override
+  String get editTemplates => 'Edit templates';
+
+  @override
+  String get sessionTemplates => 'Service templates';
+
+  @override
+  String get weeklyServices => 'Weekly services';
+
+  @override
+  String get addTemplate => 'Add template';
+
+  @override
+  String get editTemplate => 'Edit template';
+
+  @override
+  String get noTemplates =>
+      'Add the services you hold on the same day, at the same time and place every week. When you add a service, pick one to fill it in.';
+
+  @override
+  String get saveAsTemplate => 'Save as a template';
+
+  @override
+  String get saveAsTemplateHint =>
+      'Next time, pick it to fill in the name, day, time and place';
+
+  @override
+  String get templateTitleTaken => 'A template with this name already exists';
+
+  @override
+  String deleteTemplateConfirm(String title) {
+    return 'Delete the template \'$title\'? Services already added stay as they are.';
+  }
+
+  @override
+  String get weekday => 'Day';
+
+  @override
   String get setlist => 'Setlist';
 
   @override
@@ -647,9 +687,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewSheet => 'Open sheet';
-
-  @override
-  String get open => 'View';
 
   @override
   String get viewSheets => 'Open sheets';
@@ -1215,6 +1252,9 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0 uploaded yet. Signing out deletes $_temp1.';
   }
+
+  @override
+  String get open => 'View';
 
   @override
   String get pushThisDevice => 'Push on this device';

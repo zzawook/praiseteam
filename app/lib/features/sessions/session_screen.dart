@@ -104,11 +104,8 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
   }
 
   Future<void> _edit(Session session) async {
-    final rows = await showSessionEditor(context, session: session);
-    if (rows == null || rows.isEmpty || !mounted) return;
-    if (await runGuarded(context, () => ref.read(sessionsRepositoryProvider).updateSession(session.id, rows.first))) {
-      _refresh();
-    }
+    final saved = await showSessionEditor(context, teamId: session.teamId, session: session);
+    if (saved != null && mounted) _refresh();
   }
 
   Future<void> _delete(Session session) async {

@@ -32,6 +32,11 @@ class DateFormats {
 
   String weekdayShort(DateTime t) => DateFormat.E(_locale).format(t.toLocal());
 
+  /// 일요일 (or 일 when [short]) for an ISO weekday, as [DateTime.weekday].
+  String weekdayName(int weekday, {bool short = false}) =>
+      // 1 January 2024 was a Monday.
+      (short ? DateFormat.E(_locale) : DateFormat.EEEE(_locale)).format(DateTime(2024, 1, weekday));
+
   /// 11월
   String monthShort(DateTime t) => DateFormat.MMM(_locale).format(t.toLocal());
 }

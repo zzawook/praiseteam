@@ -728,6 +728,78 @@ abstract class AppLocalizations {
   /// **'{count}주 동안'**
   String repeatCount(int count);
 
+  /// No description provided for @templates.
+  ///
+  /// In ko, this message translates to:
+  /// **'템플릿'**
+  String get templates;
+
+  /// No description provided for @editTemplates.
+  ///
+  /// In ko, this message translates to:
+  /// **'템플릿 편집'**
+  String get editTemplates;
+
+  /// No description provided for @sessionTemplates.
+  ///
+  /// In ko, this message translates to:
+  /// **'예배 템플릿'**
+  String get sessionTemplates;
+
+  /// No description provided for @weeklyServices.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주 드리는 예배'**
+  String get weeklyServices;
+
+  /// No description provided for @addTemplate.
+  ///
+  /// In ko, this message translates to:
+  /// **'템플릿 추가'**
+  String get addTemplate;
+
+  /// No description provided for @editTemplate.
+  ///
+  /// In ko, this message translates to:
+  /// **'템플릿 수정'**
+  String get editTemplate;
+
+  /// No description provided for @noTemplates.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주 같은 요일, 같은 시간, 같은 장소에서 드리는 예배를 등록해 두세요. 예배를 추가할 때 골라서 바로 채울 수 있어요.'**
+  String get noTemplates;
+
+  /// No description provided for @saveAsTemplate.
+  ///
+  /// In ko, this message translates to:
+  /// **'템플릿으로 저장'**
+  String get saveAsTemplate;
+
+  /// No description provided for @saveAsTemplateHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음부터는 골라서 이름, 요일, 시간, 장소를 채워요'**
+  String get saveAsTemplateHint;
+
+  /// No description provided for @templateTitleTaken.
+  ///
+  /// In ko, this message translates to:
+  /// **'같은 이름의 템플릿이 있어요'**
+  String get templateTitleTaken;
+
+  /// No description provided for @deleteTemplateConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'\'{title}\' 템플릿을 삭제할까요? 이미 추가한 예배는 그대로 남아요.'**
+  String deleteTemplateConfirm(String title);
+
+  /// No description provided for @weekday.
+  ///
+  /// In ko, this message translates to:
+  /// **'요일'**
+  String get weekday;
+
   /// No description provided for @setlist.
   ///
   /// In ko, this message translates to:
@@ -1153,12 +1225,6 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'악보 보기'**
   String get viewSheet;
-
-  /// No description provided for @open.
-  ///
-  /// In ko, this message translates to:
-  /// **'보기'**
-  String get open;
 
   /// No description provided for @viewSheets.
   ///
@@ -2071,6 +2137,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'아직 올라가지 않은 필기가 {count}개 있어요. 로그아웃하면 이 필기는 사라져요.'**
   String unsentNotesSignOut(int count);
+
+  /// No description provided for @open.
+  ///
+  /// In ko, this message translates to:
+  /// **'보기'**
+  String get open;
 
   /// No description provided for @pushThisDevice.
   ///

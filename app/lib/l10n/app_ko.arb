@@ -171,6 +171,19 @@
       }
     }
   },
+  "templates": "템플릿",
+  "editTemplates": "템플릿 편집",
+  "sessionTemplates": "예배 템플릿",
+  "weeklyServices": "매주 드리는 예배",
+  "addTemplate": "템플릿 추가",
+  "editTemplate": "템플릿 수정",
+  "noTemplates": "매주 같은 요일, 같은 시간, 같은 장소에서 드리는 예배를 등록해 두세요. 예배를 추가할 때 골라서 바로 채울 수 있어요.",
+  "saveAsTemplate": "템플릿으로 저장",
+  "saveAsTemplateHint": "다음부터는 골라서 이름, 요일, 시간, 장소를 채워요",
+  "templateTitleTaken": "같은 이름의 템플릿이 있어요",
+  "deleteTemplateConfirm": "'{title}' 템플릿을 삭제할까요? 이미 추가한 예배는 그대로 남아요.",
+  "@deleteTemplateConfirm": {"placeholders": {"title": {"type": "String"}}},
+  "weekday": "요일",
   "setlist": "콘티",
   "setlistDraft": "초안",
   "setlistPublished": "공지됨",
@@ -368,7 +381,6 @@
     }
   },
   "viewSheet": "악보 보기",
-  "open": "열기",
   "viewSheets": "악보 보기",
   "annotate": "필기",
   "doneAnnotating": "완료",

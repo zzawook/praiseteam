@@ -276,6 +276,83 @@ final class SessionFamily extends $Family
   String toString() => r'sessionProvider';
 }
 
+@ProviderFor(sessionTemplates)
+final sessionTemplatesProvider = SessionTemplatesFamily._();
+
+final class SessionTemplatesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<SessionTemplate>>,
+          List<SessionTemplate>,
+          FutureOr<List<SessionTemplate>>
+        >
+    with
+        $FutureModifier<List<SessionTemplate>>,
+        $FutureProvider<List<SessionTemplate>> {
+  SessionTemplatesProvider._({
+    required SessionTemplatesFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'sessionTemplatesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$sessionTemplatesHash();
+
+  @override
+  String toString() {
+    return r'sessionTemplatesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<SessionTemplate>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<SessionTemplate>> create(Ref ref) {
+    final argument = this.argument as int;
+    return sessionTemplates(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SessionTemplatesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$sessionTemplatesHash() => r'4a6bff8920e225da0d2983a60bcd05587a9aeeb6';
+
+final class SessionTemplatesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<SessionTemplate>>, int> {
+  SessionTemplatesFamily._()
+    : super(
+        retry: null,
+        name: r'sessionTemplatesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  SessionTemplatesProvider call(int teamId) =>
+      SessionTemplatesProvider._(argument: teamId, from: this);
+
+  @override
+  String toString() => r'sessionTemplatesProvider';
+}
+
 @ProviderFor(setlist)
 final setlistProvider = SetlistFamily._();
 

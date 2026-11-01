@@ -11,6 +11,7 @@ local Supabase stack and assert what each user can see.
 | `flow_m5.js` | chat: part channels, live messages, polls, announcements, unread markers |
 | `flow_m6.js` | live mode: follow page turns, cues, follow off and back on, late joiner |
 | `flow_offline.js` | offline: this week's services kept on the device; the stand opens a never-opened service without a connection; notes drawn offline upload on reconnect |
+| `flow_templates.js` | service templates on a phone: save one while adding a service, add the next service from it (the following free week, same time and place), edit, delete and add templates |
 | `showcase.js` | not a test: fills a believable team (members, services, setlists, rotation, chat) and screenshots the main screens on a phone in light and dark, for design reviews (`node e2e/showcase.js <dir> <label>`) |
 
 ```sh

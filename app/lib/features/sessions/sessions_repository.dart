@@ -96,6 +96,24 @@ class SessionsRepository {
   Future<void> reorder(int sessionId, List<int> itemIds) =>
       _db.rpc('reorder_setlist', params: {'p_session_id': sessionId, 'p_item_ids': itemIds});
 
+  /// The team's weekly services, Sunday first.
+  Future<List<SessionTemplate>> templates(int teamId) async {
+    final rows = await _db
+        .from('session_templates')
+        .select('id, team_id, title, weekday, start_time, location')
+        .eq('team_id', teamId);
+    return rows.map(SessionTemplate.fromJson).toList()..sort((a, b) => a.sortKey.compareTo(b.sortKey));
+  }
+
+  /// [fields]: title, weekday, start_time ('HH:MM'), location.
+  Future<void> createTemplate(int teamId, Map<String, Object?> fields) =>
+      _db.from('session_templates').insert({'team_id': teamId, ...fields});
+
+  Future<void> updateTemplate(int templateId, Map<String, Object?> fields) =>
+      _db.from('session_templates').update(fields).eq('id', templateId);
+
+  Future<void> deleteTemplate(int templateId) => _db.from('session_templates').delete().eq('id', templateId);
+
   Future<SetlistChanges> publish(int sessionId) async {
     final result = await _db.rpc('publish_setlist', params: {'p_session_id': sessionId});
     return SetlistChanges.fromJson((result as Map?)?.cast<String, dynamic>());

@@ -343,6 +343,45 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get templates => '템플릿';
+
+  @override
+  String get editTemplates => '템플릿 편집';
+
+  @override
+  String get sessionTemplates => '예배 템플릿';
+
+  @override
+  String get weeklyServices => '매주 드리는 예배';
+
+  @override
+  String get addTemplate => '템플릿 추가';
+
+  @override
+  String get editTemplate => '템플릿 수정';
+
+  @override
+  String get noTemplates =>
+      '매주 같은 요일, 같은 시간, 같은 장소에서 드리는 예배를 등록해 두세요. 예배를 추가할 때 골라서 바로 채울 수 있어요.';
+
+  @override
+  String get saveAsTemplate => '템플릿으로 저장';
+
+  @override
+  String get saveAsTemplateHint => '다음부터는 골라서 이름, 요일, 시간, 장소를 채워요';
+
+  @override
+  String get templateTitleTaken => '같은 이름의 템플릿이 있어요';
+
+  @override
+  String deleteTemplateConfirm(String title) {
+    return '\'$title\' 템플릿을 삭제할까요? 이미 추가한 예배는 그대로 남아요.';
+  }
+
+  @override
+  String get weekday => '요일';
+
+  @override
   String get setlist => '콘티';
 
   @override
@@ -590,9 +629,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get viewSheet => '악보 보기';
-
-  @override
-  String get open => '보기';
 
   @override
   String get viewSheets => '악보 보기';
@@ -1102,6 +1138,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String unsentNotesSignOut(int count) {
     return '아직 올라가지 않은 필기가 $count개 있어요. 로그아웃하면 이 필기는 사라져요.';
   }
+
+  @override
+  String get open => '보기';
 
   @override
   String get pushThisDevice => '이 기기에서 푸시 받기';

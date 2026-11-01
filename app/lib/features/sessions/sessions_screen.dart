@@ -36,16 +36,9 @@ class _SessionsScreenState extends ConsumerState<SessionsScreen> {
     await ref.read(upcomingSessionsProvider(widget.teamId).future);
   }
 
-  Future<void> _add(List<Session> known) async {
-    final titles = <String>{for (final s in known) s.title}.toList();
-    final rows = await showSessionEditor(context, recentTitles: titles);
-    if (rows == null || !mounted) return;
-    var ids = <int>[];
-    final ok = await runGuarded(
-      context,
-      () async => ids = await ref.read(sessionsRepositoryProvider).createSessions(widget.teamId, rows),
-    );
-    if (!ok || !mounted) return;
+  Future<void> _add(List<Session> upcoming) async {
+    final ids = await showSessionEditor(context, teamId: widget.teamId, upcoming: upcoming);
+    if (ids == null || !mounted) return;
     await _refresh();
     if (mounted && ids.length == 1) context.push('/t/${widget.teamId}/sessions/${ids.first}');
   }
@@ -57,6 +50,8 @@ class _SessionsScreenState extends ConsumerState<SessionsScreen> {
     final isLeader = ref.watch(activeMembershipProvider(widget.teamId))?.role.isLeader ?? false;
     final upcoming = ref.watch(upcomingSessionsProvider(widget.teamId));
     final past = _showPast ? ref.watch(pastSessionsProvider(widget.teamId)) : null;
+    // Loaded ahead, so "add service" opens with the team's templates.
+    if (isLeader) ref.watch(sessionTemplatesProvider(widget.teamId));
 
     return Scaffold(
       appBar: AppBar(
@@ -83,9 +78,7 @@ class _SessionsScreenState extends ConsumerState<SessionsScreen> {
                 _MyServing(teamId: widget.teamId),
                 SectionHeader(
                   l10n.upcomingSessions,
-                  trailing: isLeader
-                      ? AddButton(label: l10n.addSession, onPressed: () => _add([...?upcoming.value, ...?past?.value]))
-                      : null,
+                  trailing: isLeader ? AddButton(label: l10n.addSession, onPressed: () => _add(sessions)) : null,
                 ),
                 if (sessions.isEmpty)
                   Padding(
