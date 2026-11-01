@@ -1,0 +1,8 @@
+{
+  "name": "praiseteam-e2e",
+  "private": true,
+  "description": "Browser end-to-end flows against the local Supabase stack",
+  "dependencies": {
+    "playwright-core": "1.49.1"
+  }
+}
