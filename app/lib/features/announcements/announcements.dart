@@ -174,21 +174,30 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.announcements)),
-      floatingActionButton: isLeader
-          ? FloatingActionButton.extended(onPressed: _edit, icon: const Icon(Icons.campaign_outlined), label: Text(l10n.newAnnouncement))
-          : null,
       body: AsyncBody(
         value: items,
         onRetry: () => ref.invalidate(announcementsProvider(widget.teamId)),
-        data: (list) => list.isEmpty
-            ? Center(child: Text(l10n.noAnnouncements))
-            : ContentWidth(
+        data: (list) => ContentWidth(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 96),
-                  itemCount: list.length,
-                  separatorBuilder: (_, _) => const Divider(indent: 20),
-                  itemBuilder: (context, i) {
-                    final a = list[i];
+                  padding: const EdgeInsets.only(bottom: 32),
+                  // Row 0 holds the write button (leaders), or says there are
+                  // no announcements yet; the announcements follow.
+                  itemCount: list.length + 1,
+                  separatorBuilder: (_, i) => i == 0 ? const SizedBox.shrink() : const Divider(indent: 20),
+                  itemBuilder: (context, row) {
+                    if (row == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                        child: Row(
+                          children: [
+                            Expanded(child: list.isEmpty ? Text(l10n.noAnnouncements) : const SizedBox.shrink()),
+                            if (isLeader)
+                              AddButton(label: l10n.newAnnouncement, icon: Icons.campaign_outlined, onPressed: _edit),
+                          ],
+                        ),
+                      );
+                    }
+                    final a = list[row - 1];
                     return ListTile(
                       onTap: a.kind == 'setlist' && a.sessionId != null
                           ? () => context.push('/t/${widget.teamId}/sessions/${a.sessionId}')

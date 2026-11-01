@@ -95,11 +95,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
           NotificationBell(teamId: widget.teamId),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _addSong,
-        icon: const Icon(Icons.add),
-        label: Text(l10n.addSong),
-      ),
       body: AsyncBody(
         value: library,
         onRetry: () => ref.invalidate(songLibraryProvider(widget.teamId)),
@@ -111,12 +106,20 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: l10n.searchSongs,
-                        prefixIcon: const Icon(Icons.search),
-                      ),
-                      onChanged: (v) => setState(() => _query = v),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: l10n.searchSongs,
+                              prefixIcon: const Icon(Icons.search),
+                            ),
+                            onChanged: (v) => setState(() => _query = v),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        AddButton(label: l10n.addSong, onPressed: _addSong),
+                      ],
                     ),
                   ),
                 ),

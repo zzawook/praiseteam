@@ -55,6 +55,27 @@ class AsyncBody<T> extends StatelessWidget {
   }
 }
 
+/// The one "add" button: beside the list it adds to, never floating, so it
+/// is found where the things it makes will appear.
+class AddButton extends StatelessWidget {
+  const AddButton({super.key, required this.label, required this.onPressed, this.icon = Icons.add});
+  final String label;
+  final VoidCallback? onPressed;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) => FilledButton.tonalIcon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 18),
+        label: Text(label),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(0, 40),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          visualDensity: VisualDensity.compact,
+        ),
+      );
+}
+
 class SectionHeader extends StatelessWidget {
   const SectionHeader(this.text, {super.key, this.trailing});
   final String text;

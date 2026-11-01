@@ -71,7 +71,6 @@ class BlockoutsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.blockouts)),
-      floatingActionButton: FloatingActionButton.extended(onPressed: add, icon: const Icon(Icons.add), label: Text(l10n.addBlockout)),
       body: AsyncBody(
         value: blockouts,
         onRetry: () => ref.invalidate(blockoutsProvider(teamId)),
@@ -82,9 +81,9 @@ class BlockoutsScreen extends ConsumerWidget {
           final others = upcoming.where((b) => b.userId != me).toList();
           return ContentWidth(
             child: ListView(
-              padding: const EdgeInsets.only(bottom: 96),
+              padding: const EdgeInsets.only(bottom: 32),
               children: [
-                SectionHeader(l10n.myBlockouts),
+                SectionHeader(l10n.myBlockouts, trailing: AddButton(label: l10n.addBlockout, onPressed: add)),
                 if (mine.isEmpty) Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: Text(l10n.noBlockouts)),
                 for (final b in mine) row(b, mine: true),
                 if (isLeader) ...[

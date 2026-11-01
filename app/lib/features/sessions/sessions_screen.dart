@@ -66,13 +66,6 @@ class _SessionsScreenState extends ConsumerState<SessionsScreen> {
           NotificationBell(teamId: widget.teamId),
         ],
       ),
-      floatingActionButton: isLeader
-          ? FloatingActionButton.extended(
-              onPressed: () => _add([...?upcoming.value, ...?past?.value]),
-              icon: const Icon(Icons.add),
-              label: Text(l10n.addSession),
-            )
-          : null,
       body: AsyncBody(
         value: upcoming,
         onRetry: _refresh,
@@ -80,11 +73,16 @@ class _SessionsScreenState extends ConsumerState<SessionsScreen> {
           onRefresh: _refresh,
           child: ContentWidth(
             child: ListView(
-              padding: const EdgeInsets.only(bottom: 96),
+              padding: const EdgeInsets.only(bottom: 32),
               children: [
                 if (sessions.isNotEmpty) _NextService(teamId: widget.teamId, session: sessions.first),
                 _MyServing(teamId: widget.teamId),
-                SectionHeader(l10n.upcomingSessions),
+                SectionHeader(
+                  l10n.upcomingSessions,
+                  trailing: isLeader
+                      ? AddButton(label: l10n.addSession, onPressed: () => _add([...?upcoming.value, ...?past?.value]))
+                      : null,
+                ),
                 if (sessions.isEmpty)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),

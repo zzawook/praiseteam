@@ -34,18 +34,11 @@ class ChannelsScreen extends ConsumerWidget {
         title: narrow ? TeamSwitcher(teamId: teamId) : Text(l10n.navChat),
         actions: [NotificationBell(teamId: teamId)],
       ),
-      floatingActionButton: isLeader
-          ? FloatingActionButton.extended(
-              onPressed: () => _newChannel(context, ref),
-              icon: const Icon(Icons.add_comment_outlined),
-              label: Text(l10n.newChannel),
-            )
-          : null,
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(channelsProvider(teamId)),
         child: ContentWidth(
           child: ListView(
-            padding: const EdgeInsets.only(bottom: 96),
+            padding: const EdgeInsets.only(bottom: 32),
             children: [
               ListTile(
                 leading: const Icon(Icons.campaign_outlined, color: AppColors.teamInk),
@@ -59,7 +52,16 @@ class ChannelsScreen extends ConsumerWidget {
                 },
               ),
               const Divider(),
-              SectionHeader(l10n.channels),
+              SectionHeader(
+                l10n.channels,
+                trailing: isLeader
+                    ? AddButton(
+                        label: l10n.newChannel,
+                        icon: Icons.add_comment_outlined,
+                        onPressed: () => _newChannel(context, ref),
+                      )
+                    : null,
+              ),
               AsyncBody(
                 value: channels,
                 onRetry: () => ref.invalidate(channelsProvider(teamId)),
