@@ -365,7 +365,7 @@ final class ChannelMessagesProvider
   }
 }
 
-String _$channelMessagesHash() => r'61a2da8d02d87fbc5d3acdf0a581efd41b2bea8e';
+String _$channelMessagesHash() => r'9e9d76e2eda8b0cd021d2b868b693ed275900b2a';
 
 /// A channel's messages, newest first, live. Messages sent from this device
 /// show immediately and are confirmed by the realtime echo.

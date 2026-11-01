@@ -1867,6 +1867,180 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'투표: {question}'**
   String pollPreview(String question);
+
+  /// No description provided for @liveStart.
+  ///
+  /// In ko, this message translates to:
+  /// **'라이브'**
+  String get liveStart;
+
+  /// No description provided for @liveLeave.
+  ///
+  /// In ko, this message translates to:
+  /// **'라이브 나가기'**
+  String get liveLeave;
+
+  /// No description provided for @liveWatching.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명 함께'**
+  String liveWatching(int count);
+
+  /// No description provided for @liveFollow.
+  ///
+  /// In ko, this message translates to:
+  /// **'따라가기'**
+  String get liveFollow;
+
+  /// No description provided for @liveFollowHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'끄면 다른 사람이 넘겨도 내 화면은 그대로예요.'**
+  String get liveFollowHint;
+
+  /// No description provided for @sendCue.
+  ///
+  /// In ko, this message translates to:
+  /// **'큐 보내기'**
+  String get sendCue;
+
+  /// No description provided for @cueAgain.
+  ///
+  /// In ko, this message translates to:
+  /// **'한 번 더'**
+  String get cueAgain;
+
+  /// No description provided for @cueChorus.
+  ///
+  /// In ko, this message translates to:
+  /// **'후렴으로'**
+  String get cueChorus;
+
+  /// No description provided for @cueBridge.
+  ///
+  /// In ko, this message translates to:
+  /// **'브릿지로'**
+  String get cueBridge;
+
+  /// No description provided for @cueEnding.
+  ///
+  /// In ko, this message translates to:
+  /// **'엔딩'**
+  String get cueEnding;
+
+  /// No description provided for @cueKeyUp.
+  ///
+  /// In ko, this message translates to:
+  /// **'키 업'**
+  String get cueKeyUp;
+
+  /// No description provided for @cueSofter.
+  ///
+  /// In ko, this message translates to:
+  /// **'작게'**
+  String get cueSofter;
+
+  /// No description provided for @cueFaster.
+  ///
+  /// In ko, this message translates to:
+  /// **'빠르게'**
+  String get cueFaster;
+
+  /// No description provided for @cueSlower.
+  ///
+  /// In ko, this message translates to:
+  /// **'천천히'**
+  String get cueSlower;
+
+  /// No description provided for @cueNextSong.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 곡'**
+  String get cueNextSong;
+
+  /// No description provided for @cueCustom.
+  ///
+  /// In ko, this message translates to:
+  /// **'직접 입력'**
+  String get cueCustom;
+
+  /// No description provided for @cueTo.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 사람'**
+  String get cueTo;
+
+  /// No description provided for @cueEveryone.
+  ///
+  /// In ko, this message translates to:
+  /// **'모두'**
+  String get cueEveryone;
+
+  /// No description provided for @notificationsSection.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get notificationsSection;
+
+  /// No description provided for @allSetlists.
+  ///
+  /// In ko, this message translates to:
+  /// **'모든 예배 콘티 받기'**
+  String get allSetlists;
+
+  /// No description provided for @allSetlistsHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬기지 않는 예배의 콘티 공지도 알려 줘요.'**
+  String get allSetlistsHint;
+
+  /// No description provided for @pushSection.
+  ///
+  /// In ko, this message translates to:
+  /// **'푸시 알림'**
+  String get pushSection;
+
+  /// No description provided for @pushSetlists.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 공지'**
+  String get pushSetlists;
+
+  /// No description provided for @pushServing.
+  ///
+  /// In ko, this message translates to:
+  /// **'섬김 요청과 대타'**
+  String get pushServing;
+
+  /// No description provided for @pushRehearsals.
+  ///
+  /// In ko, this message translates to:
+  /// **'연습'**
+  String get pushRehearsals;
+
+  /// No description provided for @pushAnnouncements.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지'**
+  String get pushAnnouncements;
+
+  /// No description provided for @pushChat.
+  ///
+  /// In ko, this message translates to:
+  /// **'채팅'**
+  String get pushChat;
+
+  /// No description provided for @pushJoining.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 가입'**
+  String get pushJoining;
+
+  /// No description provided for @pushOffHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요.'**
+  String get pushOffHint;
 }
 
 class _AppLocalizationsDelegate

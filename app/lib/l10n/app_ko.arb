@@ -673,5 +673,41 @@
         "type": "String"
       }
     }
-  }
+  },
+  "liveStart": "라이브",
+  "liveLeave": "라이브 나가기",
+  "liveWatching": "{count}명 함께",
+  "@liveWatching": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "liveFollow": "따라가기",
+  "liveFollowHint": "끄면 다른 사람이 넘겨도 내 화면은 그대로예요.",
+  "sendCue": "큐 보내기",
+  "cueAgain": "한 번 더",
+  "cueChorus": "후렴으로",
+  "cueBridge": "브릿지로",
+  "cueEnding": "엔딩",
+  "cueKeyUp": "키 업",
+  "cueSofter": "작게",
+  "cueFaster": "빠르게",
+  "cueSlower": "천천히",
+  "cueNextSong": "다음 곡",
+  "cueCustom": "직접 입력",
+  "cueTo": "받는 사람",
+  "cueEveryone": "모두",
+  "notificationsSection": "알림",
+  "allSetlists": "모든 예배 콘티 받기",
+  "allSetlistsHint": "섬기지 않는 예배의 콘티 공지도 알려 줘요.",
+  "pushSection": "푸시 알림",
+  "pushSetlists": "콘티 공지",
+  "pushServing": "섬김 요청과 대타",
+  "pushRehearsals": "연습",
+  "pushAnnouncements": "공지",
+  "pushChat": "채팅",
+  "pushJoining": "팀 가입",
+  "pushOffHint": "꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요."
 }

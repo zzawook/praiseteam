@@ -10,6 +10,7 @@ import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/providers.dart';
 import '../auth/auth.dart';
+import '../notifications/notification_prefs.dart';
 import '../teams/teams_providers.dart';
 import 'settings_providers.dart';
 
@@ -113,9 +114,16 @@ class SettingsScreen extends ConsumerWidget {
               onTap: userId == null
                   ? null
                   : () async {
-                      final name = await _askText(context, label: l10n.displayName, initial: profile?.displayName ?? '');
+                      final name = await _askText(
+                        context,
+                        label: l10n.displayName,
+                        initial: profile?.displayName ?? '',
+                      );
                       if (name == null || name.trim().isEmpty || !context.mounted) return;
-                      if (await runGuarded(context, () => ref.read(profileRepositoryProvider).update(userId, displayName: name))) {
+                      if (await runGuarded(
+                        context,
+                        () => ref.read(profileRepositoryProvider).update(userId, displayName: name),
+                      )) {
                         ref
                           ..invalidate(myProfileProvider)
                           ..invalidate(teamMembersProvider(teamId));
@@ -128,9 +136,8 @@ class SettingsScreen extends ConsumerWidget {
               trailing: DropdownButton<String>(
                 value: chosenLocale?.languageCode ?? 'system',
                 underline: const SizedBox.shrink(),
-                onChanged: (code) => ref
-                    .read(appLocaleProvider.notifier)
-                    .choose(code == null || code == 'system' ? null : Locale(code)),
+                onChanged: (code) =>
+                    ref.read(appLocaleProvider.notifier).choose(code == null || code == 'system' ? null : Locale(code)),
                 items: [
                   DropdownMenuItem(value: 'system', child: Text(l10n.languageSystem)),
                   const DropdownMenuItem(value: 'ko', child: Text('한국어')),
@@ -145,6 +152,7 @@ class SettingsScreen extends ConsumerWidget {
               trailing: const Icon(Icons.event_available_outlined),
               onTap: () => _calendar(context, ref),
             ),
+            const _NotificationSettings(),
             if (membership != null && membership.role.isLeader) ...[
               SectionHeader(l10n.teamSettings),
               ListTile(
@@ -152,7 +160,12 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(membership.team.name),
                 trailing: const Icon(Icons.edit_outlined),
                 onTap: () async {
-                  final name = await _askText(context, label: l10n.teamName, initial: membership.team.name, maxLength: 60);
+                  final name = await _askText(
+                    context,
+                    label: l10n.teamName,
+                    initial: membership.team.name,
+                    maxLength: 60,
+                  );
                   if (name == null || name.trim().isEmpty || !context.mounted) return;
                   if (await runGuarded(context, () => teams.updateTeam(teamId, name: name.trim()))) {
                     ref.invalidate(myMembershipsProvider);
@@ -197,6 +210,58 @@ class SettingsScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _NotificationSettings extends ConsumerWidget {
+  const _NotificationSettings();
+
+  static String _label(AppLocalizations l10n, PushGroup group) => switch (group) {
+    PushGroup.setlists => l10n.pushSetlists,
+    PushGroup.serving => l10n.pushServing,
+    PushGroup.rehearsals => l10n.pushRehearsals,
+    PushGroup.announcements => l10n.pushAnnouncements,
+    PushGroup.chat => l10n.pushChat,
+    PushGroup.joining => l10n.pushJoining,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final prefs = ref.watch(myNotificationPrefsProvider);
+    final notifier = ref.read(myNotificationPrefsProvider.notifier);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(l10n.notificationsSection),
+        AsyncBody(
+          value: prefs,
+          onRetry: () => ref.invalidate(myNotificationPrefsProvider),
+          data: (p) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SwitchListTile(
+                title: Text(l10n.allSetlists),
+                subtitle: Text(l10n.allSetlistsHint),
+                value: p.allSetlists,
+                onChanged: (on) => runGuarded(context, () => notifier.setAllSetlists(on)),
+              ),
+              SectionHeader(l10n.pushSection),
+              for (final group in PushGroup.values)
+                SwitchListTile(
+                  title: Text(_label(l10n, group)),
+                  value: p.push(group),
+                  onChanged: (on) => runGuarded(context, () => notifier.setPush(group, on)),
+                ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+                child: Text(l10n.pushOffHint, style: Theme.of(context).textTheme.bodySmall),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

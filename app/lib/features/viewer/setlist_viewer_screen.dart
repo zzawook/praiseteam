@@ -9,16 +9,21 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../app/theme.dart';
 import '../../core/music_widgets.dart';
+import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../annotations/annotation_layer.dart';
 import '../annotations/annotations_controller.dart';
 import '../annotations/ink.dart';
 import '../auth/auth.dart';
+import '../live/cue_widgets.dart';
+import '../live/live_clock.dart';
+import '../live/live_session.dart';
 import '../sessions/models.dart';
 import '../sessions/sessions_providers.dart';
 import '../songs/models.dart';
 import '../songs/songs_providers.dart';
+import '../teams/models.dart';
 import '../teams/teams_providers.dart';
 
 part 'setlist_viewer_screen.g.dart';
@@ -27,9 +32,7 @@ part 'setlist_viewer_screen.g.dart';
 @riverpod
 Future<Map<int, Sheet>> sessionSheets(Ref ref, int sessionId) async {
   final items = await ref.watch(setlistProvider(sessionId).future);
-  final sheets = await ref.watch(songsRepositoryProvider).sheetsByIds([
-    for (final i in items) ?i.sheetId,
-  ]);
+  final sheets = await ref.watch(songsRepositoryProvider).sheetsByIds([for (final i in items) ?i.sheetId]);
   return {for (final s in sheets) s.id: s};
 }
 
@@ -43,12 +46,12 @@ class StandPage {
 }
 
 List<StandPage> standPages(List<SetlistItem> items, Map<int, Sheet> sheets) => [
-      for (final item in items)
-        if (sheets[item.sheetId] case final sheet?)
-          for (var p = 0; p < sheet.pageCount; p++) StandPage(item, sheet, p)
-        else
-          StandPage(item, null, 0),
-    ];
+  for (final item in items)
+    if (sheets[item.sheetId] case final sheet?)
+      for (var p = 0; p < sheet.pageCount; p++) StandPage(item, sheet, p)
+    else
+      StandPage(item, null, 0),
+];
 
 /// The music stand: every page of the setlist in order, with notes.
 class SetlistViewerScreen extends ConsumerStatefulWidget {
@@ -70,12 +73,83 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   final _redo = <InkAction>[];
   final _focus = FocusNode();
 
+  /// Live mode: shared page turns and cues for everyone at this service.
+  LiveSession? _live;
+  bool _follow = true;
+
+  /// True while the stand moves because someone else turned; such moves
+  /// are not announced again.
+  bool _followingMove = false;
+  List<StandPage> _lastPages = const [];
+
   @override
   void dispose() {
     _pages?.dispose();
     _focus.dispose();
     if (_stage) WakelockPlus.disable();
+    _live?.leave();
+    _live?.dispose();
     super.dispose();
+  }
+
+  Future<void> _startLive() async {
+    final me = ref.read(currentUserIdProvider);
+    if (me == null) return;
+    final members = await ref.read(teamMembersProvider(widget.teamId).future);
+    final mine = members.where((m) => m.userId == me).firstOrNull;
+    final live =
+        LiveSession(
+          db: ref.read(supabaseProvider),
+          sessionId: widget.sessionId,
+          me: me,
+          name: mine?.profile.displayName ?? '',
+          myPartIds: {...?mine?.partIds},
+          onFollow: _onFollow,
+        )..addListener(() {
+          if (mounted) setState(() {});
+        });
+    live.join();
+    setState(() => _live = live);
+  }
+
+  Future<void> _leaveLive() async {
+    final live = _live;
+    setState(() => _live = null);
+    await live?.leave();
+    live?.dispose();
+  }
+
+  /// Turning follow back on rejoins the group: jump to the latest turn
+  /// seen while I was looking elsewhere.
+  void _setFollow(bool on) {
+    setState(() => _follow = on);
+    final latest = _live?.clock.current?.position;
+    if (on && latest != null) _onFollow(latest);
+  }
+
+  void _onFollow(StandPosition position) {
+    if (!_follow || !mounted) return;
+    final index = _lastPages.indexWhere((p) => p.item.id == position.itemId && p.pageIndex == position.pageIndex);
+    if (index < 0 || index == _current) return;
+    _followingMove = true;
+    _pages
+        ?.animateToPage(index, duration: const Duration(milliseconds: 220), curve: Curves.easeOut)
+        .whenComplete(() => _followingMove = false);
+  }
+
+  void _pageChanged(int index, List<StandPage> pages) {
+    setState(() => _current = index);
+    final live = _live;
+    if (live != null && live.joined && _follow && !_followingMove) {
+      live.turned(StandPosition(itemId: pages[index].item.id, pageIndex: pages[index].pageIndex));
+    }
+  }
+
+  Future<void> _cue() async {
+    final parts = await ref.read(teamPartsProvider(widget.teamId).future);
+    if (!mounted) return;
+    final picked = await showCueSheet(context, parts);
+    if (picked != null) await _live?.sendCue(picked.text, partId: picked.partId);
   }
 
   void _go(int delta, int count) {
@@ -90,9 +164,9 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   }
 
   void _record(InkAction action) => setState(() {
-        _undo.add(action);
-        _redo.clear();
-      });
+    _undo.add(action);
+    _redo.clear();
+  });
 
   void _applyUndo() {
     if (_undo.isEmpty) return;
@@ -136,11 +210,13 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
           data: (sheetMap) {
             final pages = standPages(items, sheetMap);
             if (pages.isEmpty) return const SizedBox.shrink();
+            _lastPages = pages;
             _pages ??= PageController(
-              initialPage: _current = (widget.initialItemId == null
-                      ? 0
-                      : pages.indexWhere((p) => p.item.id == widget.initialItemId))
-                  .clamp(0, pages.length - 1),
+              initialPage: _current =
+                  (widget.initialItemId == null ? 0 : pages.indexWhere((p) => p.item.id == widget.initialItemId)).clamp(
+                    0,
+                    pages.length - 1,
+                  ),
             );
             final page = pages[_current.clamp(0, pages.length - 1)];
             return _keyboard(pages.length, _stand(pages, page));
@@ -151,24 +227,26 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   }
 
   Widget _keyboard(int count, Widget child) => Focus(
-        focusNode: _focus,
-        autofocus: true,
-        onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-          final key = event.logicalKey;
-          // Bluetooth page turners send these.
-          if (key == LogicalKeyboardKey.arrowRight || key == LogicalKeyboardKey.pageDown || key == LogicalKeyboardKey.space) {
-            _go(1, count);
-            return KeyEventResult.handled;
-          }
-          if (key == LogicalKeyboardKey.arrowLeft || key == LogicalKeyboardKey.pageUp) {
-            _go(-1, count);
-            return KeyEventResult.handled;
-          }
-          return KeyEventResult.ignored;
-        },
-        child: child,
-      );
+    focusNode: _focus,
+    autofocus: true,
+    onKeyEvent: (node, event) {
+      if (event is! KeyDownEvent) return KeyEventResult.ignored;
+      final key = event.logicalKey;
+      // Bluetooth page turners send these.
+      if (key == LogicalKeyboardKey.arrowRight ||
+          key == LogicalKeyboardKey.pageDown ||
+          key == LogicalKeyboardKey.space) {
+        _go(1, count);
+        return KeyEventResult.handled;
+      }
+      if (key == LogicalKeyboardKey.arrowLeft || key == LogicalKeyboardKey.pageUp) {
+        _go(-1, count);
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    },
+    child: child,
+  );
 
   Widget _stand(List<StandPage> pages, StandPage page) {
     final isLeader = ref.watch(activeMembershipProvider(widget.teamId))?.role.isLeader ?? false;
@@ -180,40 +258,73 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
     return SafeArea(
       child: Column(
         children: [
-          _Header(page: page, index: _current, total: pages.length, stage: _stage, onClose: () => context.pop()),
+          _Header(
+            page: page,
+            index: _current,
+            total: pages.length,
+            stage: _stage,
+            onClose: () => context.pop(),
+            live: _live,
+            follow: _follow,
+            onFollow: _setFollow,
+          ),
           Expanded(
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(
-                dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.trackpad, if (!_ink.drawing) PointerDeviceKind.mouse},
-              ),
-              child: PageView.builder(
-                controller: _pages,
-                physics: physics,
-                itemCount: pages.length,
-                onPageChanged: (i) => setState(() => _current = i),
-                itemBuilder: (context, i) => _PageSlot(
-                  page: pages[i],
-                  stage: _stage,
-                  tapToTurn: !_ink.drawing,
-                  onTurn: (delta) => _go(delta, pages.length),
-                  annotations: pages[i].sheet == null
-                      ? null
-                      : AnnotationLayer(
-                          teamId: widget.teamId,
-                          sessionId: widget.sessionId,
-                          itemId: pages[i].item.id,
-                          sheetId: pages[i].sheet!.id,
-                          pageIndex: pages[i].pageIndex,
-                          settings: _ink,
-                          isLeader: isLeader,
-                          myId: me,
-                          onAction: _record,
-                          onStylusSeen: () {
-                            if (!_ink.stylusOnly) setState(() => _ink = _ink.copyWith(stylusOnly: true));
-                          },
-                        ),
+            // expand: the pages fill the slot. A loose Stack would size
+            // itself to its only unpositioned child, the hidden cue banner.
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.trackpad,
+                      if (!_ink.drawing) PointerDeviceKind.mouse,
+                    },
+                  ),
+                  child: PageView.builder(
+                    controller: _pages,
+                    physics: physics,
+                    itemCount: pages.length,
+                    onPageChanged: (i) => _pageChanged(i, pages),
+                    itemBuilder: (context, i) => _PageSlot(
+                      page: pages[i],
+                      stage: _stage,
+                      tapToTurn: !_ink.drawing,
+                      onTurn: (delta) => _go(delta, pages.length),
+                      annotations: pages[i].sheet == null
+                          ? null
+                          : AnnotationLayer(
+                              teamId: widget.teamId,
+                              sessionId: widget.sessionId,
+                              itemId: pages[i].item.id,
+                              sheetId: pages[i].sheet!.id,
+                              pageIndex: pages[i].pageIndex,
+                              settings: _ink,
+                              isLeader: isLeader,
+                              myId: me,
+                              onAction: _record,
+                              onStylusSeen: () {
+                                if (!_ink.stylusOnly) setState(() => _ink = _ink.copyWith(stylusOnly: true));
+                              },
+                            ),
+                    ),
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: CueBanner(
+                    cue: _live?.cue,
+                    serial: _live?.cueSerial ?? 0,
+                    partName: (id) => id == null
+                        ? null
+                        : (ref.read(teamPartsProvider(widget.teamId)).value ?? const <Part>[])
+                              .where((p) => p.id == id)
+                              .firstOrNull
+                              ?.name,
+                  ),
+                ),
+              ],
             ),
           ),
           _Toolbar(
@@ -227,6 +338,9 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
             onUndo: _applyUndo,
             onRedo: _applyRedo,
             onCopyPrevious: () => _copyPrevious(page.item),
+            live: _live != null,
+            onLive: () => _live == null ? _startLive() : _leaveLive(),
+            onCue: _cue,
           ),
         ],
       ),
@@ -235,7 +349,19 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.page, required this.index, required this.total, required this.stage, required this.onClose});
+  const _Header({
+    required this.page,
+    required this.index,
+    required this.total,
+    required this.stage,
+    required this.onClose,
+    required this.live,
+    required this.follow,
+    required this.onFollow,
+  });
+  final LiveSession? live;
+  final bool follow;
+  final ValueChanged<bool> onFollow;
   final StandPage page;
   final int index;
   final int total;
@@ -251,7 +377,11 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(4, 4, 16, 4),
       child: Row(
         children: [
-          IconButton(onPressed: onClose, icon: const Icon(Icons.close, color: fg), tooltip: l10n.close),
+          IconButton(
+            onPressed: onClose,
+            icon: const Icon(Icons.close, color: fg),
+            tooltip: l10n.close,
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,10 +389,17 @@ class _Header extends StatelessWidget {
                 Text(
                   page.item.song.title,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleLarge?.copyWith(color: fg, fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: fg,
+                    fontFamily: AppType.setlistFamily,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 if (page.item.songForm != null)
-                  Text(page.item.songForm!, style: theme.textTheme.bodyMedium?.copyWith(color: fg.withValues(alpha: 0.8), letterSpacing: 0.5)),
+                  Text(
+                    page.item.songForm!,
+                    style: theme.textTheme.bodyMedium?.copyWith(color: fg.withValues(alpha: 0.8), letterSpacing: 0.5),
+                  ),
               ],
             ),
           ),
@@ -271,6 +408,23 @@ class _Header extends StatelessWidget {
               data: theme.copyWith(colorScheme: theme.colorScheme.copyWith(primary: fg)),
               child: KeyBadge(page.item.effectiveKey, emphasized: true),
             ),
+          if (live != null) ...[
+            const SizedBox(width: 12),
+            Tooltip(
+              message: l10n.liveFollowHint,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.circle, size: 10, color: AppColors.stageAmber),
+                  const SizedBox(width: 6),
+                  Text(l10n.liveWatching(live!.participants), style: theme.textTheme.labelLarge?.copyWith(color: fg)),
+                  const SizedBox(width: 8),
+                  Text(l10n.liveFollow, style: theme.textTheme.labelMedium?.copyWith(color: fg)),
+                  Switch(value: follow, onChanged: onFollow, activeThumbColor: AppColors.stageAmber),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(width: 16),
           Text(l10n.pageOf(index + 1, total), style: theme.textTheme.labelLarge?.copyWith(color: fg)),
         ],
@@ -314,7 +468,11 @@ class _PageSlot extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(page.item.song.title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700)),
+              Text(
+                page.item.song.title,
+                style: Theme.of(context).textTheme.headlineMedium
+                    ?.copyWith(color: Colors.white, fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 12),
               Text(l10n.noSheetForSong, style: const TextStyle(color: Colors.white70)),
             ],
@@ -385,7 +543,13 @@ class _Toolbar extends StatelessWidget {
     required this.onUndo,
     required this.onRedo,
     required this.onCopyPrevious,
+    required this.live,
+    required this.onLive,
+    required this.onCue,
   });
+  final bool live;
+  final VoidCallback onLive;
+  final VoidCallback onCue;
   final InkSettings ink;
   final bool stage;
   final bool canUndo;
@@ -425,7 +589,25 @@ class _Toolbar extends StatelessWidget {
               label: Text(l10n.stageMode),
             ),
             if (hasSheet)
-              TextButton.icon(style: buttonStyle, onPressed: onCopyPrevious, icon: const Icon(Icons.history), label: Text(l10n.copyPreviousInk)),
+              TextButton.icon(
+                style: buttonStyle,
+                onPressed: onCopyPrevious,
+                icon: const Icon(Icons.history),
+                label: Text(l10n.copyPreviousInk),
+              ),
+            TextButton.icon(
+              style: buttonStyle,
+              onPressed: onLive,
+              icon: Icon(live ? Icons.stop_circle_outlined : Icons.sensors, color: live ? AppColors.stageAmber : null),
+              label: Text(live ? l10n.liveLeave : l10n.liveStart),
+            ),
+            if (live)
+              FilledButton.icon(
+                style: FilledButton.styleFrom(backgroundColor: AppColors.stageAmber, foregroundColor: Colors.black),
+                onPressed: onCue,
+                icon: const Icon(Icons.campaign),
+                label: Text(l10n.sendCue),
+              ),
           ],
         ),
       );
@@ -447,8 +629,16 @@ class _Toolbar extends StatelessWidget {
                 selectedBackgroundColor: forTeam ? AppColors.teamInk : AppColors.myPencil,
               ),
               segments: [
-                ButtonSegment(value: InkVisibility.private, icon: const Icon(Icons.lock_outline), label: Text(l10n.inkForMe)),
-                ButtonSegment(value: InkVisibility.team, icon: const Icon(Icons.groups_outlined), label: Text(l10n.inkForTeam)),
+                ButtonSegment(
+                  value: InkVisibility.private,
+                  icon: const Icon(Icons.lock_outline),
+                  label: Text(l10n.inkForMe),
+                ),
+                ButtonSegment(
+                  value: InkVisibility.team,
+                  icon: const Icon(Icons.groups_outlined),
+                  label: Text(l10n.inkForTeam),
+                ),
               ],
               selected: {ink.target},
               onSelectionChanged: (s) => onInk(ink.copyWith(target: s.first)),
@@ -479,7 +669,10 @@ class _Toolbar extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Color(c),
                         shape: BoxShape.circle,
-                        border: Border.all(color: ink.color == c ? AppColors.stageAmber : Colors.white54, width: ink.color == c ? 3 : 1),
+                        border: Border.all(
+                          color: ink.color == c ? AppColors.stageAmber : Colors.white54,
+                          width: ink.color == c ? 3 : 1,
+                        ),
                       ),
                     ),
                   ),
@@ -489,14 +682,18 @@ class _Toolbar extends StatelessWidget {
             IconButton(tooltip: l10n.redo, color: fg, onPressed: canRedo ? onRedo : null, icon: const Icon(Icons.redo)),
             PopupMenuButton<String>(
               iconColor: fg,
-              onSelected: (v) => onInk(v == 'team' ? ink.copyWith(showTeam: !ink.showTeam) : ink.copyWith(showMine: !ink.showMine)),
+              onSelected: (v) =>
+                  onInk(v == 'team' ? ink.copyWith(showTeam: !ink.showTeam) : ink.copyWith(showMine: !ink.showMine)),
               itemBuilder: (_) => [
                 CheckedPopupMenuItem(value: 'team', checked: ink.showTeam, child: Text(l10n.showTeamInk)),
                 CheckedPopupMenuItem(value: 'mine', checked: ink.showMine, child: Text(l10n.showMyInk)),
               ],
             ),
             const SizedBox(width: 8),
-            FilledButton(onPressed: () => onInk(ink.copyWith(mode: InkMode.view)), child: Text(l10n.doneAnnotating)),
+            FilledButton(
+              onPressed: () => onInk(ink.copyWith(mode: InkMode.view)),
+              child: Text(l10n.doneAnnotating),
+            ),
           ],
         ),
       ),

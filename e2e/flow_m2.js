@@ -93,6 +93,14 @@ let pages = [];
   await btn(b, '다시 확인').click();
   await waitText(b, '다가오는 예배');
 
+  // B serves nowhere yet, so opts in to every setlist in settings
+  await load(b, '/t/1/settings');
+  await waitText(b, '모든 예배 콘티 받기');
+  await b.getByRole('switch', { name: /모든 예배 콘티 받기/ }).or(b.getByRole('checkbox', { name: /모든 예배 콘티 받기/ })).first().click();
+  await b.waitForFunction(() => [...document.querySelectorAll('flt-semantics')].some((e) => (e.getAttribute('aria-label') || '').includes('모든 예배 콘티 받기') && ['true', 'mixed'].includes(e.getAttribute('aria-checked') ?? e.querySelector('input')?.checked?.toString())), null, { timeout: 10000 });
+  await shot(b, '07-settings-all-setlists-mobile');
+  await load(b, '/t/1/sessions');
+
   // A: add a song with a sheet (photo -> PDF)
   await a.goto(BASE + '/t/1/songs', { waitUntil: 'networkidle' });
   await semantics(a);

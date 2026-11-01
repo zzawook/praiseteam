@@ -19,7 +19,8 @@ select private.notify(null,
   array['00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-0000000000d2', '00000000-0000-0000-0000-0000000000d1']::uuid[],
   'member_approved', '{"team_name":"T"}');
 
-select is((select count(*)::int from public.notifications), 2, 'one row per distinct recipient');
+select is((select count(*)::int from public.notifications where user_id in ('00000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-0000000000d2')),
+  2, 'one row per distinct recipient');
 select is(
   (select push_status from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d2'),
   'skipped', 'category turned off -> push skipped, still listed in-app');

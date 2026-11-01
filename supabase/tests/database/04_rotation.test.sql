@@ -87,7 +87,7 @@ select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000
 select is((select count(*)::int from public.blockouts), 0, 'members do not see others'' blockouts');
 select set_config('test.swap', public.request_swap(current_setting('test.a')::bigint, '가족 행사')::text, true);
 reset role;
-select is((select count(*)::int from public.notifications where category = 'swap_requested'), 0, 'nobody eligible yet: blocked out or wrong part');
+select is((select count(*)::int from public.notifications where category = 'swap_requested' and team_id = current_setting('test.team')::bigint), 0, 'nobody eligible yet: blocked out or wrong part');
 set local role authenticated;
 
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000002a","role":"authenticated"}', true);
@@ -133,7 +133,7 @@ reset role;
 update public.assignments set sent_at = now() - interval '3 days' where id = current_setting('test.a')::bigint;
 select private.enqueue_due_reminders();
 select private.enqueue_due_reminders();
-select is((select count(*)::int from public.notifications where category = 'assignment_nudge'), 1, 'unanswered request nudged once');
+select is((select count(*)::int from public.notifications where category = 'assignment_nudge' and team_id = current_setting('test.team')::bigint), 1, 'unanswered request nudged once');
 select is((select count(*)::int from public.notifications where category = 'rehearsal_reminder' and user_id = '00000000-0000-0000-0000-00000000002b'), 1, 'rehearsal reminder sent once');
 
 select * from finish();

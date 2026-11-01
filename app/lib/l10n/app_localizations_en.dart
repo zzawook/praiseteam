@@ -1077,4 +1077,96 @@ class AppLocalizationsEn extends AppLocalizations {
   String pollPreview(String question) {
     return 'Poll: $question';
   }
+
+  @override
+  String get liveStart => 'Go live';
+
+  @override
+  String get liveLeave => 'Leave live';
+
+  @override
+  String liveWatching(int count) {
+    return '$count together';
+  }
+
+  @override
+  String get liveFollow => 'Follow';
+
+  @override
+  String get liveFollowHint =>
+      'When off, your page stays put when others turn.';
+
+  @override
+  String get sendCue => 'Send cue';
+
+  @override
+  String get cueAgain => 'Once more';
+
+  @override
+  String get cueChorus => 'To chorus';
+
+  @override
+  String get cueBridge => 'To bridge';
+
+  @override
+  String get cueEnding => 'Ending';
+
+  @override
+  String get cueKeyUp => 'Key up';
+
+  @override
+  String get cueSofter => 'Softer';
+
+  @override
+  String get cueFaster => 'Faster';
+
+  @override
+  String get cueSlower => 'Slower';
+
+  @override
+  String get cueNextSong => 'Next song';
+
+  @override
+  String get cueCustom => 'Type a cue';
+
+  @override
+  String get cueTo => 'To';
+
+  @override
+  String get cueEveryone => 'Everyone';
+
+  @override
+  String get notificationsSection => 'Notifications';
+
+  @override
+  String get allSetlists => 'Every setlist';
+
+  @override
+  String get allSetlistsHint =>
+      'Also tell me about setlists for services I\'m not serving at.';
+
+  @override
+  String get pushSection => 'Push notifications';
+
+  @override
+  String get pushSetlists => 'Setlists';
+
+  @override
+  String get pushServing => 'Serving requests and swaps';
+
+  @override
+  String get pushRehearsals => 'Rehearsals';
+
+  @override
+  String get pushAnnouncements => 'Announcements';
+
+  @override
+  String get pushChat => 'Chat';
+
+  @override
+  String get pushJoining => 'Joining the team';
+
+  @override
+  String get pushOffHint =>
+      'Turning one off stops the push only. It still shows in your notifications and chat unread counts.';
 }

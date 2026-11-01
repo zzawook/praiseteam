@@ -51,10 +51,10 @@ select is((select count(*)::int from public.messages), 1, 'and read every channe
 -- ---- chat notifications: channel members except the sender, push only
 reset role;
 select is(
-  (select array_agg(user_id order by user_id) from public.notifications where category = 'chat_message'),
+  (select array_agg(user_id order by user_id) from public.notifications where category = 'chat_message' and team_id = current_setting('test.team')::bigint),
   array['00000000-0000-0000-0000-00000000003a']::uuid[],
   'only the leader is notified (the keys player is not in that channel, the sender is skipped)');
-select is((select bool_and(not listed) from public.notifications where category = 'chat_message'), true, 'chat notifications stay out of the notification list');
+select is((select bool_and(not listed) from public.notifications where category = 'chat_message' and team_id = current_setting('test.team')::bigint), true, 'chat notifications stay out of the notification list');
 set local role authenticated;
 
 -- leader mutes the singers channel
@@ -63,7 +63,7 @@ insert into public.channel_reads (team_id, channel_id, muted) values (current_se
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000003b","role":"authenticated"}', true);
 insert into public.messages (id, team_id, channel_id, body) values ('20000000-0000-0000-0000-000000000002', current_setting('test.team')::bigint, current_setting('test.singers')::bigint, '둘째');
 reset role;
-select is((select count(*)::int from public.notifications where category = 'chat_message'), 1, 'a muted channel sends no push');
+select is((select count(*)::int from public.notifications where category = 'chat_message' and team_id = current_setting('test.team')::bigint), 1, 'a muted channel sends no push');
 set local role authenticated;
 
 -- ---- changing parts moves you into channels
@@ -145,7 +145,7 @@ select throws_ok($$ select * from public.poll_results(current_setting('test.poll
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000003a","role":"authenticated"}', true);
 insert into public.announcements (team_id, kind, title, body, created_by) values (current_setting('test.team')::bigint, 'general', '수련회 안내', '11월 셋째 주', '00000000-0000-0000-0000-00000000003a');
 reset role;
-select is((select count(*)::int from public.notifications where category = 'announcement' and listed), 2, 'both members get a listed announcement notification');
+select is((select count(*)::int from public.notifications where category = 'announcement' and listed and team_id = current_setting('test.team')::bigint), 2, 'both members get a listed announcement notification');
 
 select * from finish();
 rollback;

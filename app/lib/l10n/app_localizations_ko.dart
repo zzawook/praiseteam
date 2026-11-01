@@ -992,4 +992,93 @@ class AppLocalizationsKo extends AppLocalizations {
   String pollPreview(String question) {
     return '투표: $question';
   }
+
+  @override
+  String get liveStart => '라이브';
+
+  @override
+  String get liveLeave => '라이브 나가기';
+
+  @override
+  String liveWatching(int count) {
+    return '$count명 함께';
+  }
+
+  @override
+  String get liveFollow => '따라가기';
+
+  @override
+  String get liveFollowHint => '끄면 다른 사람이 넘겨도 내 화면은 그대로예요.';
+
+  @override
+  String get sendCue => '큐 보내기';
+
+  @override
+  String get cueAgain => '한 번 더';
+
+  @override
+  String get cueChorus => '후렴으로';
+
+  @override
+  String get cueBridge => '브릿지로';
+
+  @override
+  String get cueEnding => '엔딩';
+
+  @override
+  String get cueKeyUp => '키 업';
+
+  @override
+  String get cueSofter => '작게';
+
+  @override
+  String get cueFaster => '빠르게';
+
+  @override
+  String get cueSlower => '천천히';
+
+  @override
+  String get cueNextSong => '다음 곡';
+
+  @override
+  String get cueCustom => '직접 입력';
+
+  @override
+  String get cueTo => '받는 사람';
+
+  @override
+  String get cueEveryone => '모두';
+
+  @override
+  String get notificationsSection => '알림';
+
+  @override
+  String get allSetlists => '모든 예배 콘티 받기';
+
+  @override
+  String get allSetlistsHint => '섬기지 않는 예배의 콘티 공지도 알려 줘요.';
+
+  @override
+  String get pushSection => '푸시 알림';
+
+  @override
+  String get pushSetlists => '콘티 공지';
+
+  @override
+  String get pushServing => '섬김 요청과 대타';
+
+  @override
+  String get pushRehearsals => '연습';
+
+  @override
+  String get pushAnnouncements => '공지';
+
+  @override
+  String get pushChat => '채팅';
+
+  @override
+  String get pushJoining => '팀 가입';
+
+  @override
+  String get pushOffHint => '꺼도 알림 목록과 채팅의 안 읽은 표시는 그대로예요.';
 }
