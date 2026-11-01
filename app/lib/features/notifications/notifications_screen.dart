@@ -38,6 +38,8 @@ import 'notifications_providers.dart';
     'service_reminder' => (title: l10n.notifServiceReminder(p('session_title'), p('part_name')), body: ''),
     'rehearsal_scheduled' => (title: l10n.notifRehearsalScheduled(_when(n.params['starts_at'])), body: p('location')),
     'rehearsal_reminder' => (title: l10n.notifRehearsalReminder(_when(n.params['starts_at'])), body: p('location')),
+    'announcement' => (title: l10n.notifAnnouncementTitle(p('title')), body: p('preview')),
+    'chat_message' => (title: l10n.notifChatTitle(p('channel_name')), body: '${p('sender_name')}: ${p('preview')}'),
     _ => (title: l10n.notifFallback, body: ''),
   };
 }
@@ -58,6 +60,8 @@ String notificationRoute(AppNotification n) {
     'assignment_requested' || 'assignment_declined' || 'assignment_removed' || 'assignment_nudge' || 'swap_requested' || 'swap_filled' =>
       '/t/$team/rotation',
     'member_join_request' || 'member_approved' => '/t/$team/team',
+    'announcement' => '/t/$team/announcements',
+    'chat_message' when n.params['channel_id'] != null => '/t/$team/chat/${n.params['channel_id']}',
     _ => '/t/$team/sessions',
   };
 }

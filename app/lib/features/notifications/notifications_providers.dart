@@ -30,6 +30,7 @@ class NotificationsRepository {
     final rows = await _db
         .from('notifications')
         .select('id, team_id, category, params, created_at, read_at')
+        .eq('listed', true) // chat notifications are push-only
         .order('created_at', ascending: false)
         .limit(100);
     return rows.map(AppNotification.fromJson).toList();
@@ -38,6 +39,7 @@ class NotificationsRepository {
   Future<void> markAllRead() => _db
       .from('notifications')
       .update({'read_at': DateTime.now().toUtc().toIso8601String()})
+      .eq('listed', true)
       .isFilter('read_at', null);
 
   /// Calls [onChange] when a notification for [userId] arrives.

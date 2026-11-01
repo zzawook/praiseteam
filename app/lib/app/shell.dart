@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/announcements/announcements.dart';
+import '../features/chat/chat_providers.dart';
 import '../features/teams/teams_providers.dart';
 import '../l10n/app_localizations.dart';
 
@@ -22,6 +24,7 @@ class _Destination {
 final _destinations = [
   _Destination('sessions', Icons.event_note_outlined, Icons.event_note, (l) => l.navSessions),
   _Destination('songs', Icons.library_music_outlined, Icons.library_music, (l) => l.navSongs),
+  _Destination('chat', Icons.forum_outlined, Icons.forum, (l) => l.navChat),
   _Destination('team', Icons.groups_outlined, Icons.groups, (l) => l.navTeam),
   _Destination('settings', Icons.settings_outlined, Icons.settings, (l) => l.navSettings),
 ];
@@ -47,7 +50,16 @@ class AppShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final width = MediaQuery.sizeOf(context).width;
-    Widget icon(_Destination d, {required bool selected}) => Icon(selected ? d.selectedIcon : d.icon);
+    final unreadChat = ref.watch(unreadChatCountProvider(teamId));
+    final newAnnouncements = ref.watch(hasNewAnnouncementsProvider(teamId)).value ?? false;
+
+    Widget icon(_Destination d, {required bool selected}) {
+      final base = Icon(selected ? d.selectedIcon : d.icon);
+      if (d.path != 'chat') return base;
+      if (unreadChat > 0) return Badge.count(count: unreadChat, child: base);
+      if (newAnnouncements) return Badge(child: base);
+      return base;
+    }
 
     if (width < Breakpoints.rail) {
       return Scaffold(

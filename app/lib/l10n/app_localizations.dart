@@ -1651,6 +1651,222 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'구글 캘린더는 웹에서 \'다른 캘린더 > URL로 추가\'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요.'**
   String get googleCalendarHint;
+
+  /// No description provided for @navChat.
+  ///
+  /// In ko, this message translates to:
+  /// **'채팅'**
+  String get navChat;
+
+  /// No description provided for @announcements.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지'**
+  String get announcements;
+
+  /// No description provided for @newAnnouncement.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 쓰기'**
+  String get newAnnouncement;
+
+  /// No description provided for @editAnnouncement.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 수정'**
+  String get editAnnouncement;
+
+  /// No description provided for @deleteAnnouncement.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 삭제'**
+  String get deleteAnnouncement;
+
+  /// No description provided for @announcementTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get announcementTitle;
+
+  /// No description provided for @announcementBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'내용'**
+  String get announcementBody;
+
+  /// No description provided for @pinAnnouncement.
+  ///
+  /// In ko, this message translates to:
+  /// **'맨 위에 고정'**
+  String get pinAnnouncement;
+
+  /// No description provided for @pinned.
+  ///
+  /// In ko, this message translates to:
+  /// **'고정'**
+  String get pinned;
+
+  /// No description provided for @noAnnouncements.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 공지가 없어요.'**
+  String get noAnnouncements;
+
+  /// No description provided for @newBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'새 글'**
+  String get newBadge;
+
+  /// No description provided for @channels.
+  ///
+  /// In ko, this message translates to:
+  /// **'채널'**
+  String get channels;
+
+  /// No description provided for @archivedChannel.
+  ///
+  /// In ko, this message translates to:
+  /// **'지난 예배 (읽기만 가능)'**
+  String get archivedChannel;
+
+  /// No description provided for @newChannel.
+  ///
+  /// In ko, this message translates to:
+  /// **'채널 만들기'**
+  String get newChannel;
+
+  /// No description provided for @channelName.
+  ///
+  /// In ko, this message translates to:
+  /// **'채널 이름'**
+  String get channelName;
+
+  /// No description provided for @channelPartsHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 파트를 맡은 사람들이 들어와요. 리더는 모든 채널을 봐요.'**
+  String get channelPartsHint;
+
+  /// No description provided for @noMessages.
+  ///
+  /// In ko, this message translates to:
+  /// **'첫 메시지를 남겨보세요.'**
+  String get noMessages;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'메시지'**
+  String get messageHint;
+
+  /// No description provided for @send.
+  ///
+  /// In ko, this message translates to:
+  /// **'보내기'**
+  String get send;
+
+  /// No description provided for @mute.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 끄기'**
+  String get mute;
+
+  /// No description provided for @unmute.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 켜기'**
+  String get unmute;
+
+  /// No description provided for @deleteMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'메시지 삭제'**
+  String get deleteMessage;
+
+  /// No description provided for @deletedMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제된 메시지예요'**
+  String get deletedMessage;
+
+  /// No description provided for @newPoll.
+  ///
+  /// In ko, this message translates to:
+  /// **'투표 만들기'**
+  String get newPoll;
+
+  /// No description provided for @pollQuestion.
+  ///
+  /// In ko, this message translates to:
+  /// **'질문'**
+  String get pollQuestion;
+
+  /// No description provided for @pollOption.
+  ///
+  /// In ko, this message translates to:
+  /// **'선택지 {n}'**
+  String pollOption(int n);
+
+  /// No description provided for @addOption.
+  ///
+  /// In ko, this message translates to:
+  /// **'선택지 추가'**
+  String get addOption;
+
+  /// No description provided for @multipleChoice.
+  ///
+  /// In ko, this message translates to:
+  /// **'여러 개 고를 수 있게'**
+  String get multipleChoice;
+
+  /// No description provided for @anonymousPoll.
+  ///
+  /// In ko, this message translates to:
+  /// **'익명 투표'**
+  String get anonymousPoll;
+
+  /// No description provided for @vote.
+  ///
+  /// In ko, this message translates to:
+  /// **'투표하기'**
+  String get vote;
+
+  /// No description provided for @votes.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}표'**
+  String votes(int count);
+
+  /// No description provided for @pollClosed.
+  ///
+  /// In ko, this message translates to:
+  /// **'마감된 투표'**
+  String get pollClosed;
+
+  /// No description provided for @anonymous.
+  ///
+  /// In ko, this message translates to:
+  /// **'익명'**
+  String get anonymous;
+
+  /// No description provided for @notifChatTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'{channel}'**
+  String notifChatTitle(String channel);
+
+  /// No description provided for @notifAnnouncementTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지: {title}'**
+  String notifAnnouncementTitle(String title);
+
+  /// No description provided for @pollPreview.
+  ///
+  /// In ko, this message translates to:
+  /// **'투표: {question}'**
+  String pollPreview(String question);
 }
 
 class _AppLocalizationsDelegate

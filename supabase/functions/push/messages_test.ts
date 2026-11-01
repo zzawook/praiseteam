@@ -31,3 +31,9 @@ Deno.test("setlist change summary", () => {
 Deno.test("unknown categories fall back instead of failing", () => {
   assertEquals(render("something_new", "en", {}).title, "PraiseTeam");
 });
+
+Deno.test("chat pushes show channel, sender and preview", () => {
+  const p = { channel_name: "싱어팀", sender_name: "민지", preview: "화음 연습 7시", is_poll: false };
+  assertEquals(render("chat_message", "ko", p), { title: "싱어팀", body: "민지: 화음 연습 7시" });
+  assertEquals(render("chat_message", "en", { ...p, is_poll: true, preview: "회식 언제?" }).body, "민지: Poll 회식 언제?");
+});

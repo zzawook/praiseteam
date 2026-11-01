@@ -602,5 +602,76 @@
   "openInCalendar": "캘린더 앱에서 열기",
   "newCalendarUrl": "주소 새로 만들기",
   "newCalendarUrlHint": "새로 만들면 예전 주소로는 더 이상 보이지 않아요.",
-  "googleCalendarHint": "구글 캘린더는 웹에서 '다른 캘린더 > URL로 추가'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요."
+  "googleCalendarHint": "구글 캘린더는 웹에서 '다른 캘린더 > URL로 추가'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요.",
+  "navChat": "채팅",
+  "announcements": "공지",
+  "newAnnouncement": "공지 쓰기",
+  "editAnnouncement": "공지 수정",
+  "deleteAnnouncement": "공지 삭제",
+  "announcementTitle": "제목",
+  "announcementBody": "내용",
+  "pinAnnouncement": "맨 위에 고정",
+  "pinned": "고정",
+  "noAnnouncements": "아직 공지가 없어요.",
+  "newBadge": "새 글",
+  "channels": "채널",
+  "archivedChannel": "지난 예배 (읽기만 가능)",
+  "newChannel": "채널 만들기",
+  "channelName": "채널 이름",
+  "channelPartsHint": "이 파트를 맡은 사람들이 들어와요. 리더는 모든 채널을 봐요.",
+  "noMessages": "첫 메시지를 남겨보세요.",
+  "messageHint": "메시지",
+  "send": "보내기",
+  "mute": "알림 끄기",
+  "unmute": "알림 켜기",
+  "deleteMessage": "메시지 삭제",
+  "deletedMessage": "삭제된 메시지예요",
+  "newPoll": "투표 만들기",
+  "pollQuestion": "질문",
+  "pollOption": "선택지 {n}",
+  "@pollOption": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "addOption": "선택지 추가",
+  "multipleChoice": "여러 개 고를 수 있게",
+  "anonymousPoll": "익명 투표",
+  "vote": "투표하기",
+  "votes": "{count}표",
+  "@votes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pollClosed": "마감된 투표",
+  "anonymous": "익명",
+  "notifChatTitle": "{channel}",
+  "@notifChatTitle": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "notifAnnouncementTitle": "공지: {title}",
+  "@notifAnnouncementTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pollPreview": "투표: {question}",
+  "@pollPreview": {
+    "placeholders": {
+      "question": {
+        "type": "String"
+      }
+    }
+  }
 }

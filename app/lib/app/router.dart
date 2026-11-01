@@ -2,7 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../features/announcements/announcements.dart';
 import '../features/auth/auth.dart';
+import '../features/chat/channels_screen.dart';
+import '../features/chat/chat_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/notifications/notifications_screen.dart';
 import '../features/rotation/blockouts_screen.dart';
@@ -71,6 +74,16 @@ GoRouter router(Ref ref) {
         path: '/t/:teamId/notifications',
         builder: (_, state) => NotificationsScreen(teamId: teamIdOf(state)!),
       ),
+      // Chat rooms and announcements open full screen (the input bar must not
+      // sit on top of the phone's bottom navigation).
+      GoRoute(
+        path: '/t/:teamId/chat/:channelId',
+        builder: (_, state) => ChatScreen(teamId: teamIdOf(state)!, channelId: idOf(state, 'channelId')),
+      ),
+      GoRoute(
+        path: '/t/:teamId/announcements',
+        builder: (_, state) => AnnouncementsScreen(teamId: teamIdOf(state)!),
+      ),
       // The music stand: full screen, outside the navigation shell.
       GoRoute(
         path: '/t/:teamId/stand/:sessionId',
@@ -114,6 +127,10 @@ GoRouter router(Ref ref) {
                 builder: (_, state) => SongDetailScreen(teamId: teamIdOf(state)!, songId: idOf(state, 'songId')),
               ),
             ],
+          ),
+          GoRoute(
+            path: '/t/:teamId/chat',
+            builder: (_, state) => ChannelsScreen(teamId: teamIdOf(state)!),
           ),
           GoRoute(
             path: '/t/:teamId/rotation',

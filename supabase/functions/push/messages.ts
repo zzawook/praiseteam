@@ -59,6 +59,20 @@ const serving = (ko: (s: string, part: string, p: Params) => string, en: (s: str
 });
 
 const templates: Record<string, Record<Locale, Template>> = {
+  chat_message: {
+    ko: {
+      title: (p) => str(p.channel_name),
+      body: (p) => `${str(p.sender_name)}: ${p.is_poll ? "투표 " : ""}${str(p.preview)}`,
+    },
+    en: {
+      title: (p) => str(p.channel_name),
+      body: (p) => `${str(p.sender_name)}: ${p.is_poll ? "Poll " : ""}${str(p.preview)}`,
+    },
+  },
+  announcement: {
+    ko: { title: (p) => `공지: ${str(p.title)}`, body: (p) => str(p.preview) },
+    en: { title: (p) => `Announcement: ${str(p.title)}`, body: (p) => str(p.preview) },
+  },
   assignment_requested: serving((s, part) => `${s} ${part} 섬김 요청`, (s, part) => `${s}: can you serve on ${part}?`),
   assignment_removed: serving((s, part) => `${s} ${part} 섬김에서 빠졌어요`, (s, part) => `You're off ${part} for ${s}`),
   assignment_nudge: serving((s, part) => `${s} ${part} 요청에 아직 답하지 않았어요`, (s, part) => `Still waiting on you: ${part} for ${s}`),

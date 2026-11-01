@@ -952,4 +952,129 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get googleCalendarHint =>
       'Google Calendar: on the web, Other calendars > From URL. Updates can take a few hours.';
+
+  @override
+  String get navChat => 'Chat';
+
+  @override
+  String get announcements => 'Announcements';
+
+  @override
+  String get newAnnouncement => 'New announcement';
+
+  @override
+  String get editAnnouncement => 'Edit announcement';
+
+  @override
+  String get deleteAnnouncement => 'Delete announcement';
+
+  @override
+  String get announcementTitle => 'Title';
+
+  @override
+  String get announcementBody => 'Message';
+
+  @override
+  String get pinAnnouncement => 'Pin to top';
+
+  @override
+  String get pinned => 'Pinned';
+
+  @override
+  String get noAnnouncements => 'No announcements yet.';
+
+  @override
+  String get newBadge => 'New';
+
+  @override
+  String get channels => 'Channels';
+
+  @override
+  String get archivedChannel => 'Past service (read-only)';
+
+  @override
+  String get newChannel => 'New channel';
+
+  @override
+  String get channelName => 'Channel name';
+
+  @override
+  String get channelPartsHint =>
+      'People who play these parts are in it. Leaders see every channel.';
+
+  @override
+  String get noMessages => 'Say hello.';
+
+  @override
+  String get messageHint => 'Message';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get deleteMessage => 'Delete message';
+
+  @override
+  String get deletedMessage => 'Message deleted';
+
+  @override
+  String get newPoll => 'New poll';
+
+  @override
+  String get pollQuestion => 'Question';
+
+  @override
+  String pollOption(int n) {
+    return 'Option $n';
+  }
+
+  @override
+  String get addOption => 'Add option';
+
+  @override
+  String get multipleChoice => 'Allow several choices';
+
+  @override
+  String get anonymousPoll => 'Anonymous';
+
+  @override
+  String get vote => 'Vote';
+
+  @override
+  String votes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count votes',
+      one: '1 vote',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pollClosed => 'Poll closed';
+
+  @override
+  String get anonymous => 'Anonymous';
+
+  @override
+  String notifChatTitle(String channel) {
+    return '$channel';
+  }
+
+  @override
+  String notifAnnouncementTitle(String title) {
+    return 'Announcement: $title';
+  }
+
+  @override
+  String pollPreview(String question) {
+    return 'Poll: $question';
+  }
 }

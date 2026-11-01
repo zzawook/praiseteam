@@ -874,4 +874,122 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get googleCalendarHint =>
       '구글 캘린더는 웹에서 \'다른 캘린더 > URL로 추가\'에 붙여넣어요. 반영되기까지 몇 시간 걸릴 수 있어요.';
+
+  @override
+  String get navChat => '채팅';
+
+  @override
+  String get announcements => '공지';
+
+  @override
+  String get newAnnouncement => '공지 쓰기';
+
+  @override
+  String get editAnnouncement => '공지 수정';
+
+  @override
+  String get deleteAnnouncement => '공지 삭제';
+
+  @override
+  String get announcementTitle => '제목';
+
+  @override
+  String get announcementBody => '내용';
+
+  @override
+  String get pinAnnouncement => '맨 위에 고정';
+
+  @override
+  String get pinned => '고정';
+
+  @override
+  String get noAnnouncements => '아직 공지가 없어요.';
+
+  @override
+  String get newBadge => '새 글';
+
+  @override
+  String get channels => '채널';
+
+  @override
+  String get archivedChannel => '지난 예배 (읽기만 가능)';
+
+  @override
+  String get newChannel => '채널 만들기';
+
+  @override
+  String get channelName => '채널 이름';
+
+  @override
+  String get channelPartsHint => '이 파트를 맡은 사람들이 들어와요. 리더는 모든 채널을 봐요.';
+
+  @override
+  String get noMessages => '첫 메시지를 남겨보세요.';
+
+  @override
+  String get messageHint => '메시지';
+
+  @override
+  String get send => '보내기';
+
+  @override
+  String get mute => '알림 끄기';
+
+  @override
+  String get unmute => '알림 켜기';
+
+  @override
+  String get deleteMessage => '메시지 삭제';
+
+  @override
+  String get deletedMessage => '삭제된 메시지예요';
+
+  @override
+  String get newPoll => '투표 만들기';
+
+  @override
+  String get pollQuestion => '질문';
+
+  @override
+  String pollOption(int n) {
+    return '선택지 $n';
+  }
+
+  @override
+  String get addOption => '선택지 추가';
+
+  @override
+  String get multipleChoice => '여러 개 고를 수 있게';
+
+  @override
+  String get anonymousPoll => '익명 투표';
+
+  @override
+  String get vote => '투표하기';
+
+  @override
+  String votes(int count) {
+    return '$count표';
+  }
+
+  @override
+  String get pollClosed => '마감된 투표';
+
+  @override
+  String get anonymous => '익명';
+
+  @override
+  String notifChatTitle(String channel) {
+    return '$channel';
+  }
+
+  @override
+  String notifAnnouncementTitle(String title) {
+    return '공지: $title';
+  }
+
+  @override
+  String pollPreview(String question) {
+    return '투표: $question';
+  }
 }
