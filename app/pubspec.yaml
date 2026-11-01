@@ -46,6 +46,7 @@ dev_dependencies:
   freezed: ^4.0.3
   json_serializable: ^6.15.2
   drift_dev: ^2.35.2
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
@@ -59,3 +60,23 @@ flutter:
       fonts:
         - asset: assets/fonts/GowunBatang-Bold-subset.ttf
           weight: 700
+
+# App icon from assets/icon/ (the sign-in staff mark); regenerate with
+# `dart run flutter_launcher_icons`. Version 0.14.4 also rewrites
+# ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS in
+# ios/Runner.xcodeproj/project.pbxproj; restore that file afterwards.
+flutter_launcher_icons:
+  image_path: assets/icon/icon.png
+  android: true
+  adaptive_icon_background: "#F4F5F2"
+  adaptive_icon_foreground: assets/icon/icon_foreground.png
+  # The foreground image already keeps to the safe zone.
+  adaptive_icon_foreground_inset: 0
+  min_sdk_android: 24
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: assets/icon/icon.png
+    background_color: "#F4F5F2"
+    theme_color: "#2541B2"

@@ -2,4 +2,5 @@
 <resources>
     <!-- AppColors.teamInk -->
     <color name="notification_accent">#2541B2</color>
+	<color name="ic_launcher_background">#F4F5F2</color>
 </resources>
