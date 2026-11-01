@@ -72,7 +72,8 @@ insert into public.setlist_items (team_id, session_id, position, song_id) select
 select public.publish_setlist(current_setting('test.session')::bigint);
 reset role;
 select is(
-  (select array_agg(user_id order by user_id) from public.notifications where category = 'setlist_published'),
+  (select array_agg(user_id order by user_id) from public.notifications
+   where category = 'setlist_published' and team_id = current_setting('test.team')::bigint),
   array['00000000-0000-0000-0000-00000000002b']::uuid[],
   'only the person serving is notified (the publishing leader is skipped)');
 set local role authenticated;
