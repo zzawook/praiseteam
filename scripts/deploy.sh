@@ -27,6 +27,13 @@ db() {
   export SUPABASE_DB_PASSWORD
   supabase db push --linked --dry-run
   confirm "Apply these migrations to production?" || exit 1
+  # A migration can move data, so production is dumped first; restoring
+  # from these files is the way back.
+  local backup
+  backup="$SECRETS/backups/$(date -u +%Y%m%dT%H%M%SZ)"
+  (umask 077 && mkdir -p "$SECRETS/backups")
+  supabase db dump --linked -f "$backup-schema.sql"
+  supabase db dump --linked --data-only --use-copy -f "$backup-data.sql"
   supabase db push --linked
 }
 
