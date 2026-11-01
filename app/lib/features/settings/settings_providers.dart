@@ -9,24 +9,25 @@ part 'settings_providers.g.dart';
 
 const supportedLanguageCodes = ['ko', 'en'];
 
-/// The language the user picked, or null to follow the device.
+/// The language the app shows; null follows the device.
+///
+/// Korean unless the person picks another in settings: the team is Korean,
+/// but many phones in Singapore are set to English. "Follow the device" is
+/// a choice of its own, kept as [_device].
 @Riverpod(keepAlive: true)
 class AppLocale extends _$AppLocale {
   static const _key = 'locale';
+  static const _device = 'system';
 
   @override
   Locale? build() {
     final code = ref.watch(sharedPreferencesProvider).getString(_key);
-    return supportedLanguageCodes.contains(code) ? Locale(code!) : null;
+    if (code == _device) return null;
+    return Locale(supportedLanguageCodes.contains(code) ? code! : 'ko');
   }
 
   Future<void> choose(Locale? locale) async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    if (locale == null) {
-      await prefs.remove(_key);
-    } else {
-      await prefs.setString(_key, locale.languageCode);
-    }
+    await ref.read(sharedPreferencesProvider).setString(_key, locale?.languageCode ?? _device);
     state = locale;
   }
 }

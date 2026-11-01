@@ -5,13 +5,12 @@
 // function does not verify JWTs (see config.toml) and authorizes by token.
 import postgres from "npm:postgres@3.4.4";
 import { calendar, type CalendarEvent } from "./ics.ts";
+import { assignmentStatus, rehearsalTitle, toLocale } from "./texts.ts";
 
 const sql = postgres(Deno.env.get("SUPABASE_DB_URL")!, { prepare: false, max: 2, idle_timeout: 20 });
 
 const SERVICE_HOURS = 2; // sessions have no end time; show two hours
 const tokenPattern = /^[0-9a-f-]{36}$/i;
-
-const statusText: Record<string, string> = { pending: "응답 대기 / Waiting for your answer", accepted: "수락 / Accepted" };
 
 Deno.serve(async (req) => {
   if (req.method !== "GET") return new Response("Method Not Allowed", { status: 405 });
@@ -19,8 +18,13 @@ Deno.serve(async (req) => {
   const token = last.replace(/\.ics$/, "");
   if (!tokenPattern.test(token)) return new Response("Not Found", { status: 404 });
 
-  const [feed] = await sql`select user_id from public.calendar_feeds where token = ${token}::uuid`;
+  const [feed] = await sql`
+    select f.user_id, p.locale
+    from public.calendar_feeds f
+    left join public.profiles p on p.id = f.user_id
+    where f.token = ${token}::uuid`;
   if (!feed) return new Response("Not Found", { status: 404 });
+  const locale = toLocale(feed.locale);
 
   const services = await sql`
     select a.id, a.status, s.title, s.starts_at, s.location, p.name as part, t.name as team
@@ -55,7 +59,7 @@ Deno.serve(async (req) => {
         end: new Date(start.getTime() + SERVICE_HOURS * 3600_000),
         summary: `[${r.part}] ${r.title}`,
         location: r.location,
-        description: `${r.team}\n${statusText[r.status] ?? r.status}`,
+        description: `${r.team}\n${assignmentStatus(locale, r.status)}`,
       };
     }),
     ...rehearsals.map((r) => {
@@ -64,7 +68,7 @@ Deno.serve(async (req) => {
         uid: `rehearsal-${r.id}@praiseteam`,
         start,
         end: r.ends_at ? new Date(r.ends_at) : new Date(start.getTime() + 3600_000),
-        summary: r.session_title ? `연습 / Rehearsal: ${r.session_title}` : "연습 / Rehearsal",
+        summary: rehearsalTitle(locale, r.session_title),
         location: r.location,
         description: r.team,
       };

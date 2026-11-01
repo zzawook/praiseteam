@@ -8,14 +8,26 @@ part of 'settings_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The language the user picked, or null to follow the device.
+/// The language the app shows; null follows the device.
+///
+/// Korean unless the person picks another in settings: the team is Korean,
+/// but many phones in Singapore are set to English. "Follow the device" is
+/// a choice of its own, kept as [_device].
 
 @ProviderFor(AppLocale)
 final appLocaleProvider = AppLocaleProvider._();
 
-/// The language the user picked, or null to follow the device.
+/// The language the app shows; null follows the device.
+///
+/// Korean unless the person picks another in settings: the team is Korean,
+/// but many phones in Singapore are set to English. "Follow the device" is
+/// a choice of its own, kept as [_device].
 final class AppLocaleProvider extends $NotifierProvider<AppLocale, Locale?> {
-  /// The language the user picked, or null to follow the device.
+  /// The language the app shows; null follows the device.
+  ///
+  /// Korean unless the person picks another in settings: the team is Korean,
+  /// but many phones in Singapore are set to English. "Follow the device" is
+  /// a choice of its own, kept as [_device].
   AppLocaleProvider._()
     : super(
         from: null,
@@ -43,9 +55,13 @@ final class AppLocaleProvider extends $NotifierProvider<AppLocale, Locale?> {
   }
 }
 
-String _$appLocaleHash() => r'b41e2cde86b954c6269b1131b8f40aaf180c8013';
+String _$appLocaleHash() => r'1e9ee176706bb613b1e513db6f17b0151e28202f';
 
-/// The language the user picked, or null to follow the device.
+/// The language the app shows; null follows the device.
+///
+/// Korean unless the person picks another in settings: the team is Korean,
+/// but many phones in Singapore are set to English. "Follow the device" is
+/// a choice of its own, kept as [_device].
 
 abstract class _$AppLocale extends $Notifier<Locale?> {
   Locale? build();
