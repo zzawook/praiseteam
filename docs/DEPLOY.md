@@ -28,11 +28,11 @@ scripts/deploy.sh functions
 
 `supabase db query --linked`가 로그인을 요구하면 `supabase login`을 한 뒤 다시 실행해요.
 
-### 3. 개인정보처리방침 연락처, 웹 배포
-`app/web/privacy.html`에서 `CONTACT_EMAIL` 두 곳을 개인정보 문의를 받을 주소로 바꾼 뒤 실행해요.
+### 3. 웹 배포
 ```sh
 scripts/deploy.sh web
 ```
+개인정보처리방침의 연락처는 kjaehyeok21@gmail.com이에요(`app/web/privacy.html`).
 
 ### 4. 푸시 켜기 (Firebase 콘솔)
 1. Firebase 콘솔 → 프로젝트 설정 → 서비스 계정 → **새 비공개 키 생성**.
