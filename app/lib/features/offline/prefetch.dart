@@ -6,6 +6,7 @@ import '../../core/offline/reachability.dart';
 import '../../core/providers.dart';
 import '../annotations/annotations_controller.dart';
 import '../auth/auth.dart';
+import '../rotation/rehearsals.dart';
 import '../sessions/sessions_providers.dart';
 import '../songs/songs_providers.dart';
 import '../teams/teams_providers.dart';
@@ -17,7 +18,7 @@ const offlineWindow = Duration(days: 7);
 
 /// Keeps what the music stand needs on the device: every service in the
 /// next 7 days and every upcoming service I serve at, with its setlist,
-/// sheets (the PDFs too) and notes. Runs after sign-in and again each time
+/// sheets (the PDFs too), notes and rehearsals. Runs after sign-in and again each time
 /// the connection comes back. The value is how many services are ready.
 @Riverpod(keepAlive: true)
 Future<int> offlinePrefetch(Ref ref) async {
@@ -28,6 +29,7 @@ Future<int> offlinePrefetch(Ref ref) async {
   final sessions = ref.read(sessionsRepositoryProvider);
   final songs = ref.read(songsRepositoryProvider);
   final notes = ref.read(annotationsRepositoryProvider);
+  final rehearsals = ref.read(rehearsalsRepositoryProvider);
   final soon = DateTime.now().add(offlineWindow);
 
   var ready = 0;
@@ -43,6 +45,7 @@ Future<int> offlinePrefetch(Ref ref) async {
           await songs.downloadSheet(sheet.storagePath);
         }
         await notes.forSession(session.id);
+        await rehearsals.forSession(session.id);
         ready++;
       } catch (e) {
         if (isOfflineError(e)) rethrow; // the rest cannot be fetched either

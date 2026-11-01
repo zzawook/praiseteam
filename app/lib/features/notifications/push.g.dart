@@ -69,7 +69,7 @@ final class PushRegistrationProvider
   PushRegistration create() => PushRegistration();
 }
 
-String _$pushRegistrationHash() => r'af10066bffded5583616f1ba371e2d6264b8873b';
+String _$pushRegistrationHash() => r'2acbcc1bde930021545558b85f557d3a7380914b';
 
 /// This device's push registration for the signed-in user.
 ///

@@ -10,7 +10,7 @@ part of 'prefetch.dart';
 // ignore_for_file: type=lint, type=warning
 /// Keeps what the music stand needs on the device: every service in the
 /// next 7 days and every upcoming service I serve at, with its setlist,
-/// sheets (the PDFs too) and notes. Runs after sign-in and again each time
+/// sheets (the PDFs too), notes and rehearsals. Runs after sign-in and again each time
 /// the connection comes back. The value is how many services are ready.
 
 @ProviderFor(offlinePrefetch)
@@ -18,7 +18,7 @@ final offlinePrefetchProvider = OfflinePrefetchProvider._();
 
 /// Keeps what the music stand needs on the device: every service in the
 /// next 7 days and every upcoming service I serve at, with its setlist,
-/// sheets (the PDFs too) and notes. Runs after sign-in and again each time
+/// sheets (the PDFs too), notes and rehearsals. Runs after sign-in and again each time
 /// the connection comes back. The value is how many services are ready.
 
 final class OfflinePrefetchProvider
@@ -26,7 +26,7 @@ final class OfflinePrefetchProvider
     with $FutureModifier<int>, $FutureProvider<int> {
   /// Keeps what the music stand needs on the device: every service in the
   /// next 7 days and every upcoming service I serve at, with its setlist,
-  /// sheets (the PDFs too) and notes. Runs after sign-in and again each time
+  /// sheets (the PDFs too), notes and rehearsals. Runs after sign-in and again each time
   /// the connection comes back. The value is how many services are ready.
   OfflinePrefetchProvider._()
     : super(
@@ -53,4 +53,4 @@ final class OfflinePrefetchProvider
   }
 }
 
-String _$offlinePrefetchHash() => r'72e9f5111cb43ac880afca3fc80ca51f2e39424f';
+String _$offlinePrefetchHash() => r'976757c98295fa961af9c0130e80590b4219c55d';

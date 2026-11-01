@@ -4,10 +4,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 
 import '../../core/dates.dart';
+import '../../core/offline/offline_store.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth.dart';
+import '../offline/offline.dart';
 import 'rotation_providers.dart';
 import 'rotation_repository.dart';
 
@@ -36,15 +38,20 @@ class Rehearsal {
 }
 
 class RehearsalsRepository {
-  RehearsalsRepository(this._db);
+  RehearsalsRepository(this._db, this._offline);
   final SupabaseClient _db;
+  final ReadThrough _offline;
 
+  /// Kept on the device with the rest of the session (readable offline).
   Future<List<Rehearsal>> forSession(int sessionId) async {
-    final rows = await _db
-        .from('rehearsals')
-        .select('id, starts_at, location, rehearsal_responses(user_id, rsvp, attendance)')
-        .eq('session_id', sessionId)
-        .order('starts_at', ascending: true);
+    final rows = await _offline.list(
+      'rehearsals:$sessionId',
+      () => _db
+          .from('rehearsals')
+          .select('id, starts_at, location, rehearsal_responses(user_id, rsvp, attendance)')
+          .eq('session_id', sessionId)
+          .order('starts_at', ascending: true),
+    );
     return [
       for (final r in rows)
         Rehearsal(
@@ -79,11 +86,14 @@ class RehearsalsRepository {
 }
 
 @Riverpod(keepAlive: true)
-RehearsalsRepository rehearsalsRepository(Ref ref) => RehearsalsRepository(ref.watch(supabaseProvider));
+RehearsalsRepository rehearsalsRepository(Ref ref) =>
+    RehearsalsRepository(ref.watch(supabaseProvider), ref.watch(readThroughProvider));
 
 @riverpod
-Future<List<Rehearsal>> sessionRehearsals(Ref ref, int sessionId) =>
-    ref.watch(rehearsalsRepositoryProvider).forSession(sessionId);
+Future<List<Rehearsal>> sessionRehearsals(Ref ref, int sessionId) {
+  ref.watch(onlineStatusProvider.select((s) => s.epoch)); // refresh on reconnect
+  return ref.watch(rehearsalsRepositoryProvider).forSession(sessionId);
+}
 
 /// Who serves in a session and the session's rehearsals, for its page.
 class SessionServingSection extends ConsumerWidget {

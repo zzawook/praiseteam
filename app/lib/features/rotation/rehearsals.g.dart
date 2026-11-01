@@ -55,7 +55,7 @@ final class RehearsalsRepositoryProvider
 }
 
 String _$rehearsalsRepositoryHash() =>
-    r'3da67a21f8a7bf996ee916e3dd3305c565ff5439';
+    r'077dcb45623c99b0b4a4685f063deffbf48badb4';
 
 @ProviderFor(sessionRehearsals)
 final sessionRehearsalsProvider = SessionRehearsalsFamily._();
@@ -112,7 +112,7 @@ final class SessionRehearsalsProvider
   }
 }
 
-String _$sessionRehearsalsHash() => r'750b4c199bcc5ef2b4978461f902a2b6327a502c';
+String _$sessionRehearsalsHash() => r'8654b3ad809bb1c3f43ba4b23a0b10b2682ad771';
 
 final class SessionRehearsalsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<Rehearsal>>, int> {

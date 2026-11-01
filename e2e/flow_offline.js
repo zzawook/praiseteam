@@ -129,6 +129,7 @@ let pages = [];
   sql(`insert into public.setlist_items (team_id, session_id, position, song_id, sheet_id) values (${team}, ${friday}, 1, ${song1}, ${sheet1})`);
   const item2 = sql(`insert into public.setlist_items (team_id, session_id, position, song_id, sheet_id) values (${team}, ${sunday}, 1, ${song2}, ${sheet2}) returning id`);
   sql(`update public.sessions set setlist_status = 'published', published_at = now() where id in (${friday}, ${sunday})`);
+  sql(`insert into public.rehearsals (team_id, session_id, starts_at, location) values (${team}, ${sunday}, now() + interval '2 days 20 hours', '본당 2층')`);
   sql(`insert into public.strokes (id, team_id, session_id, setlist_item_id, sheet_id, page_index, owner_id, visibility, tool, color, width, points) values ('${crypto.randomUUID()}', ${team}, ${sunday}, ${item2}, ${sheet2}, 0, '${aId}', 'team', 'pen', ${0xff2541b2 | 0}, 0.006, '\\x33330040ffcccccd4cff')`);
 
   // B opens the app: this week's services are kept on the device
@@ -153,6 +154,7 @@ let pages = [];
   await b.getByText('주일 2부 예배').or(b.getByRole('button', { name: /주일 2부 예배/ })).first().click();
   await waitText(b, '은혜');
   await waitText(b, '오프라인이에요');
+  await waitText(b, '본당 2층'); // the rehearsal, kept with the session
   await shot(b, '40-offline-session-desktop');
   await btn(b, '악보 보기').click();
   await waitText(b, '오프라인');
