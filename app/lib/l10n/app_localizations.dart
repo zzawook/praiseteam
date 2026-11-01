@@ -2299,6 +2299,24 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'연습 {when}'**
   String rehearsalAt(String when);
+
+  /// No description provided for @moreCues.
+  ///
+  /// In ko, this message translates to:
+  /// **'큐 더보기'**
+  String get moreCues;
+
+  /// No description provided for @hideCues.
+  ///
+  /// In ko, this message translates to:
+  /// **'큐 숨기기'**
+  String get hideCues;
+
+  /// No description provided for @showCues.
+  ///
+  /// In ko, this message translates to:
+  /// **'큐 보이기'**
+  String get showCues;
 }
 
 class _AppLocalizationsDelegate

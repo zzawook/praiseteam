@@ -1363,4 +1363,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String rehearsalAt(String when) {
     return 'Rehearsal $when';
   }
+
+  @override
+  String get moreCues => 'More cues';
+
+  @override
+  String get hideCues => 'Hide cues';
+
+  @override
+  String get showCues => 'Show cues';
 }

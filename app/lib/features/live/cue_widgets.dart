@@ -164,3 +164,90 @@ class _CueBannerState extends State<CueBanner> {
     );
   }
 }
+
+/// Cues one tap away while live: the seven most used, to everyone, and
+/// "more" for the rest (faster, slower, a custom text, or one part only).
+/// Two rows under the pages when the screen is upright; a rail beside them
+/// when it lies sideways, in the margin a portrait page leaves. Neither
+/// covers music, and anyone can hide it to give the pages the room.
+class CueBar extends StatelessWidget {
+  const CueBar({super.key, required this.vertical, required this.onCue, required this.onMore});
+  final bool vertical;
+  final ValueChanged<String> onCue;
+  final VoidCallback onMore;
+
+  static const _cell = 48.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final quick = [
+      l10n.cueAgain,
+      l10n.cueChorus,
+      l10n.cueBridge,
+      l10n.cueEnding,
+      l10n.cueKeyUp,
+      l10n.cueSofter,
+      l10n.cueNextSong,
+    ];
+    final style = OutlinedButton.styleFrom(
+      foregroundColor: AppColors.stageAmber,
+      side: BorderSide(color: AppColors.stageAmber.withValues(alpha: 0.6)),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      minimumSize: const Size(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+    );
+    final buttons = <Widget>[
+      for (final text in quick)
+        OutlinedButton(
+          style: style,
+          onPressed: () => onCue(text),
+          child: Text(text, maxLines: 1, softWrap: false, overflow: TextOverflow.fade),
+        ),
+      Tooltip(
+        message: l10n.moreCues,
+        child: OutlinedButton(style: style, onPressed: onMore, child: const Icon(Icons.more_horiz)),
+      ),
+    ];
+
+    // Rows of [columns] buttons, each the same width.
+    Widget grid(int columns) => Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var row = 0; row < buttons.length; row += columns)
+          Row(
+            children: [
+              for (final button in buttons.skip(row).take(columns))
+                Expanded(
+                  child: Padding(padding: const EdgeInsets.all(3), child: button),
+                ),
+            ],
+          ),
+      ],
+    );
+
+    if (vertical) {
+      return LayoutBuilder(
+        builder: (context, box) {
+          // Tall enough for one column of eight? Otherwise two per row.
+          final columns = box.maxHeight >= buttons.length * _cell ? 1 : 2;
+          return SizedBox(
+            width: columns == 1 ? 108 : 196,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Center(child: grid(columns)),
+            ),
+          );
+        },
+      );
+    }
+    // On a wide upright screen (a tablet) the rows keep phone proportions.
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Padding(padding: const EdgeInsets.fromLTRB(5, 4, 5, 0), child: grid(4)),
+      ),
+    );
+  }
+}

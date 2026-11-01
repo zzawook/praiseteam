@@ -769,5 +769,8 @@
   "mostPlayedRecently": "최근 3개월 많이 한 곡",
   "notPlayedLately": "오래 안 한 곡",
   "rehearsalAt": "연습 {when}",
-  "@rehearsalAt": {"placeholders": {"when": {"type": "String"}}}
+  "@rehearsalAt": {"placeholders": {"when": {"type": "String"}}},
+  "moreCues": "큐 더보기",
+  "hideCues": "큐 숨기기",
+  "showCues": "큐 보이기"
 }

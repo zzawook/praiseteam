@@ -102,9 +102,10 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await shot(b, '34-live-followed-mobile');
 
   // B sends a cue to everyone; A sees the banner
-  await btn(b, '큐 보내기').click();
+  // one tap on B's cue strip; A sees the banner with B's name (A's own cue
+  // rail also reads 한 번 더, so the sender's name is what proves arrival)
   await btn(b, '한 번 더').click();
-  await waitText(a, '한 번 더');
+  await waitText(a, `b${stamp}`);
   await shot(a, '35-live-cue-desktop');
 
   // B stops following; A turns back; B stays
@@ -132,6 +133,11 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await waitText(b, '2명 함께');
   await waitText(b, '2 / 2');
   console.log('late joiner landed on', await headerText(b));
+
+  // B closes the stand without leaving live mode: B leaves live with it
+  await btn(b, '닫기').click();
+  await waitText(a, '1명 함께');
+  console.log('closing the stand left live mode');
 
   await browser.close();
   console.log('FLOW M6 OK');

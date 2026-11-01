@@ -383,5 +383,8 @@
   "mostPlayedRecently": "Most played, last 3 months",
   "notPlayedLately": "Not played lately",
   "rehearsalAt": "Rehearsal {when}",
-  "@rehearsalAt": {"placeholders": {"when": {"type": "String"}}}
+  "@rehearsalAt": {"placeholders": {"when": {"type": "String"}}},
+  "moreCues": "More cues",
+  "hideCues": "Hide cues",
+  "showCues": "Show cues"
 }

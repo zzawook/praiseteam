@@ -79,6 +79,16 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   LiveSession? _live;
   bool _follow = true;
 
+  /// Anyone may put the cue bar away to give the pages the room (cues sent
+  /// by others still show). Remembered on this device.
+  static const _cuesHiddenKey = 'stand.cuesHidden';
+  late bool _cuesHidden = ref.read(sharedPreferencesProvider).getBool(_cuesHiddenKey) ?? false;
+
+  void _setCuesHidden(bool hidden) {
+    setState(() => _cuesHidden = hidden);
+    ref.read(sharedPreferencesProvider).setBool(_cuesHiddenKey, hidden);
+  }
+
   /// True while the stand moves because someone else turned; such moves
   /// are not announced again.
   bool _followingMove = false;
@@ -146,6 +156,11 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
       live.turned(StandPosition(itemId: pages[index].item.id, pageIndex: pages[index].pageIndex));
     }
   }
+
+  /// Back to where the stand was opened from, or to its service when it
+  /// was opened directly (a link, a notification) and there is nothing to
+  /// go back to.
+  void _close() => context.canPop() ? context.pop() : context.go('/t/${widget.teamId}/sessions/${widget.sessionId}');
 
   Future<void> _cue() async {
     final parts = await ref.read(teamPartsProvider(widget.teamId).future);
@@ -267,7 +282,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
             index: _current,
             total: pages.length,
             stage: _stage,
-            onClose: () => context.pop(),
+            onClose: _close,
             live: _live,
             follow: _follow,
             onFollow: _setFollow,
@@ -275,62 +290,82 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
             waiting: waiting,
           ),
           Expanded(
-            // expand: the pages fill the slot. A loose Stack would size
-            // itself to its only unpositioned child, the hidden cue banner.
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.trackpad,
-                      if (!_ink.drawing) PointerDeviceKind.mouse,
-                    },
-                  ),
-                  child: PageView.builder(
-                    controller: _pages,
-                    physics: physics,
-                    itemCount: pages.length,
-                    onPageChanged: (i) => _pageChanged(i, pages),
-                    itemBuilder: (context, i) => _PageSlot(
-                      page: pages[i],
-                      stage: _stage,
-                      tapToTurn: !_ink.drawing,
-                      onTurn: (delta) => _go(delta, pages.length),
-                      annotations: pages[i].sheet == null
-                          ? null
-                          : AnnotationLayer(
-                              teamId: widget.teamId,
-                              sessionId: widget.sessionId,
-                              itemId: pages[i].item.id,
-                              sheetId: pages[i].sheet!.id,
-                              pageIndex: pages[i].pageIndex,
-                              settings: _ink,
-                              isLeader: isLeader,
-                              myId: me,
-                              onAction: _record,
-                              onStylusSeen: () {
-                                if (!_ink.stylusOnly) setState(() => _ink = _ink.copyWith(stylusOnly: true));
-                              },
-                            ),
+            child: LayoutBuilder(
+              builder: (context, box) {
+                // expand: the pages fill the slot. A loose Stack would size
+                // itself to its only unpositioned child, the hidden cue banner.
+                final pagesArea = Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.trackpad,
+                          if (!_ink.drawing) PointerDeviceKind.mouse,
+                        },
+                      ),
+                      child: PageView.builder(
+                        controller: _pages,
+                        physics: physics,
+                        itemCount: pages.length,
+                        onPageChanged: (i) => _pageChanged(i, pages),
+                        itemBuilder: (context, i) => _PageSlot(
+                          page: pages[i],
+                          stage: _stage,
+                          tapToTurn: !_ink.drawing,
+                          onTurn: (delta) => _go(delta, pages.length),
+                          annotations: pages[i].sheet == null
+                              ? null
+                              : AnnotationLayer(
+                                  teamId: widget.teamId,
+                                  sessionId: widget.sessionId,
+                                  itemId: pages[i].item.id,
+                                  sheetId: pages[i].sheet!.id,
+                                  pageIndex: pages[i].pageIndex,
+                                  settings: _ink,
+                                  isLeader: isLeader,
+                                  myId: me,
+                                  onAction: _record,
+                                  onStylusSeen: () {
+                                    if (!_ink.stylusOnly) setState(() => _ink = _ink.copyWith(stylusOnly: true));
+                                  },
+                                ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: CueBanner(
-                    cue: _live?.cue,
-                    serial: _live?.cueSerial ?? 0,
-                    partName: (id) => id == null
-                        ? null
-                        : (ref.read(teamPartsProvider(widget.teamId)).value ?? const <Part>[])
-                              .where((p) => p.id == id)
-                              .firstOrNull
-                              ?.name,
-                  ),
-                ),
-              ],
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: CueBanner(
+                        cue: _live?.cue,
+                        serial: _live?.cueSerial ?? 0,
+                        partName: (id) => id == null
+                            ? null
+                            : (ref.read(teamPartsProvider(widget.teamId)).value ?? const <Part>[])
+                                  .where((p) => p.id == id)
+                                  .firstOrNull
+                                  ?.name,
+                      ),
+                    ),
+                  ],
+                );
+                final live = _live;
+                // Sideways, a portrait page leaves room at its side: the
+                // rail goes there. Upright, the strip sits under the pages.
+                final rail = box.maxWidth > box.maxHeight;
+                // The pages keep the same place in the tree whether or not
+                // the bar is there, so joining or leaving live mode never
+                // rebuilds them (and never loses the page you are on).
+                return Flex(
+                  direction: rail ? Axis.horizontal : Axis.vertical,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(child: pagesArea),
+                    if (live != null && !_cuesHidden)
+                      CueBar(vertical: rail, onCue: (text) => live.sendCue(text), onMore: _cue),
+                  ],
+                );
+              },
             ),
           ),
           _Toolbar(
@@ -347,7 +382,8 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
             live: _live != null,
             online: online,
             onLive: () => _live == null ? _startLive() : _leaveLive(),
-            onCue: _cue,
+            cuesHidden: _cuesHidden,
+            onToggleCues: () => _setCuesHidden(!_cuesHidden),
           ),
         ],
       ),
@@ -387,70 +423,97 @@ class _Header extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     const fg = Colors.white;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 16, 4),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: onClose,
-            icon: const Icon(Icons.close, color: fg),
-            tooltip: l10n.close,
+    final songForm = page.item.songForm;
+    final live = this.live;
+
+    // First line: the song and where I am. Second line, when there is one:
+    // the song form under the title, and live mode's status, so on a phone
+    // neither squeezes the title.
+    final first = Row(
+      children: [
+        IconButton(
+          onPressed: onClose,
+          icon: const Icon(Icons.close, color: fg),
+          tooltip: l10n.close,
+        ),
+        Expanded(
+          child: Text(
+            page.item.song.title,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: fg,
+              fontFamily: AppType.setlistFamily,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        if (page.item.effectiveKey != null)
+          Theme(
+            data: theme.copyWith(colorScheme: theme.colorScheme.copyWith(primary: fg)),
+            child: KeyBadge(page.item.effectiveKey, emphasized: true),
+          ),
+        if (!online || waiting > 0) ...[
+          const SizedBox(width: 12),
+          Icon(online ? Icons.cloud_upload_outlined : Icons.cloud_off_outlined, size: 18, color: fg),
+          const SizedBox(width: 6),
+          Text(
+            waiting > 0 ? l10n.notesWaiting(waiting) : l10n.offline,
+            style: theme.textTheme.labelMedium?.copyWith(color: fg),
+          ),
+        ],
+        const SizedBox(width: 16),
+        Text(l10n.pageOf(index + 1, total), style: theme.textTheme.labelLarge?.copyWith(color: fg)),
+      ],
+    );
+
+    // The song form keeps its line whole; live mode's status sits beside it
+    // when both fit, else wraps under it.
+    final second = songForm == null && live == null
+        ? null
+        : Padding(
+            padding: const EdgeInsets.only(left: 52),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 16,
               children: [
-                Text(
-                  page.item.song.title,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: fg,
-                    fontFamily: AppType.setlistFamily,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (page.item.songForm != null)
+                if (songForm != null)
                   Text(
-                    page.item.songForm!,
-                    style: theme.textTheme.bodyMedium?.copyWith(color: fg.withValues(alpha: 0.8), letterSpacing: 0.5),
+                    songForm,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: fg.withValues(alpha: 0.85),
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                if (live != null)
+                  Tooltip(
+                    message: l10n.liveFollowHint,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.circle, size: 10, color: AppColors.stageAmber),
+                        const SizedBox(width: 6),
+                        Text(
+                          l10n.liveWatching(live.participants),
+                          style: theme.textTheme.labelLarge?.copyWith(color: fg),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(l10n.liveFollow, style: theme.textTheme.labelMedium?.copyWith(color: fg)),
+                        Switch(value: follow, onChanged: onFollow, activeThumbColor: AppColors.stageAmber),
+                      ],
+                    ),
                   ),
               ],
             ),
-          ),
-          if (page.item.effectiveKey != null)
-            Theme(
-              data: theme.copyWith(colorScheme: theme.colorScheme.copyWith(primary: fg)),
-              child: KeyBadge(page.item.effectiveKey, emphasized: true),
-            ),
-          if (live != null) ...[
-            const SizedBox(width: 12),
-            Tooltip(
-              message: l10n.liveFollowHint,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.circle, size: 10, color: AppColors.stageAmber),
-                  const SizedBox(width: 6),
-                  Text(l10n.liveWatching(live!.participants), style: theme.textTheme.labelLarge?.copyWith(color: fg)),
-                  const SizedBox(width: 8),
-                  Text(l10n.liveFollow, style: theme.textTheme.labelMedium?.copyWith(color: fg)),
-                  Switch(value: follow, onChanged: onFollow, activeThumbColor: AppColors.stageAmber),
-                ],
-              ),
-            ),
-          ],
-          if (!online || waiting > 0) ...[
-            const SizedBox(width: 16),
-            Icon(online ? Icons.cloud_upload_outlined : Icons.cloud_off_outlined, size: 18, color: fg),
-            const SizedBox(width: 6),
-            Text(
-              waiting > 0 ? l10n.notesWaiting(waiting) : l10n.offline,
-              style: theme.textTheme.labelMedium?.copyWith(color: fg),
-            ),
-          ],
-          const SizedBox(width: 16),
-          Text(l10n.pageOf(index + 1, total), style: theme.textTheme.labelLarge?.copyWith(color: fg)),
-        ],
+          );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 4, 16, 4),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [first, ?second],
       ),
     );
   }
@@ -569,14 +632,16 @@ class _Toolbar extends StatelessWidget {
     required this.live,
     required this.online,
     required this.onLive,
-    required this.onCue,
+    required this.cuesHidden,
+    required this.onToggleCues,
   });
   final bool live;
 
   /// Live mode and copying earlier notes need the server.
   final bool online;
   final VoidCallback onLive;
-  final VoidCallback onCue;
+  final bool cuesHidden;
+  final VoidCallback onToggleCues;
   final InkSettings ink;
   final bool stage;
   final bool canUndo;
@@ -629,11 +694,11 @@ class _Toolbar extends StatelessWidget {
               label: Text(live ? l10n.liveLeave : l10n.liveStart),
             ),
             if (live)
-              FilledButton.icon(
-                style: FilledButton.styleFrom(backgroundColor: AppColors.stageAmber, foregroundColor: Colors.black),
-                onPressed: onCue,
-                icon: const Icon(Icons.campaign),
-                label: Text(l10n.sendCue),
+              TextButton.icon(
+                style: buttonStyle,
+                onPressed: onToggleCues,
+                icon: Icon(cuesHidden ? Icons.campaign_outlined : Icons.expand_more, color: AppColors.stageAmber),
+                label: Text(cuesHidden ? l10n.showCues : l10n.hideCues),
               ),
           ],
         ),

@@ -1242,4 +1242,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String rehearsalAt(String when) {
     return '연습 $when';
   }
+
+  @override
+  String get moreCues => '큐 더보기';
+
+  @override
+  String get hideCues => '큐 숨기기';
+
+  @override
+  String get showCues => '큐 보이기';
 }

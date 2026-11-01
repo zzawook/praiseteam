@@ -44,6 +44,10 @@ class LiveSession extends ChangeNotifier {
   final LiveClock clock;
   RealtimeChannel? _channel;
   bool joined = false;
+
+  /// Set when leaving. Events still in flight while the channel closes are
+  /// ignored, so nothing touches the stand after it is gone.
+  bool _closed = false;
   int participants = 0;
   LiveCue? cue;
   int cueSerial = 0;
@@ -57,6 +61,7 @@ class LiveSession extends ChangeNotifier {
       ..onBroadcast(
         event: 'turn',
         callback: (message) {
+          if (_closed) return;
           final turn = LiveTurn.fromJson(_payload(message));
           if (turn != null && turn.by != me && clock.receive(turn)) onFollow(turn.position);
         },
@@ -64,6 +69,7 @@ class LiveSession extends ChangeNotifier {
       ..onBroadcast(
         event: 'cue',
         callback: (message) {
+          if (_closed) return;
           final c = LiveCue.fromJson(_payload(message));
           if (c == null || (c.partId != null && !myPartIds.contains(c.partId))) return;
           cue = c;
@@ -72,6 +78,7 @@ class LiveSession extends ChangeNotifier {
         },
       )
       ..onPresenceSync((_) {
+        if (_closed) return;
         var count = 0;
         LiveTurn? newest;
         for (final state in channel.presenceState()) {
@@ -86,6 +93,7 @@ class LiveSession extends ChangeNotifier {
         notifyListeners();
       })
       ..subscribe((status, error) async {
+        if (_closed) return;
         if (status == RealtimeSubscribeStatus.subscribed) {
           joined = true;
           await channel.track(_presence());
@@ -119,7 +127,10 @@ class LiveSession extends ChangeNotifier {
     }
   }
 
+  /// Leaving the stand leaves live mode too (the viewer calls this when it
+  /// closes): presence drops, so the others' count goes down by one.
   Future<void> leave() async {
+    _closed = true;
     final channel = _channel;
     _channel = null;
     joined = false;
