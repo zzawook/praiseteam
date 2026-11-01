@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PraiseTeam 개인정보처리방침</title>
+  <meta name="description" content="PraiseTeam이 어떤 정보를 왜 저장하고, 누구에게 보이며, 어떻게 지울 수 있는지 설명해요.">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <a class="wordmark" href="about.html">PraiseTeam</a>
+      <nav class="lang"><a href="#ko" aria-current="true">한국어</a><a href="#en">English</a></nav>
+    </header>
+
+    <article id="ko" lang="ko">
+      <h1>개인정보처리방침</h1>
+      <p class="updated">시행일 2026년 11월 1일</p>
+
+      <p>PraiseTeam은 교회 찬양팀이 콘티, 악보, 로테이션, 공지와 대화를 함께 보려고 쓰는 앱이에요. 이 문서는 앱이 어떤 정보를 왜 저장하고, 누구에게 보이며, 어떻게 지울 수 있는지 설명해요. 광고를 붙이거나 정보를 팔지 않고, 사용 분석 도구도 쓰지 않아요.</p>
+
+      <h2>로그인할 때 받는 정보</h2>
+      <p>Google로 로그인하면 Google 계정의 이름, 이메일 주소, 프로필 사진 주소를 받아요. 이름은 팀원에게 보이는 표시 이름의 처음 값으로 쓰고, 설정에서 바꿀 수 있어요. 이메일 주소는 로그인에만 쓰고 다른 팀원에게 보이지 않아요. Google에서 받은 정보는 <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API 서비스 사용자 데이터 정책</a>의 제한적 사용 요건을 지켜서 다뤄요.</p>
+
+      <h2>앱을 쓰면서 저장되는 정보</h2>
+      <ul>
+        <li>팀 정보: 속한 팀, 역할(인도자, 팀원), 맡은 파트</li>
+        <li>팀원이 올린 내용: 곡, 악보 파일, 원곡 링크, 예배 일정과 콘티, 공지, 채팅 메시지, 투표와 응답</li>
+        <li>로테이션: 섬김 배정과 응답, 대타 요청, 불가능한 날짜, 연습 참석 응답과 출석</li>
+        <li>필기: 악보 위에 그린 획. '나만 보기' 필기는 그린 사람만 볼 수 있고, 인도자도 볼 수 없어요.</li>
+        <li>읽음 표시: 내 화면에 안 읽은 개수와 '새 공지'를 보여 주려고 저장해요. 누가 읽었는지는 다른 사람이 볼 수 없어요.</li>
+        <li>알림 설정과 앱 언어, 푸시를 받을 기기 식별자(Firebase 설치 ID)</li>
+        <li>캘린더 구독 주소에 들어가는 비밀 값. 이 주소를 아는 사람은 내 섬김·연습 일정을 볼 수 있어서, 설정에서 언제든 새 주소로 바꿀 수 있어요.</li>
+      </ul>
+
+      <h2>누가 볼 수 있나요</h2>
+      <p>팀의 내용은 같은 팀의 승인된 팀원만 봐요. 파트별 채팅은 그 파트 팀원만, 예배별 채팅은 그 예배에 배정된 사람과 인도자만 볼 수 있어요. 아직 보내지 않은 배정 초안과 다른 사람의 불가능한 날짜는 인도자만 봐요. 이 규칙은 화면에서 숨기는 방식이 아니라 데이터베이스의 접근 규칙으로 지켜져요.</p>
+
+      <h2>어디에 저장되나요</h2>
+      <ul>
+        <li>데이터와 악보 파일: Supabase(싱가포르 리전)</li>
+        <li>푸시 알림 전달: Google Firebase Cloud Messaging</li>
+        <li>웹 앱 배포: Google Firebase Hosting</li>
+        <li>내 기기: 7일 안의 예배와 내가 섬기는 예배의 콘티, 악보, 필기를 인터넷 없이 보려고 기기에 저장해요. 로그아웃하면 지워져요.</li>
+      </ul>
+
+      <h2>얼마나 보관하나요</h2>
+      <p>앱 안 알림은 180일이 지나면 지워져요. 나머지 내용은 팀이 쓰는 동안 남아 있어요. 팀을 나가도 내가 올린 공지, 메시지, 공용 필기는 팀 기록으로 남아요.</p>
+
+      <h2>지우고 싶을 때</h2>
+      <p>표시 이름과 알림 설정은 앱의 설정에서 바꿀 수 있어요. 계정과 내 정보를 지우고 싶으면 아래 주소로 요청해 주세요. 요청을 확인한 뒤 30일 안에 지워요.</p>
+
+      <h2>문의</h2>
+      <p class="contact">CONTACT_EMAIL</p>
+    </article>
+
+    <article id="en" lang="en">
+      <h1>Privacy policy</h1>
+      <p class="updated">Effective 1 November 2026</p>
+
+      <p>PraiseTeam is an app church worship teams use to share setlists, sheet music, rotations, announcements and chat. This page explains what the app stores and why, who can see it, and how to have it deleted. There are no ads, nothing is sold, and no analytics tools are used.</p>
+
+      <h2>When you sign in</h2>
+      <p>Signing in with Google gives the app your Google account name, email address and profile picture URL. The name becomes your display name, which you can change in settings. Your email address is used only to sign you in and is not shown to teammates. Information received from Google APIs is handled in line with the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including its Limited Use requirements.</p>
+
+      <h2>What the app stores as you use it</h2>
+      <ul>
+        <li>Teams: the teams you belong to, your role (leader or member) and your parts</li>
+        <li>What teammates share: songs, sheet files, recording links, services and setlists, announcements, chat messages, polls and votes</li>
+        <li>Rotation: assignments and replies, swap requests, dates you cannot serve, rehearsal replies and attendance</li>
+        <li>Notes drawn on sheets. "Only me" notes can be seen by their author alone, not even by leaders.</li>
+        <li>Read markers, used only to show you your own unread counts. Nobody else can see who read what.</li>
+        <li>Notification settings, app language, and the identifier of each device that receives pushes (its Firebase Installation ID)</li>
+        <li>The secret part of your calendar feed address. Anyone with that address can see your serving and rehearsal schedule, so you can replace it at any time in settings.</li>
+      </ul>
+
+      <h2>Who can see it</h2>
+      <p>A team's content is visible only to approved members of that team. Part chats are open to members of those parts, and a service's chat to the people serving at it and leaders. Draft assignments and other people's unavailable dates are visible to leaders only. These rules are enforced by the database's access rules, not by hiding things on screen.</p>
+
+      <h2>Where it is stored</h2>
+      <ul>
+        <li>Data and sheet files: Supabase (Singapore region)</li>
+        <li>Push delivery: Google Firebase Cloud Messaging</li>
+        <li>The web app: Google Firebase Hosting</li>
+        <li>Your device: setlists, sheets and notes for services in the next 7 days and services you serve at, so they open without internet. Signing out removes them.</li>
+      </ul>
+
+      <h2>How long it is kept</h2>
+      <p>In-app notifications are deleted after 180 days. Everything else stays while the team uses the app. If you leave a team, the announcements, messages and team notes you added remain part of the team's record.</p>
+
+      <h2>Deleting your information</h2>
+      <p>You can change your display name and notification settings in the app. To delete your account and your information, write to the address below; it is deleted within 30 days of confirming the request.</p>
+
+      <h2>Contact</h2>
+      <p class="contact">CONTACT_EMAIL</p>
+    </article>
+
+    <footer class="footer"><a href="about.html">PraiseTeam 소개</a><a href="/">앱 열기</a></footer>
+  </main>
+</body>
+</html>

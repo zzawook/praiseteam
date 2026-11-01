@@ -2083,6 +2083,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요.'**
   String get pushBlocked;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보처리방침'**
+  String get privacyPolicy;
 }
 
 class _AppLocalizationsDelegate

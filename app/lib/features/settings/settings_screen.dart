@@ -205,6 +205,11 @@ class SettingsScreen extends ConsumerWidget {
                   }
                 },
               ),
+            ListTile(
+              title: Text(l10n.privacyPolicy),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: () => launchUrl(Env.privacyPolicy),
+            ),
             const Divider(indent: 20),
             ListTile(
               title: Text(l10n.signOut),

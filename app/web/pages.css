@@ -1,0 +1,100 @@
+/* The static pages next to the web app (about, privacy). Same tokens as
+   lib/app/theme.dart: manuscript-paper grey, ink, team blue, and the serif
+   the app uses for setlist titles. */
+@font-face {
+  font-family: 'Gowun Batang';
+  src: url('assets/assets/fonts/GowunBatang-Bold-subset.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --canvas: #F4F5F2;
+  --surface: #FFFFFF;
+  --ink: #1D1F23;
+  --muted: #5B6068;
+  --rule: #DADDD6;
+  --team: #2541B2;
+  --team-ink: #FFFFFF;
+  --pencil: #666B73;
+  --serif: 'Gowun Batang', 'Nanum Myeongjo', 'AppleMyungjo', serif;
+  --sans: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #101215;
+    --surface: #16181C;
+    --ink: #E8E9E6;
+    --muted: #A3A8AF;
+    --rule: #2A2D33;
+    --team: #8EA2F2;
+    --team-ink: #0E1640;
+    --pencil: #A3A8AF;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font: 400 1rem/1.7 var(--sans);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+a { color: var(--team); text-underline-offset: 0.18em; }
+a:focus-visible { outline: 2px solid var(--team); outline-offset: 3px; border-radius: 4px; }
+
+.page { max-width: 42rem; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+.masthead { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; }
+.wordmark { font: 700 1.25rem/1 var(--serif); color: var(--ink); text-decoration: none; letter-spacing: 0.01em; }
+.lang { display: flex; gap: 1rem; font-size: 0.875rem; }
+.lang a { color: var(--muted); text-decoration: none; }
+.lang a[aria-current] { color: var(--ink); }
+
+h1, h2 { font-family: var(--serif); font-weight: 700; line-height: 1.3; }
+h1 { font-size: 2rem; margin: 0 0 0.25rem; }
+h2 { font-size: 1.2rem; margin: 2.25rem 0 0.5rem; }
+p, ul { margin: 0 0 1rem; }
+ul { padding-left: 1.25rem; }
+li { margin-bottom: 0.4rem; }
+.updated { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.75rem; }
+article + article { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--rule); }
+
+.footer { display: flex; gap: 1.5rem; margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: 0.875rem; }
+
+/* about: the setlist card is the page's one picture */
+.hero h1 { font-size: clamp(2.25rem, 7vw, 3.25rem); margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+.hero .lede { font-size: 1.15rem; color: var(--muted); max-width: 30em; }
+.setlist {
+  margin: 2rem 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 1.25rem 1.25rem 0.5rem;
+}
+.setlist header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.75rem; }
+.setlist header strong { font: 700 1.1rem/1.3 var(--serif); }
+.setlist header span { color: var(--muted); font-size: 0.875rem; white-space: nowrap; }
+.setlist ol { list-style: none; padding: 0; margin: 0; }
+.setlist li { display: grid; grid-template-columns: 1.5rem 1fr auto; align-items: baseline; gap: 0.25rem 0.75rem; padding: 0.7rem 0; border-top: 1px solid var(--rule); margin: 0; }
+.setlist .n { color: var(--muted); font-family: var(--serif); }
+.setlist .title { font: 700 1.15rem/1.35 var(--serif); }
+.setlist .form { grid-column: 2; color: var(--pencil); font-size: 0.85rem; letter-spacing: 0.04em; }
+.key {
+  grid-row: 1; grid-column: 3;
+  min-width: 2.25rem; text-align: center;
+  border: 1.5px solid var(--team); color: var(--team);
+  border-radius: 8px; padding: 0 0.45rem; font-weight: 700; font-size: 0.95rem;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0 0; }
+.button {
+  display: inline-block; padding: 0.7rem 1.2rem; border-radius: 999px;
+  background: var(--team); color: var(--team-ink); text-decoration: none; font-weight: 600;
+}
+.button.quiet { background: transparent; color: var(--team); box-shadow: inset 0 0 0 1.5px var(--team); }
+.features h2 { margin-top: 2.5rem; }
+.platforms { color: var(--muted); }

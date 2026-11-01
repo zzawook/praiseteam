@@ -1,0 +1,18 @@
+{
+  "hosting": {
+    "public": "app/build/web",
+    "ignore": ["firebase.json", "**/.*"],
+    "cleanUrls": false,
+    "rewrites": [{ "source": "**", "destination": "/index.html" }],
+    "headers": [
+      {
+        "source": "**/*.@(html|js|json)",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.@(ttf|otf|woff2|png|ico|wasm)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+      }
+    ]
+  }
+}

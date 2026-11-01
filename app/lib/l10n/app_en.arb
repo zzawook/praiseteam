@@ -334,5 +334,6 @@
   "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}},
   "open": "View",
   "pushThisDevice": "Push on this device",
-  "pushBlocked": "Notifications for this app are turned off in your device or browser settings."
+  "pushBlocked": "Notifications for this app are turned off in your device or browser settings.",
+  "privacyPolicy": "Privacy policy"
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/theme.dart';
 import '../../core/env.dart';
@@ -66,6 +67,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: _busy ? null : () => _run(auth.signInWithGoogle),
                     icon: const Icon(Icons.login),
                     label: Text(l10n.continueWithGoogle),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => launchUrl(Env.privacyPolicy),
+                    child: Text(l10n.privacyPolicy),
                   ),
                   if (Env.devLogin) ...[
                     const SizedBox(height: 40),

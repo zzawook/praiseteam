@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 /// Compile-time configuration, supplied with
 /// `--dart-define-from-file=env/<name>.json` (see env/README.md).
 abstract final class Env {
@@ -15,6 +17,13 @@ abstract final class Env {
   /// Web push key pair from Firebase (Cloud Messaging > Web Push
   /// certificates). Empty: Firebase's default key is used.
   static const webPushKey = String.fromEnvironment('WEB_PUSH_KEY');
+
+  /// Where the web app is served; the privacy policy page lives next to it.
+  static const webAppUrl = String.fromEnvironment('WEB_APP_URL', defaultValue: 'https://praiseteam-sg.web.app');
+
+  /// The privacy policy, next to the web app (the same origin on the web).
+  static Uri get privacyPolicy =>
+      kIsWeb ? Uri.base.resolve('/privacy.html') : Uri.parse('$webAppUrl/privacy.html');
 
   /// Email/password login, only for a local Supabase stack.
   static const devLogin = bool.fromEnvironment('DEV_LOGIN');

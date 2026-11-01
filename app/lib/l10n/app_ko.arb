@@ -720,5 +720,6 @@
   "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}},
   "open": "보기",
   "pushThisDevice": "이 기기에서 푸시 받기",
-  "pushBlocked": "기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요."
+  "pushBlocked": "기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요.",
+  "privacyPolicy": "개인정보처리방침"
 }

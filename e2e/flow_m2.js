@@ -33,7 +33,9 @@ async function load(page, path) {
 }
 const btn = (page, name) => page.getByRole('button', { name, exact: true });
 async function type(page, label, text) {
-  const input = page.locator(`input[aria-label="${label}"], textarea[aria-label="${label}"]`).first();
+  // Prefix match: a focused empty field adds its hint to the label
+  // ("예배 이름\n예: 주일 2부 예배").
+  const input = page.locator(`input[aria-label^="${label}"], textarea[aria-label^="${label}"]`).first();
   await input.click();
   // Flutter attaches its editing element asynchronously after focus.
   await page.waitForFunction(() => ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName), null, { timeout: 5000 });
@@ -156,6 +158,12 @@ let pages = [];
     await p.screenshot({ path: `${SHOTS}/fail-${n}.png` }).catch(() => {});
     const labels = await p.evaluate(() => [...document.querySelectorAll('flt-semantics')].map((e) => e.getAttribute('aria-label') || '').filter(Boolean).slice(0, 40)).catch(() => []);
     console.error(n, p.url(), JSON.stringify(labels));
+    const dom = await p.evaluate(() => ({
+      nodes: document.querySelectorAll('flt-semantics').length,
+      inputs: [...document.querySelectorAll('input, textarea')].map((e) => `${e.tagName}[${e.getAttribute('aria-label') ?? ''}]`),
+      active: `${document.activeElement?.tagName}[${document.activeElement?.getAttribute('aria-label') ?? ''}]`,
+    })).catch(() => ({}));
+    console.error(n, 'semantics dom', JSON.stringify(dom));
   }
   process.exit(1);
 });

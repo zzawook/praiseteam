@@ -31,7 +31,9 @@ async function load(page, p) {
 }
 const btn = (page, name) => page.getByRole('button', { name, exact: true });
 async function type(page, label, text) {
-  const input = page.locator(`input[aria-label="${label}"], textarea[aria-label="${label}"]`).first();
+  // Prefix match: a focused empty field adds its hint to the label
+  // ("예배 이름\n예: 주일 2부 예배").
+  const input = page.locator(`input[aria-label^="${label}"], textarea[aria-label^="${label}"]`).first();
   await input.click();
   await page.waitForFunction(() => ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName), null, { timeout: 5000 });
   await page.waitForTimeout(250);

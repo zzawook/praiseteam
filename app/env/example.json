@@ -3,5 +3,6 @@
   "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_...",
   "DEV_LOGIN": "true",
   "GOOGLE_WEB_CLIENT_ID": "",
-  "WEB_PUSH_KEY": ""
+  "WEB_PUSH_KEY": "",
+  "WEB_APP_URL": "http://127.0.0.1:3000"
 }

@@ -1108,4 +1108,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pushBlocked => '기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요.';
+
+  @override
+  String get privacyPolicy => '개인정보처리방침';
 }

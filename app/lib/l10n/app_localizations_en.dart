@@ -1222,4 +1222,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pushBlocked =>
       'Notifications for this app are turned off in your device or browser settings.';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
 }
