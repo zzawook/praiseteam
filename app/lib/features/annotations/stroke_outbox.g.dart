@@ -70,7 +70,7 @@ final class StrokeOutboxProvider extends $NotifierProvider<StrokeOutbox, int> {
   }
 }
 
-String _$strokeOutboxHash() => r'6378cb5dc75076cb7a414a330c2be26dfb9426e1';
+String _$strokeOutboxHash() => r'ded5772a6b55eb2e6f4c4a5a41d3e6c0fbc09714';
 
 /// Note changes that have not reached the server yet, oldest first.
 ///

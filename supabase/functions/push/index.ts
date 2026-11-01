@@ -44,7 +44,9 @@ function buildMessage(row: Claimed, token: Token): FcmMessage {
     ? `channel-${row.params.channel_id}`
     : `n-${row.notification_id}`;
   return {
-    token: token.token,
+    // device_tokens.token holds the app installation's Firebase
+    // Installation ID; FCM v1 deprecated `token` in favour of `fid`.
+    fid: token.token,
     notification: { title, body },
     data: {
       notification_id: String(row.notification_id),
@@ -54,8 +56,9 @@ function buildMessage(row: Claimed, token: Token): FcmMessage {
     },
     android: { priority: "high", notification: { tag } },
     apns: { headers: { "apns-collapse-id": tag }, payload: { aps: { sound: "default" } } },
+    // A click on a web push opens the team's notification list.
     ...(WEB_APP_URL
-      ? { webpush: { fcm_options: { link: `${WEB_APP_URL}/notifications` } } }
+      ? { webpush: { fcm_options: { link: row.team_id == null ? WEB_APP_URL : `${WEB_APP_URL}/t/${row.team_id}/notifications` } } }
       : {}),
   };
 }

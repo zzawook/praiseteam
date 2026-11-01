@@ -12,6 +12,10 @@ abstract final class Env {
   static const googleIosClientId =
       String.fromEnvironment('GOOGLE_IOS_CLIENT_ID');
 
+  /// Web push key pair from Firebase (Cloud Messaging > Web Push
+  /// certificates). Empty: Firebase's default key is used.
+  static const webPushKey = String.fromEnvironment('WEB_PUSH_KEY');
+
   /// Email/password login, only for a local Supabase stack.
   static const devLogin = bool.fromEnvironment('DEV_LOGIN');
 

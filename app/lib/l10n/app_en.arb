@@ -331,5 +331,8 @@
   "notesWaiting": "{count, plural, =1{1 note waiting} other{{count} notes waiting}}",
   "@notesWaiting": {"placeholders": {"count": {"type": "int"}}},
   "unsentNotesSignOut": "{count, plural, =1{1 note hasn't} other{{count} notes haven't}} uploaded yet. Signing out deletes {count, plural, =1{it} other{them}}.",
-  "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}}
+  "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}},
+  "open": "View",
+  "pushThisDevice": "Push on this device",
+  "pushBlocked": "Notifications for this app are turned off in your device or browser settings."
 }

@@ -6,6 +6,7 @@ import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../annotations/stroke_outbox.dart';
 import '../auth/auth.dart';
+import '../notifications/push.dart';
 
 /// A slim line while the server cannot be reached: what is shown is the
 /// copy kept on this device, and notes go up later.
@@ -61,6 +62,12 @@ Future<void> signOutHere(BuildContext context, WidgetRef ref) async {
     if (!ok || !context.mounted) return;
   }
   await runGuarded(context, () async {
+    try {
+      await ref.read(pushRegistrationProvider.notifier).disable();
+    } catch (_) {
+      // Offline: the token stays registered until the next sign-in here
+      // takes it over, or it expires.
+    }
     await ref.read(authRepositoryProvider).signOut();
     await ref.read(offlineStoreProvider).clear();
   });

@@ -1157,7 +1157,7 @@ abstract class AppLocalizations {
   /// No description provided for @open.
   ///
   /// In ko, this message translates to:
-  /// **'열기'**
+  /// **'보기'**
   String get open;
 
   /// No description provided for @viewSheets.
@@ -2071,6 +2071,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'아직 올라가지 않은 필기가 {count}개 있어요. 로그아웃하면 이 필기는 사라져요.'**
   String unsentNotesSignOut(int count);
+
+  /// No description provided for @pushThisDevice.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 기기에서 푸시 받기'**
+  String get pushThisDevice;
+
+  /// No description provided for @pushBlocked.
+  ///
+  /// In ko, this message translates to:
+  /// **'기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요.'**
+  String get pushBlocked;
 }
 
 class _AppLocalizationsDelegate

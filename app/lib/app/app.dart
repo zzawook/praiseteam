@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/auth/auth.dart';
+import '../features/notifications/push.dart';
 import '../features/settings/settings_providers.dart';
 import '../l10n/app_localizations.dart';
 import 'router.dart';
@@ -22,7 +23,7 @@ class PraiseTeamApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: ref.watch(routerProvider),
-      builder: (context, child) => _ProfileLocaleSyncer(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) => _ProfileLocaleSyncer(child: PushHandler(child: child ?? const SizedBox.shrink())),
     );
   }
 }

@@ -6,11 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/env.dart';
+import '../../core/errors.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/providers.dart';
 import '../auth/auth.dart';
 import '../notifications/notification_prefs.dart';
+import '../notifications/push.dart';
 import '../offline/offline_widgets.dart';
 import '../teams/teams_providers.dart';
 import 'settings_providers.dart';
@@ -242,6 +244,7 @@ class _NotificationSettings extends ConsumerWidget {
           data: (p) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const _DevicePush(),
               SwitchListTile(
                 title: Text(l10n.allSetlists),
                 subtitle: Text(l10n.allSetlistsHint),
@@ -266,3 +269,41 @@ class _NotificationSettings extends ConsumerWidget {
     );
   }
 }
+
+/// Whether this phone or browser gets pushes for the signed-in user.
+class _DevicePush extends ConsumerWidget {
+  const _DevicePush();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final state = ref.watch(pushRegistrationProvider);
+    final push = ref.read(pushRegistrationProvider.notifier);
+    if (state case AsyncError(:final error) when !state.isLoading) {
+      // Registering failed: off, with the reason, and the switch tries again.
+      return SwitchListTile(
+        title: Text(l10n.pushThisDevice),
+        subtitle: Text(AppError.from(error).message(l10n)),
+        value: false,
+        onChanged: (_) => runGuarded(context, push.enable),
+      );
+    }
+    return switch (state.value) {
+      null || PushState.unsupported => const SizedBox.shrink(),
+      PushState.blocked => SwitchListTile(
+        title: Text(l10n.pushThisDevice),
+        subtitle: Text(l10n.pushBlocked),
+        value: false,
+        onChanged: null,
+      ),
+      final s => SwitchListTile(
+        title: Text(l10n.pushThisDevice),
+        value: s == PushState.on,
+        onChanged: state.isLoading
+            ? null
+            : (on) => runGuarded(context, () => on ? push.enable() : push.disable()),
+      ),
+    };
+  }
+}
+

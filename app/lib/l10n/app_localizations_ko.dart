@@ -592,7 +592,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get viewSheet => '악보 보기';
 
   @override
-  String get open => '열기';
+  String get open => '보기';
 
   @override
   String get viewSheets => '악보 보기';
@@ -1102,4 +1102,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String unsentNotesSignOut(int count) {
     return '아직 올라가지 않은 필기가 $count개 있어요. 로그아웃하면 이 필기는 사라져요.';
   }
+
+  @override
+  String get pushThisDevice => '이 기기에서 푸시 받기';
+
+  @override
+  String get pushBlocked => '기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요.';
 }

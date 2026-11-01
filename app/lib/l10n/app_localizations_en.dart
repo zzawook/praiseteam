@@ -649,7 +649,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewSheet => 'Open sheet';
 
   @override
-  String get open => 'Open';
+  String get open => 'View';
 
   @override
   String get viewSheets => 'Open sheets';
@@ -1215,4 +1215,11 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0 uploaded yet. Signing out deletes $_temp1.';
   }
+
+  @override
+  String get pushThisDevice => 'Push on this device';
+
+  @override
+  String get pushBlocked =>
+      'Notifications for this app are turned off in your device or browser settings.';
 }

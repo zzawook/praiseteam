@@ -11,6 +11,7 @@ import 'core/env.dart';
 import 'core/http_client.dart';
 import 'core/offline/reachability.dart';
 import 'core/providers.dart';
+import 'features/notifications/push.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ Future<void> main() async {
 
   // Every request reports whether the server answered, so the app knows
   // when to read the copies it keeps on the device instead.
+  await initPush();
   final reachability = Reachability();
   await Supabase.initialize(
     url: Env.supabaseUrl,

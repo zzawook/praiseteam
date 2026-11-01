@@ -717,5 +717,8 @@
   "notesWaiting": "필기 {count}개 대기",
   "@notesWaiting": {"placeholders": {"count": {"type": "int"}}},
   "unsentNotesSignOut": "아직 올라가지 않은 필기가 {count}개 있어요. 로그아웃하면 이 필기는 사라져요.",
-  "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}}
+  "@unsentNotesSignOut": {"placeholders": {"count": {"type": "int"}}},
+  "open": "보기",
+  "pushThisDevice": "이 기기에서 푸시 받기",
+  "pushBlocked": "기기나 브라우저 설정에서 이 앱의 알림이 꺼져 있어요."
 }
