@@ -2539,6 +2539,36 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'팀 시간대: {timezone}'**
   String inTeamTimezone(String timezone);
+
+  /// No description provided for @demoBanner.
+  ///
+  /// In ko, this message translates to:
+  /// **'데모 · 이 기기에만 저장돼요'**
+  String get demoBanner;
+
+  /// No description provided for @demoReset.
+  ///
+  /// In ko, this message translates to:
+  /// **'초기화'**
+  String get demoReset;
+
+  /// No description provided for @demoStart.
+  ///
+  /// In ko, this message translates to:
+  /// **'데모 시작하기'**
+  String get demoStart;
+
+  /// No description provided for @demoLiveHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'데모에서는 이 기기에서 라이브 화면을 미리 볼 수 있어요.'**
+  String get demoLiveHint;
+
+  /// No description provided for @demoVideo.
+  ///
+  /// In ko, this message translates to:
+  /// **'3분 소개 영상'**
+  String get demoVideo;
 }
 
 class _AppLocalizationsDelegate

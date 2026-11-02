@@ -14,3 +14,15 @@ supabase/.env
 .idea/
 .vscode/
 node_modules/
+
+# Imported private chat references and generated media.
+/Talk_*.txt
+/20[0-9][0-9][0-9][0-9][0-9][0-9]_*
+/*.zip
+/output/
+/tmp/
+/demo/media/work/
+/.firebase/
+/firebase-debug*.log
+__pycache__/
+*.pyc

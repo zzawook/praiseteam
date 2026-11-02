@@ -1380,4 +1380,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String inTeamTimezone(String timezone) {
     return '팀 시간대: $timezone';
   }
+
+  @override
+  String get demoBanner => '데모 · 이 기기에만 저장돼요';
+
+  @override
+  String get demoReset => '초기화';
+
+  @override
+  String get demoStart => '데모 시작하기';
+
+  @override
+  String get demoLiveHint => '데모에서는 이 기기에서 라이브 화면을 미리 볼 수 있어요.';
+
+  @override
+  String get demoVideo => '3분 소개 영상';
 }

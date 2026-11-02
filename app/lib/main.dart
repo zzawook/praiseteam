@@ -11,6 +11,7 @@ import 'core/env.dart';
 import 'core/http_client.dart';
 import 'core/offline/reachability.dart';
 import 'core/providers.dart';
+import 'demo/demo_application.dart';
 import 'features/notifications/push.dart';
 
 Future<void> main() async {
@@ -21,6 +22,11 @@ Future<void> main() async {
     final ofl = await rootBundle.loadString('assets/fonts/GowunBatang-OFL.txt');
     yield LicenseEntryWithLineBreaks(['Gowun Batang'], ofl);
   });
+
+  if (Env.demo) {
+    runApp(DemoApplication(preferences: await SharedPreferences.getInstance()));
+    return;
+  }
 
   // Every request reports whether the server answered, so the app knows
   // when to read the copies it keeps on the device instead.

@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "site": "praiseteam-sg-demo",
+    "public": "app/build/demo",
+    "ignore": ["firebase.demo.json", "**/.*"],
+    "rewrites": [{"source": "**", "destination": "/index.html"}],
+    "headers": [
+      {"source": "**", "headers": [{"key": "Cache-Control", "value": "no-cache"}]},
+      {"source": "**/*.mp4", "headers": [{"key": "Cache-Control", "value": "public,max-age=86400"}]}
+    ]
+  }
+}

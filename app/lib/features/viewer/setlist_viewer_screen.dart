@@ -9,6 +9,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../app/theme.dart';
 import '../../core/music_widgets.dart';
+import '../../core/env.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
@@ -140,6 +141,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
           });
       live.join();
       setState(() => _live = live);
+      if (Env.demo) showMessage(context, AppLocalizations.of(context).demoLiveHint);
     } catch (error) {
       if (mounted) showError(context, error);
     } finally {

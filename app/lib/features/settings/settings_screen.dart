@@ -150,12 +150,13 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             const Divider(indent: 20),
-            ListTile(
-              title: Text(l10n.calendarSubscribe),
-              subtitle: Text(l10n.calendarHint),
-              trailing: const Icon(Icons.event_available_outlined),
-              onTap: () => _calendar(context, ref),
-            ),
+            if (!Env.demo)
+              ListTile(
+                title: Text(l10n.calendarSubscribe),
+                subtitle: Text(l10n.calendarHint),
+                trailing: const Icon(Icons.event_available_outlined),
+                onTap: () => _calendar(context, ref),
+              ),
             const _NotificationSettings(),
             if (membership != null)
               ListTile(leading: const Icon(Icons.public), title: Text(l10n.inTeamTimezone(membership.team.timezone))),
@@ -214,7 +215,7 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => launchUrl(Env.privacyPolicy),
             ),
             const Divider(indent: 20),
-            ListTile(title: Text(l10n.signOut), onTap: () => signOutHere(context, ref)),
+            if (!Env.demo) ListTile(title: Text(l10n.signOut), onTap: () => signOutHere(context, ref)),
             const DeleteAccountTile(),
           ],
         ),

@@ -20,7 +20,7 @@ import 'notifications_screen.dart' show notificationRoute;
 part 'push.g.dart';
 
 /// Push works on Android and the web for now; iOS needs APNs set up first.
-bool get pushSupported => kIsWeb || defaultTargetPlatform == TargetPlatform.android;
+bool get pushSupported => !Env.demo && (kIsWeb || defaultTargetPlatform == TargetPlatform.android);
 
 /// Called once in main(), before runApp.
 Future<void> initPush() async {

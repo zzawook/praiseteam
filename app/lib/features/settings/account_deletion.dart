@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors.dart';
+import '../../core/env.dart';
 import '../../core/providers.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth.dart';
@@ -12,15 +13,20 @@ class DeleteAccountTile extends StatelessWidget {
   const DeleteAccountTile({super.key});
 
   @override
-  Widget build(BuildContext context) => ListTile(
-    leading: Icon(Icons.person_remove_outlined, color: Theme.of(context).colorScheme.error),
-    title: Text(
-      AppLocalizations.of(context).deleteAccount,
-      style: TextStyle(color: Theme.of(context).colorScheme.error),
-    ),
-    onTap: () =>
-        showDialog<void>(context: context, barrierDismissible: false, builder: (_) => const _DeleteAccountDialog()),
-  );
+  Widget build(BuildContext context) => Env.demo
+      ? const SizedBox.shrink()
+      : ListTile(
+          leading: Icon(Icons.person_remove_outlined, color: Theme.of(context).colorScheme.error),
+          title: Text(
+            AppLocalizations.of(context).deleteAccount,
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+          onTap: () => showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const _DeleteAccountDialog(),
+          ),
+        );
 }
 
 class _DeleteAccountDialog extends ConsumerStatefulWidget {

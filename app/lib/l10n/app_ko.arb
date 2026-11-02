@@ -827,5 +827,10 @@
         "type": "String"
       }
     }
-  }
+  },
+  "demoBanner": "데모 · 이 기기에만 저장돼요",
+  "demoReset": "초기화",
+  "demoStart": "데모 시작하기",
+  "demoLiveHint": "데모에서는 이 기기에서 라이브 화면을 미리 볼 수 있어요.",
+  "demoVideo": "3분 소개 영상"
 }

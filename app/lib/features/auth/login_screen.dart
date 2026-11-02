@@ -51,28 +51,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   const _StaffMark(),
                   const SizedBox(height: 28),
-                  Text(
-                    l10n.appTitle,
-                    style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800),
-                  ),
+                  Text(l10n.appTitle, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
                   const SizedBox(height: 8),
                   Text(
                     l10n.loginTagline,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                    style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 40),
                   FilledButton.icon(
                     onPressed: _busy ? null : () => _run(auth.signInWithGoogle),
                     icon: const Icon(Icons.login),
-                    label: Text(l10n.continueWithGoogle),
+                    label: Text(Env.demo ? l10n.demoStart : l10n.continueWithGoogle),
                   ),
                   const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => launchUrl(Env.privacyPolicy),
-                    child: Text(l10n.privacyPolicy),
-                  ),
+                  TextButton(onPressed: () => launchUrl(Env.privacyPolicy), child: Text(l10n.privacyPolicy)),
                   if (Env.devLogin) ...[
                     const SizedBox(height: 40),
                     const Divider(),
@@ -98,10 +90,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: OutlinedButton(
                             onPressed: _busy
                                 ? null
-                                : () => _run(() => auth.signUpWithPassword(
-                                      _email.text.trim(),
-                                      _password.text,
-                                    )),
+                                : () => _run(() => auth.signUpWithPassword(_email.text.trim(), _password.text)),
                             child: Text(l10n.signUp),
                           ),
                         ),
@@ -110,10 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: FilledButton.tonal(
                             onPressed: _busy
                                 ? null
-                                : () => _run(() => auth.signInWithPassword(
-                                      _email.text.trim(),
-                                      _password.text,
-                                    )),
+                                : () => _run(() => auth.signInWithPassword(_email.text.trim(), _password.text)),
                             child: Text(l10n.signIn),
                           ),
                         ),
@@ -137,14 +123,10 @@ class _StaffMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 56,
-        width: 120,
-        child: CustomPaint(
-          painter: _StaffPainter(
-            line: Theme.of(context).colorScheme.outlineVariant,
-          ),
-        ),
-      );
+    height: 56,
+    width: 120,
+    child: CustomPaint(painter: _StaffPainter(line: Theme.of(context).colorScheme.outlineVariant)),
+  );
 }
 
 class _StaffPainter extends CustomPainter {

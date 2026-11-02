@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/auth/auth.dart';
 import '../core/dates.dart';
+import '../core/env.dart';
 import '../core/team_time.dart';
+import '../demo/demo_banner.dart';
 import '../features/teams/teams_providers.dart';
 import '../features/notifications/push.dart';
 import '../features/settings/settings_providers.dart';
@@ -17,7 +19,7 @@ class PraiseTeamApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      onGenerateTitle: (context) => '${AppLocalizations.of(context).appTitle}${Env.demo ? ' Demo' : ''}',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
@@ -27,7 +29,9 @@ class PraiseTeamApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: ref.watch(routerProvider),
       builder: (context, child) => _TeamClock(
-        child: _ProfileLocaleSyncer(child: PushHandler(child: child ?? const SizedBox.shrink())),
+        child: DemoBanner(
+          child: _ProfileLocaleSyncer(child: PushHandler(child: child ?? const SizedBox.shrink())),
+        ),
       ),
     );
   }

@@ -19,6 +19,10 @@ class AuthRepository {
   bool _googleReady = false;
 
   Future<void> signInWithGoogle() async {
+    if (Env.demo) {
+      await _client.auth.setSession('browser-demo-session');
+      return;
+    }
     if (kIsWeb) {
       await _client.auth.signInWithOAuth(OAuthProvider.google, redirectTo: Uri.base.origin);
       return;

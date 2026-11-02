@@ -436,5 +436,10 @@
         "type": "String"
       }
     }
-  }
+  },
+  "demoBanner": "Demo · saved on this device only",
+  "demoReset": "Reset",
+  "demoStart": "Open demo",
+  "demoLiveHint": "This demo previews live mode on this device only.",
+  "demoVideo": "3-minute tour"
 }

@@ -1,0 +1,160 @@
+{
+  "team_name": "한빛 찬양팀",
+  "timezone": "Asia/Singapore",
+  "people": [
+    "서지훈",
+    "김하늘",
+    "이은혜",
+    "박찬양",
+    "최소망",
+    "정믿음",
+    "한빛나",
+    "윤기쁨",
+    "배온유",
+    "신다은"
+  ],
+  "songs": [
+    {
+      "title": "In Jesus Name",
+      "key": "G",
+      "bpm": 105,
+      "tags": [
+        "선포",
+        "찬양"
+      ],
+      "versions": [
+        "공유 영상 편곡",
+        "팀 편곡"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=TVsRM55_jsE"
+      ]
+    },
+    {
+      "title": "Awesome God",
+      "key": "G",
+      "bpm": 79,
+      "tags": [
+        "경배",
+        "후렴 반복"
+      ],
+      "versions": [
+        "공유 영상 편곡"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=YK58HXhzcuY"
+      ]
+    },
+    {
+      "title": "시간을 뚫고",
+      "key": "G",
+      "bpm": 64,
+      "tags": [
+        "고백"
+      ],
+      "versions": [
+        "공유 영상 편곡"
+      ],
+      "links": [
+        "https://youtu.be/A0FUMbDKmLA"
+      ]
+    },
+    {
+      "title": "무엇이 변치 않아",
+      "key": "G",
+      "bpm": 64,
+      "tags": [
+        "고백"
+      ],
+      "versions": [
+        "공유 영상 편곡"
+      ],
+      "links": [
+        "https://youtu.be/sCTjAoumhcM"
+      ]
+    },
+    {
+      "title": "주님 다시 오실 때까지",
+      "key": "G",
+      "bpm": null,
+      "tags": [
+        "소망"
+      ],
+      "versions": [
+        "금요 편곡"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=Xur6J6OAFaU"
+      ]
+    },
+    {
+      "title": "길을 만드시는 주",
+      "key": "Bb",
+      "bpm": null,
+      "tags": [
+        "믿음"
+      ],
+      "versions": [
+        "공유 영상 편곡"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=Vdjk2jozY-o"
+      ]
+    },
+    {
+      "title": "왕이신 하나님",
+      "key": "F",
+      "bpm": null,
+      "tags": [
+        "경배"
+      ],
+      "versions": [
+        "주일 편곡"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=lA4wvuBltv4"
+      ]
+    },
+    {
+      "title": "더 원합니다",
+      "key": "F",
+      "bpm": null,
+      "tags": [
+        "기도"
+      ],
+      "versions": [
+        "주일 편곡"
+      ],
+      "links": [
+        "https://www.youtube.com/watch?v=4LnEHg4nFuI"
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "person": 1,
+      "text": "이번 주 콘티 확인했어요. 네 곡 모두 G키로 이어서 가는 거 맞죠?"
+    },
+    {
+      "person": 0,
+      "text": "네, 첫 곡은 영상처럼 진행해요. Awesome God은 후렴을 반복하면서 다이나믹을 같이 맞춰봐요."
+    },
+    {
+      "person": 3,
+      "text": "건반은 전주와 곡 사이 연결 준비해 둘게요. 토요일 합주 때 확인해요!"
+    },
+    {
+      "person": 2,
+      "text": "토요일 오후 2시에 본당에서 만나요. 주일은 오후 1시까지 모이면 되죠? 🙏"
+    },
+    {
+      "person": 0,
+      "text": "맞아요! 주일 1시 50분까지 연습을 마치고 1시 55분에 함께 기도해요."
+    }
+  ],
+  "announcement": {
+    "title": "이번 주 연습과 주일 준비",
+    "body": "토요일 오후 2시-4시 합주 후 팀 나눔을 합니다. 주일은 오후 1시까지 본당에 모여 주세요. 각자 공유 영상과 콘티의 키, 송폼을 미리 확인해 주세요. 월간 로테이션에 참석하기 어려운 날짜도 미리 등록해 주세요."
+  },
+  "service_hour": 14
+}

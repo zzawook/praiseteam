@@ -54,6 +54,7 @@ flutter:
   generate: true
   assets:
     - assets/fonts/GowunBatang-OFL.txt
+    - assets/demo/
   fonts:
     # Subset (KS X 1001 + ASCII) of Gowun Batang Bold, SIL OFL 1.1.
     # Used only for setlist titles and song names on the setlist.

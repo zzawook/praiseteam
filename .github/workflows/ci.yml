@@ -37,6 +37,20 @@ jobs:
       - run: flutter test --no-pub
       - name: Build with local example configuration
         run: flutter build web --release --no-pub --dart-define-from-file=env/example.json
+      - name: Build the isolated browser demo
+        run: flutter build web --release --no-pub --dart-define=DEMO_MODE=true --output=build/demo
+      - name: Install the browser for demo checks
+        working-directory: e2e
+        run: |
+          npm ci
+          npx playwright-core install --with-deps chromium
+      - name: Exercise the demo without a backend
+        working-directory: .
+        run: |
+          python3 e2e/spa_server.py app/build/demo 3001 &
+          demo_server_pid=$!
+          trap 'kill "$demo_server_pid"' EXIT
+          node e2e/flow_demo.js
 
   database:
     name: Fresh database migrations and pgTAP

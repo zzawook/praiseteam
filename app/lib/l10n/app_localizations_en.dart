@@ -1510,4 +1510,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String inTeamTimezone(String timezone) {
     return 'Team time zone: $timezone';
   }
+
+  @override
+  String get demoBanner => 'Demo · saved on this device only';
+
+  @override
+  String get demoReset => 'Reset';
+
+  @override
+  String get demoStart => 'Open demo';
+
+  @override
+  String get demoLiveHint =>
+      'This demo previews live mode on this device only.';
+
+  @override
+  String get demoVideo => '3-minute tour';
 }
