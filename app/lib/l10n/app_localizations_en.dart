@@ -1189,6 +1189,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveStart => 'Go live';
 
   @override
+  String get liveNeedsConnection => 'Connect to the internet to go live.';
+
+  @override
   String get liveLeave => 'Leave live';
 
   @override

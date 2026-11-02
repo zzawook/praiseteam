@@ -9,7 +9,7 @@ local Supabase stack and assert what each user can see.
 | `flow_m3.js` | annotations: private vs team strokes, live sync to another member |
 | `flow_m4.js` | rotation: auto-assign, send, member accepts; the rotation as a table, a cell opening its part of the service |
 | `flow_m5.js` | chat: part channels, live messages, polls, announcements, unread markers |
-| `flow_m6.js` | live mode: follow page turns, cues, follow off and back on, late joiner |
+| `flow_m6.js` | live mode: view-only sheets vs one-click live entry from a service, follow page turns, cues, follow off and back on, late joiner and reopening live |
 | `flow_offline.js` | offline: this week's services kept on the device; the stand opens a never-opened service without a connection; notes drawn offline upload on reconnect |
 | `flow_templates.js` | service templates on a phone: save one while adding a service, add the next service from it (the following free week, same time and place), edit, delete and add templates |
 | `flow_versions.js` | song versions: a song added with its first version, a second version on the song's page, the version chosen when adding the song to a setlist (bringing its tempo), and switched in the entry's editor |

@@ -325,6 +325,7 @@
   "notifAnnouncementTitle": "Announcement: {title}",
   "pollPreview": "Poll: {question}",
   "liveStart": "Go live",
+  "liveNeedsConnection": "Connect to the internet to go live.",
   "liveLeave": "Leave live",
   "liveWatching": "{count} together",
   "liveFollow": "Follow",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/music.dart';
+import '../sessions/models.dart';
 import 'models.dart';
 
 /// Public video thumbnails need no API key or separate metadata request.
@@ -20,6 +21,11 @@ String? linksThumbnail(Iterable<SongLink> links) {
 
 /// A song may use the artwork from any of its versions, oldest first.
 String? songThumbnail(Song song) => linksThumbnail(song.versions.expand((v) => v.links));
+
+/// Prefer the arrangement being played; fall back to another of this song's
+/// versions, just as the song library does. This only selects the artwork.
+String? setlistThumbnail(SetlistItem item) =>
+    linksThumbnail(item.version?.links ?? const []) ?? linksThumbnail(item.song.versions.expand((v) => v.links));
 
 /// Stable dimensions keep song rows still while images load. A missing or
 /// unavailable image falls back to the same music mark, including offline.

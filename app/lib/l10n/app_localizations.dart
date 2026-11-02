@@ -2045,8 +2045,14 @@ abstract class AppLocalizations {
   /// No description provided for @liveStart.
   ///
   /// In ko, this message translates to:
-  /// **'라이브'**
+  /// **'라이브하기'**
   String get liveStart;
+
+  /// No description provided for @liveNeedsConnection.
+  ///
+  /// In ko, this message translates to:
+  /// **'라이브를 시작하려면 인터넷에 연결해 주세요.'**
+  String get liveNeedsConnection;
 
   /// No description provided for @liveLeave.
   ///

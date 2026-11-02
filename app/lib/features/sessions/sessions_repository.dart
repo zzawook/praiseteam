@@ -15,7 +15,8 @@ class SessionsRepository {
   static const _sessionColumns =
       'id, team_id, title, starts_at, location, theme, notes, setlist_status, published_at, setlist_items(count)';
   static const _itemColumns =
-      'id, session_id, position, song_id, version_id, key, bpm, sheet_id, song_form, notes, songs(title), '
+      'id, session_id, position, song_id, version_id, key, bpm, sheet_id, song_form, notes, '
+      'songs(title, song_versions(song_links(id, version_id, label, url, sort_order))), '
       'song_versions(name, default_key, bpm, song_links(id, version_id, label, url, sort_order))';
 
   /// A session stays upcoming through the end of its team's calendar day.
@@ -54,8 +55,14 @@ class SessionsRepository {
   Future<List<SetlistItem>> setlist(int sessionId) async {
     final rows = await _offline.list(
       'setlist:$sessionId',
-      () =>
-          _db.from('setlist_items').select(_itemColumns).eq('session_id', sessionId).order('position', ascending: true),
+      () => _db
+          .from('setlist_items')
+          .select(_itemColumns)
+          .eq('session_id', sessionId)
+          .order('position', ascending: true)
+          .order('id', referencedTable: 'songs.song_versions', ascending: true)
+          .order('sort_order', referencedTable: 'songs.song_versions.song_links', ascending: true)
+          .order('sort_order', referencedTable: 'song_versions.song_links', ascending: true),
     );
     return rows.map(SetlistItem.fromJson).toList();
   }

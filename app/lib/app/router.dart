@@ -92,6 +92,7 @@ GoRouter router(Ref ref) {
           teamId: teamIdOf(state)!,
           sessionId: idOf(state, 'sessionId'),
           initialItemId: int.tryParse(state.uri.queryParameters['item'] ?? ''),
+          startLive: state.uri.queryParameters['live'] == '1',
         ),
       ),
       GoRoute(
@@ -102,11 +103,8 @@ GoRouter router(Ref ref) {
         ),
       ),
       ShellRoute(
-        builder: (context, state, child) => AppShell(
-          teamId: teamIdOf(state)!,
-          location: state.matchedLocation,
-          child: child,
-        ),
+        builder: (context, state, child) =>
+            AppShell(teamId: teamIdOf(state)!, location: state.matchedLocation, child: child),
         routes: [
           GoRoute(
             path: '/t/:teamId/home',
@@ -126,7 +124,10 @@ GoRouter router(Ref ref) {
             path: '/t/:teamId/songs',
             builder: (_, state) => SongsScreen(teamId: teamIdOf(state)!),
             routes: [
-              GoRoute(path: 'stats', builder: (_, state) => StatsScreen(teamId: teamIdOf(state)!)),
+              GoRoute(
+                path: 'stats',
+                builder: (_, state) => StatsScreen(teamId: teamIdOf(state)!),
+              ),
               GoRoute(
                 path: ':songId',
                 builder: (_, state) => SongDetailScreen(teamId: teamIdOf(state)!, songId: idOf(state, 'songId')),

@@ -80,7 +80,12 @@ abstract class SessionTemplate with _$SessionTemplate {
 
 @freezed
 abstract class SetlistSong with _$SetlistSong {
-  const factory SetlistSong({required String title}) = _SetlistSong;
+  const factory SetlistSong({
+    required String title,
+
+    /// Other arrangements can provide artwork when the selected one has no link.
+    @JsonKey(name: 'song_versions') @Default(<SetlistVersion>[]) List<SetlistVersion> versions,
+  }) = _SetlistSong;
 
   factory SetlistSong.fromJson(Map<String, dynamic> json) => _$SetlistSongFromJson(json);
 }

@@ -58,10 +58,17 @@ List<StandPage> standPages(List<SetlistItem> items, Map<int, Sheet> sheets) => [
 
 /// The music stand: every page of the setlist in order, with notes.
 class SetlistViewerScreen extends ConsumerStatefulWidget {
-  const SetlistViewerScreen({super.key, required this.teamId, required this.sessionId, this.initialItemId});
+  const SetlistViewerScreen({
+    super.key,
+    required this.teamId,
+    required this.sessionId,
+    this.initialItemId,
+    this.startLive = false,
+  });
   final int teamId;
   final int sessionId;
   final int? initialItemId;
+  final bool startLive;
 
   @override
   ConsumerState<SetlistViewerScreen> createState() => _SetlistViewerScreenState();
@@ -79,6 +86,8 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   /// Live mode: shared page turns and cues for everyone at this service.
   LiveSession? _live;
   bool _follow = true;
+  bool _joiningLive = false;
+  bool _autoLiveRequested = false;
 
   /// Anyone may put the cue bar away to give the pages the room (cues sent
   /// by others still show). Remembered on this device.
@@ -106,23 +115,46 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   }
 
   Future<void> _startLive() async {
+    if (_joiningLive || _live != null) return;
     final me = ref.read(currentUserIdProvider);
     if (me == null) return;
-    final members = await ref.read(teamMembersProvider(widget.teamId).future);
-    final mine = members.where((m) => m.userId == me).firstOrNull;
-    final live =
-        LiveSession(
-          db: ref.read(supabaseProvider),
-          sessionId: widget.sessionId,
-          me: me,
-          name: mine?.profile.displayName ?? '',
-          myPartIds: {...?mine?.partIds},
-          onFollow: _onFollow,
-        )..addListener(() {
-          if (mounted) setState(() {});
-        });
-    live.join();
-    setState(() => _live = live);
+    if (!ref.read(onlineStatusProvider).online) {
+      showMessage(context, AppLocalizations.of(context).liveNeedsConnection);
+      return;
+    }
+    _joiningLive = true;
+    try {
+      final members = await ref.read(teamMembersProvider(widget.teamId).future);
+      if (!mounted) return;
+      final mine = members.where((m) => m.userId == me).firstOrNull;
+      final live =
+          LiveSession(
+            db: ref.read(supabaseProvider),
+            sessionId: widget.sessionId,
+            me: me,
+            name: mine?.profile.displayName ?? '',
+            myPartIds: {...?mine?.partIds},
+            onFollow: _onFollow,
+          )..addListener(() {
+            if (mounted) setState(() {});
+          });
+      live.join();
+      setState(() => _live = live);
+    } catch (error) {
+      if (mounted) showError(context, error);
+    } finally {
+      _joiningLive = false;
+    }
+  }
+
+  void _startLiveOnOpen() {
+    if (!widget.startLive || _autoLiveRequested) return;
+    _autoLiveRequested = true;
+    // Join only after the pages and controller are attached, so a late
+    // joiner's first presence update can move straight to the current page.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _startLive();
+    });
   }
 
   Future<void> _leaveLive() async {
@@ -237,6 +269,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
                   ),
             );
             final page = pages[_current.clamp(0, pages.length - 1)];
+            _startLiveOnOpen();
             return _keyboard(pages.length, _stand(pages, page));
           },
         ),
@@ -559,7 +592,7 @@ class _PageSlot extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (linksThumbnail(page.item.version?.links ?? const []) case final url?) ...[
+              if (setlistThumbnail(page.item) case final url?) ...[
                 SongArtwork(url: url, width: 256, height: 144),
                 const SizedBox(height: 20),
               ],

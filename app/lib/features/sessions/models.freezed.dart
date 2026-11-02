@@ -602,7 +602,8 @@ as String?,
 /// @nodoc
 mixin _$SetlistSong {
 
- String get title;
+ String get title;/// Other arrangements can provide artwork when the selected one has no link.
+@JsonKey(name: 'song_versions') List<SetlistVersion> get versions;
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -616,20 +617,20 @@ $SetlistSongCopyWith<SetlistSong> get copyWith => _$SetlistSongCopyWithImpl<Setl
 @override
 bool operator ==(Object other) {
   final _this = this as SetlistSong;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistSong&&(identical(other.title, _this.title) || other.title == _this.title));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistSong&&(identical(other.title, _this.title) || other.title == _this.title)&&const DeepCollectionEquality().equals(other.versions, _this.versions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SetlistSong;
-  return Object.hash(runtimeType,_this.title);
+  return Object.hash(runtimeType,_this.title,const DeepCollectionEquality().hash(_this.versions));
 }
 
 @override
 String toString() {
   final _this = this as SetlistSong;
-  return 'SetlistSong(title: ${_this.title})';
+  return 'SetlistSong(title: ${_this.title}, versions: ${_this.versions})';
 }
 
 
@@ -640,7 +641,7 @@ abstract mixin class $SetlistSongCopyWith<$Res>  {
   factory $SetlistSongCopyWith(SetlistSong value, $Res Function(SetlistSong) _then) = _$SetlistSongCopyWithImpl;
 @useResult
 $Res call({
- String title
+ String title,@JsonKey(name: 'song_versions') List<SetlistVersion> versions
 });
 
 
@@ -657,10 +658,11 @@ class _$SetlistSongCopyWithImpl<$Res>
 
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? versions = null,}) {
   return _then(SetlistSong(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,
+as String,versions: null == versions ? _self.versions : versions // ignore: cast_nullable_to_non_nullable
+as List<SetlistVersion>,
   ));
 }
 
@@ -745,10 +747,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title, @JsonKey(name: 'song_versions')  List<SetlistVersion> versions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SetlistSong() when $default != null:
-return $default(_that.title);case _:
+return $default(_that.title,_that.versions);case _:
   return orElse();
 
 }
@@ -766,10 +768,10 @@ return $default(_that.title);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title, @JsonKey(name: 'song_versions')  List<SetlistVersion> versions)  $default,) {final _that = this;
 switch (_that) {
 case _SetlistSong():
-return $default(_that.title);case _:
+return $default(_that.title,_that.versions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -786,10 +788,10 @@ return $default(_that.title);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title, @JsonKey(name: 'song_versions')  List<SetlistVersion> versions)?  $default,) {final _that = this;
 switch (_that) {
 case _SetlistSong() when $default != null:
-return $default(_that.title);case _:
+return $default(_that.title,_that.versions);case _:
   return null;
 
 }
@@ -801,10 +803,19 @@ return $default(_that.title);case _:
 @JsonSerializable()
 
 class _SetlistSong implements SetlistSong {
-  const _SetlistSong({required this.title});
+  const _SetlistSong({required this.title, @JsonKey(name: 'song_versions')  List<SetlistVersion> versions = const <SetlistVersion>[]}): _versions = versions;
   factory _SetlistSong.fromJson(Map<String, dynamic> json) => _$SetlistSongFromJson(json);
 
 @override final  String title;
+/// Other arrangements can provide artwork when the selected one has no link.
+ final  List<SetlistVersion> _versions;
+/// Other arrangements can provide artwork when the selected one has no link.
+@override@JsonKey(name: 'song_versions') List<SetlistVersion> get versions {
+  if (_versions is EqualUnmodifiableListView) return _versions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_versions);
+}
+
 
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
@@ -819,18 +830,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistSong&&(identical(other.title, title) || other.title == title));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistSong&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.versions, _versions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,title);
+    return Object.hash(runtimeType,title,const DeepCollectionEquality().hash(_versions));
 }
 
 @override
 String toString() {
-    return 'SetlistSong(title: $title)';
+    return 'SetlistSong(title: $title, versions: $versions)';
 }
 
 
@@ -841,7 +852,7 @@ abstract mixin class _$SetlistSongCopyWith<$Res> implements $SetlistSongCopyWith
   factory _$SetlistSongCopyWith(_SetlistSong value, $Res Function(_SetlistSong) _then) = __$SetlistSongCopyWithImpl;
 @override @useResult
 $Res call({
- String title
+ String title,@JsonKey(name: 'song_versions') List<SetlistVersion> versions
 });
 
 
@@ -858,10 +869,11 @@ class __$SetlistSongCopyWithImpl<$Res>
 
 /// Create a copy of SetlistSong
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? versions = null,}) {
   return _then(_SetlistSong(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,
+as String,versions: null == versions ? _self._versions : versions // ignore: cast_nullable_to_non_nullable
+as List<SetlistVersion>,
   ));
 }
 

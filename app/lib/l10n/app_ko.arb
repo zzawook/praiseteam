@@ -708,7 +708,8 @@
       }
     }
   },
-  "liveStart": "라이브",
+  "liveStart": "라이브하기",
+  "liveNeedsConnection": "라이브를 시작하려면 인터넷에 연결해 주세요.",
   "liveLeave": "라이브 나가기",
   "liveWatching": "{count}명 함께",
   "@liveWatching": {

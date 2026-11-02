@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/theme.dart';
 import '../../core/dates.dart';
 import '../../core/music_widgets.dart';
+import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../notifications/notification_bell.dart';
@@ -146,17 +147,12 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
     final isLeader = ref.watch(activeMembershipProvider(widget.teamId))?.role.isLeader ?? false;
     final session = ref.watch(sessionProvider(widget.sessionId));
     final setlist = ref.watch(setlistProvider(widget.sessionId));
+    final online = ref.watch(onlineStatusProvider.select((s) => s.online));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(session.value?.title ?? ''),
         actions: [
-          if (setlist.value?.isNotEmpty ?? false)
-            IconButton(
-              tooltip: l10n.viewSheets,
-              icon: const Icon(Icons.chrome_reader_mode_outlined),
-              onPressed: () => context.push('/t/${widget.teamId}/stand/${widget.sessionId}'),
-            ),
           NotificationBell(teamId: widget.teamId),
           if (isLeader && session.value != null)
             PopupMenuButton<String>(
@@ -168,17 +164,32 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: isLeader && (setlist.value?.isNotEmpty ?? false) && session.value != null
+      bottomNavigationBar: (setlist.value?.isNotEmpty ?? false) && session.value != null
           ? SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
                 child: ContentWidth(
-                  child: FilledButton.icon(
-                    onPressed: _publishing ? null : () => _publish(session.value!),
-                    icon: const Icon(Icons.campaign_outlined),
-                    label: Text(
-                      session.value!.setlistStatus == SetlistStatus.draft ? l10n.publishSetlist : l10n.republishSetlist,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: online
+                            ? () => context.push('/t/${widget.teamId}/stand/${widget.sessionId}?live=1')
+                            : null,
+                        icon: const Icon(Icons.play_arrow_rounded),
+                        label: Text(l10n.liveStart),
+                      ),
+                      if (!online)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Text(
+                            l10n.liveNeedsConnection,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -200,6 +211,9 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
                     session: s,
                     items: _pendingOrder ?? items,
                     isLeader: isLeader,
+                    onViewSheets: () => context.push('/t/${widget.teamId}/stand/${widget.sessionId}'),
+                    onPublish: isLeader ? () => _publish(s) : null,
+                    publishing: _publishing,
                     onTapItem: (item) => isLeader
                         ? showSetlistItemEditor(context, item: item)
                         : context.push('/t/${widget.teamId}/stand/${widget.sessionId}?item=${item.id}'),
@@ -270,6 +284,9 @@ class _SetlistSheet extends StatelessWidget {
     required this.session,
     required this.items,
     required this.isLeader,
+    required this.onViewSheets,
+    required this.onPublish,
+    required this.publishing,
     required this.onTapItem,
     required this.onReorder,
     required this.onAdd,
@@ -277,6 +294,9 @@ class _SetlistSheet extends StatelessWidget {
   final Session session;
   final List<SetlistItem> items;
   final bool isLeader;
+  final VoidCallback onViewSheets;
+  final VoidCallback? onPublish;
+  final bool publishing;
   final void Function(SetlistItem) onTapItem;
   final void Function(int from, int to) onReorder;
   final VoidCallback onAdd;
@@ -336,6 +356,29 @@ class _SetlistSheet extends StatelessWidget {
       sliver: SliverMainAxisGroup(
         slivers: [
           SliverToBoxAdapter(child: heading),
+          if (items.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: onViewSheets,
+                      icon: const Icon(Icons.library_music_outlined, size: 20),
+                      label: Text(l10n.viewSheets),
+                    ),
+                    if (onPublish != null)
+                      TextButton.icon(
+                        onPressed: publishing ? null : onPublish,
+                        icon: const Icon(Icons.campaign_outlined, size: 20),
+                        label: Text(published ? l10n.republishSetlist : l10n.publishSetlist),
+                      ),
+                  ],
+                ),
+              ),
+            ),
           SliverToBoxAdapter(child: empty),
           if (isLeader)
             SliverReorderableList(
@@ -378,6 +421,7 @@ class _SetlistRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final serif = theme.textTheme.titleLarge?.copyWith(fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700);
+    final compact = MediaQuery.sizeOf(context).width < 400;
     final details = [
       ?item.version?.name,
       if (item.songForm != null) item.songForm!,
@@ -394,10 +438,8 @@ class _SetlistRow extends StatelessWidget {
               width: 28,
               child: Text('${index + 1}', style: serif?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
             ),
-            if (linksThumbnail(item.version?.links ?? const []) case final url?) ...[
-              SongArtwork(url: url, width: 64, height: 40),
-              const SizedBox(width: 12),
-            ],
+            SongArtwork(url: setlistThumbnail(item), width: 64, height: 40),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,26 +453,44 @@ class _SetlistRow extends StatelessWidget {
                         style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                       ),
                     ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Column(
-                children: [
-                  KeyBadge(item.effectiveKey, emphasized: true),
-                  if (item.effectiveBpm case final bpm?)
+                  if (compact)
                     Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        '$bpm BPM',
-                        style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Wrap(
+                        spacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          KeyBadge(item.effectiveKey, emphasized: true),
+                          if (item.effectiveBpm case final bpm?)
+                            Text(
+                              '$bpm BPM',
+                              style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                            ),
+                        ],
                       ),
                     ),
                 ],
               ),
             ),
+            if (!compact) ...[
+              const SizedBox(width: 12),
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Column(
+                  children: [
+                    KeyBadge(item.effectiveKey, emphasized: true),
+                    if (item.effectiveBpm case final bpm?)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          '$bpm BPM',
+                          style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
             if (draggable)
               ReorderableDragStartListener(
                 index: index,

@@ -1093,7 +1093,10 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get liveStart => '라이브';
+  String get liveStart => '라이브하기';
+
+  @override
+  String get liveNeedsConnection => '라이브를 시작하려면 인터넷에 연결해 주세요.';
 
   @override
   String get liveLeave => '라이브 나가기';

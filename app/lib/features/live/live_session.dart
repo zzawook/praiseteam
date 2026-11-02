@@ -97,6 +97,7 @@ class LiveSession extends ChangeNotifier {
         if (status == RealtimeSubscribeStatus.subscribed) {
           joined = true;
           await channel.track(_presence());
+          if (_closed) return;
           notifyListeners();
         }
       });

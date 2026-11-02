@@ -120,24 +120,24 @@ class NextServiceCard extends ConsumerWidget {
               else ...[
                 for (final (i, item) in items.take(4).indexed)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
+                    padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Row(
                       children: [
                         SizedBox(
                           width: 24,
                           child: Text('${i + 1}', style: serif?.copyWith(color: soft)),
                         ),
-                        if (linksThumbnail(item.version?.links ?? const []) case final url?) ...[
-                          SongArtwork(url: url, width: 48, height: 30),
-                          const SizedBox(width: 10),
-                        ],
+                        SongArtwork(url: setlistThumbnail(item), width: 80, height: 48),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             item.song.title,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: serif?.copyWith(color: fg),
                           ),
                         ),
+                        const SizedBox(width: 8),
                         if (item.effectiveKey case final key?)
                           Container(
                             constraints: const BoxConstraints(minWidth: 30),
@@ -157,7 +157,7 @@ class NextServiceCard extends ConsumerWidget {
                   ),
                 if (items.length > 4)
                   Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 2),
+                    padding: const EdgeInsets.only(left: 116, top: 2),
                     child: Text(
                       l10n.moreSongs(items.length - 4),
                       style: theme.textTheme.bodySmall?.copyWith(color: soft),

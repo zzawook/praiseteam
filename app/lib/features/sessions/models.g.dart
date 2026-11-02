@@ -60,11 +60,20 @@ Map<String, dynamic> _$SessionTemplateToJson(_SessionTemplate instance) =>
       'location': instance.location,
     };
 
-_SetlistSong _$SetlistSongFromJson(Map<String, dynamic> json) =>
-    _SetlistSong(title: json['title'] as String);
+_SetlistSong _$SetlistSongFromJson(Map<String, dynamic> json) => _SetlistSong(
+  title: json['title'] as String,
+  versions:
+      (json['song_versions'] as List<dynamic>?)
+          ?.map((e) => SetlistVersion.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <SetlistVersion>[],
+);
 
 Map<String, dynamic> _$SetlistSongToJson(_SetlistSong instance) =>
-    <String, dynamic>{'title': instance.title};
+    <String, dynamic>{
+      'title': instance.title,
+      'song_versions': instance.versions.map((e) => e.toJson()).toList(),
+    };
 
 _SetlistVersion _$SetlistVersionFromJson(Map<String, dynamic> json) =>
     _SetlistVersion(

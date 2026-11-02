@@ -1,14 +1,15 @@
-// Two-user M1 flow against the local stack: create team, join by code,
-// approve, pick parts, see notifications. Screenshots go to argv[2].
+// Two-user live flow against the local stack, including direct live entry
+// from a service and a separate view-only path. Screenshots go to argv[2].
 const { chromium } = require('playwright-core');
 const SHOTS = process.argv[2];
 const BASE = 'http://127.0.0.1:3000';
 const stamp = Date.now();
+const pageErrors = [];
 
 async function open(browser, viewport, name) {
   const ctx = await browser.newContext({ viewport, locale: 'ko-KR', deviceScaleFactor: 1 });
   const page = await ctx.newPage();
-  page.on('pageerror', (e) => console.log(`[${name}] pageerror`, String(e)));
+  page.on('pageerror', (e) => { pageErrors.push(String(e)); console.log(`[${name}] pageerror`, String(e)); });
   page.on('response', async (r) => {
     if (r.status() < 400) return;
     const auth = (await r.request().allHeaders())['authorization'] || '';
@@ -84,11 +85,20 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
 
   // the stand header reads "<title>\n<page> / <pages>"
   const headerText = (p) => p.evaluate(() => [...document.querySelectorAll('flt-semantics')].map((e) => (e.getAttribute('aria-label') || '').match(/(\d+ \/ \d+)/)).find(Boolean)?.[1] || '');
+
+  // The setlist's view-only action opens the stand without joining live.
+  await load(a, `/t/${team}/sessions/${session}`);
+  await btn(a, '악보 보기').click();
+  await waitText(a, '1 / 2');
+  await btn(a, '라이브하기').waitFor();
+  if (await btn(a, '라이브 나가기').count()) throw new Error('Viewing sheets joined live mode');
+  await btn(a, '닫기').click();
+
+  // The primary action on the service page opens the stand already live.
   for (const p of [a, b]) {
-    await p.goto(BASE + `/t/${team}/stand/${session}`, { waitUntil: 'load' });
-    await semantics(p);
+    await load(p, `/t/${team}/sessions/${session}`);
+    await btn(p, '라이브하기').click();
     await waitText(p, '1 / 2');
-    await btn(p, '라이브').click();
   }
   await waitText(a, '2명 함께');
   await waitText(b, '2명 함께');
@@ -129,7 +139,7 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await waitText(a, '2 / 2');
   await b.waitForTimeout(1500);
   if (await headerText(b) !== '1 / 2') throw new Error('B moved while out of live mode');
-  await btn(b, '라이브').click();
+  await btn(b, '라이브하기').click();
   await waitText(b, '2명 함께');
   await waitText(b, '2 / 2');
   console.log('late joiner landed on', await headerText(b));
@@ -139,6 +149,13 @@ const sql = (q) => require('child_process').execSync(`docker exec supabase_db_pr
   await waitText(a, '1명 함께');
   console.log('closing the stand left live mode');
 
+  // Reopening from the service starts a fresh stand and follows the group.
+  await btn(b, '라이브하기').click();
+  await waitText(b, '2명 함께');
+  await waitText(b, '2 / 2');
+  console.log('one-click late joiner followed the current page');
+
+  if (pageErrors.length) throw new Error(`Uncaught browser errors: ${pageErrors.join('; ')}`);
   await browser.close();
   console.log('FLOW M6 OK');
 })().catch(async (e) => {

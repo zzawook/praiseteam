@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:praiseteam/features/sessions/models.dart';
 import 'package:praiseteam/features/sessions/sessions_providers.dart';
 import 'package:praiseteam/features/songs/models.dart';
+import 'package:praiseteam/features/songs/song_artwork.dart';
 import 'package:praiseteam/l10n/app_localizations_en.dart';
 import 'package:praiseteam/l10n/app_localizations_ko.dart';
 
@@ -47,6 +48,43 @@ void main() {
   });
 
   group('a setlist entry', () {
+    const selectedLink = SongLink(id: 1, versionId: 11, url: 'https://youtu.be/aqz-KE-bpKQ');
+    const otherLink = SongLink(id: 2, versionId: 12, url: 'https://www.youtube.com/watch?v=dQw4w9WgXc');
+    const picturedItem = SetlistItem(
+      id: 5,
+      sessionId: 3,
+      position: 1,
+      songId: 1,
+      versionId: 11,
+      song: SetlistSong(
+        title: '주의 집에 거하는 자',
+        versions: [
+          SetlistVersion(links: [otherLink]),
+        ],
+      ),
+      version: SetlistVersion(name: '선택한 버전', defaultKey: 'G', bpm: 72, links: [selectedLink]),
+    );
+
+    test('artwork prefers the version being played', () {
+      expect(setlistThumbnail(picturedItem), linkThumbnail(selectedLink.url));
+    });
+
+    test('a version without video artwork uses another version of the same song', () {
+      final item = picturedItem.copyWith(
+        version: picturedItem.version!.copyWith(
+          links: [const SongLink(id: 3, versionId: 11, url: 'https://open.spotify.com/track/1')],
+        ),
+      );
+      expect(setlistThumbnail(item), linkThumbnail(otherLink.url));
+      expect((item.versionId, item.effectiveKey, item.effectiveBpm), (11, 'G', 72));
+    });
+
+    test('nested artwork links survive the setlist snapshot used offline', () {
+      final item = picturedItem.copyWith(version: picturedItem.version!.copyWith(links: const []));
+      final restored = SetlistItem.fromJson(item.toJson());
+      expect(setlistThumbnail(restored), linkThumbnail(otherLink.url));
+    });
+
     test('plays its own key and tempo, else its version\'s', () {
       final item = SetlistItem.fromJson({
         'id': 5,
@@ -78,6 +116,7 @@ void main() {
         'songs': {'title': '주의 집에 거하는 자', 'artist': '마커스워십', 'default_key': 'G', 'bpm': 72},
       });
       expect((item.versionId, item.version, item.effectiveKey, item.sheetId), (null, null, 'G', 9));
+      expect(setlistThumbnail(item), isNull);
     });
   });
 
