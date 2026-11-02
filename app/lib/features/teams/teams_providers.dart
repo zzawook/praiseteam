@@ -1,12 +1,17 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/providers.dart';
+import '../../core/team_time.dart';
 import '../auth/auth.dart';
 import '../offline/offline.dart';
 import 'models.dart';
 import 'teams_repository.dart';
 
 part 'teams_providers.g.dart';
+
+@riverpod
+TeamTime teamTime(Ref ref, int teamId) =>
+    TeamTime(ref.watch(activeMembershipProvider(teamId))?.team.timezone ?? TeamTime.defaultZone);
 
 @Riverpod(keepAlive: true)
 TeamsRepository teamsRepository(Ref ref) =>
@@ -31,12 +36,10 @@ Membership? activeMembership(Ref ref, int teamId) {
 }
 
 @riverpod
-Future<List<Member>> teamMembers(Ref ref, int teamId) =>
-    ref.watch(teamsRepositoryProvider).members(teamId);
+Future<List<Member>> teamMembers(Ref ref, int teamId) => ref.watch(teamsRepositoryProvider).members(teamId);
 
 @riverpod
-Future<List<Part>> teamParts(Ref ref, int teamId) =>
-    ref.watch(teamsRepositoryProvider).parts(teamId);
+Future<List<Part>> teamParts(Ref ref, int teamId) => ref.watch(teamsRepositoryProvider).parts(teamId);
 
 /// The last team the user opened, so the app reopens there.
 @Riverpod(keepAlive: true)

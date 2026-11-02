@@ -16,6 +16,7 @@ import '../notifications/push.dart';
 import '../offline/offline_widgets.dart';
 import '../teams/teams_providers.dart';
 import 'settings_providers.dart';
+import 'account_deletion.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key, required this.teamId});
@@ -156,6 +157,8 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => _calendar(context, ref),
             ),
             const _NotificationSettings(),
+            if (membership != null)
+              ListTile(leading: const Icon(Icons.public), title: Text(l10n.inTeamTimezone(membership.team.timezone))),
             if (membership != null && membership.role.isLeader) ...[
               SectionHeader(l10n.teamSettings),
               ListTile(
@@ -211,10 +214,8 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => launchUrl(Env.privacyPolicy),
             ),
             const Divider(indent: 20),
-            ListTile(
-              title: Text(l10n.signOut),
-              onTap: () => signOutHere(context, ref),
-            ),
+            ListTile(title: Text(l10n.signOut), onTap: () => signOutHere(context, ref)),
+            const DeleteAccountTile(),
           ],
         ),
       ),
@@ -304,11 +305,8 @@ class _DevicePush extends ConsumerWidget {
       final s => SwitchListTile(
         title: Text(l10n.pushThisDevice),
         value: s == PushState.on,
-        onChanged: state.isLoading
-            ? null
-            : (on) => runGuarded(context, () => on ? push.enable() : push.disable()),
+        onChanged: state.isLoading ? null : (on) => runGuarded(context, () => on ? push.enable() : push.disable()),
       ),
     };
   }
 }
-

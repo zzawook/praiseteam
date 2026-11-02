@@ -5,6 +5,7 @@ import '../../core/music_widgets.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../songs/models.dart';
+import '../songs/song_artwork.dart';
 import '../songs/song_form.dart' show showNewSongForm;
 import '../songs/songs_providers.dart';
 import '../songs/songs_screen.dart' show statsLine;
@@ -42,7 +43,9 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
     if (draft == null || !mounted) return;
     final repo = ref.read(songsRepositoryProvider);
     var id = -1;
-    if (!await runGuarded(context, () async => id = await repo.addSong(widget.teamId, draft.song, draft.version))) return;
+    if (!await runGuarded(context, () async => id = await repo.addSong(widget.teamId, draft.song, draft.version))) {
+      return;
+    }
     ref.invalidate(songLibraryProvider(widget.teamId));
     final library = await ref.read(songLibraryProvider(widget.teamId).future);
     if (!mounted) return;
@@ -69,26 +72,25 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
             onRetry: () => ref.invalidate(songLibraryProvider(widget.teamId)),
             data: (songs) {
               final shown = songs
-                  .where((e) =>
-                      _query.isEmpty ||
-                      e.song.title.toLowerCase().contains(_query) ||
-                      (e.versionNames ?? '').toLowerCase().contains(_query))
+                  .where(
+                    (e) =>
+                        _query.isEmpty ||
+                        e.song.title.toLowerCase().contains(_query) ||
+                        (e.versionNames ?? '').toLowerCase().contains(_query),
+                  )
                   .toList();
               return ListView(
                 controller: widget.controller,
                 children: [
-                  ListTile(
-                    leading: const Icon(Icons.add),
-                    title: Text(l10n.addSong),
-                    onTap: _createAndPick,
-                  ),
+                  ListTile(leading: const Icon(Icons.add), title: Text(l10n.addSong), onTap: _createAndPick),
                   const Divider(),
                   for (final e in shown)
                     ListTile(
                       enabled: !widget.alreadyIn.contains(e.song.id),
                       onTap: () => Navigator.pop(context, e),
+                      leading: SongArtwork(url: songThumbnail(e.song)),
                       title: Text(e.song.title),
-                      subtitle: Text([?e.versionNames, statsLine(l10n, e.stats)].join('\n')),
+                      subtitle: Text([?e.versionNames, statsLine(context, e.stats)].join('\n')),
                       isThreeLine: e.versionNames != null,
                       trailing: KeyBadge(e.displayKey),
                     ),
@@ -126,13 +128,17 @@ Future<SongVersion?> pickVersion(BuildContext context, SongEntry entry) async {
             ),
             for (final v in ordered)
               ListTile(
+                leading: SongArtwork(url: linksThumbnail(v.links)),
                 title: Text(v.name ?? l10n.unnamedVersion),
                 subtitle: v.id == entry.stats.lastVersionId ? Text(l10n.playedLast) : null,
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (v.bpm case final bpm?)
-                      Padding(padding: const EdgeInsets.only(right: 10), child: Text('$bpm BPM', style: theme.textTheme.labelMedium)),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Text('$bpm BPM', style: theme.textTheme.labelMedium),
+                      ),
                     KeyBadge(v.defaultKey),
                   ],
                 ),

@@ -35,7 +35,7 @@ Future<int> offlinePrefetch(Ref ref) async {
   var ready = 0;
   for (final membership in memberships.where((m) => m.isActive)) {
     final serving = await _servingAt(ref, me, membership.teamId);
-    final upcoming = await sessions.upcoming(membership.teamId);
+    final upcoming = await sessions.upcoming(membership.teamId, time: ref.read(teamTimeProvider(membership.teamId)));
     for (final session in upcoming.where((s) => s.startsAt.isBefore(soon) || serving.contains(s.id))) {
       try {
         await sessions.session(session.id);

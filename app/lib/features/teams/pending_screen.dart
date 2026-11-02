@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../offline/offline_widgets.dart';
+import '../settings/account_deletion.dart';
 import 'models.dart';
 import 'teams_providers.dart';
 
@@ -22,12 +23,7 @@ class PendingScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: () => signOutHere(context, ref),
-            child: Text(l10n.signOut),
-          ),
-        ],
+        actions: [TextButton(onPressed: () => signOutHere(context, ref), child: Text(l10n.signOut))],
       ),
       body: SafeArea(
         child: ContentWidth(
@@ -55,15 +51,11 @@ class PendingScreen extends ConsumerWidget {
                   const SizedBox(height: 8),
                 ],
                 const SizedBox(height: 16),
-                FilledButton(
-                  onPressed: () => ref.invalidate(myMembershipsProvider),
-                  child: Text(l10n.checkAgain),
-                ),
+                FilledButton(onPressed: () => ref.invalidate(myMembershipsProvider), child: Text(l10n.checkAgain)),
                 const SizedBox(height: 12),
-                OutlinedButton(
-                  onPressed: () => context.go('/welcome'),
-                  child: Text(l10n.joinAnotherTeam),
-                ),
+                OutlinedButton(onPressed: () => context.go('/welcome'), child: Text(l10n.joinAnotherTeam)),
+                const SizedBox(height: 24),
+                const DeleteAccountTile(),
               ],
             ),
           ),

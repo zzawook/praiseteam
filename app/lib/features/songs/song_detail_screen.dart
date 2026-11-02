@@ -5,13 +5,13 @@ import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/dates.dart';
-import '../../core/music.dart';
 import '../../core/music_widgets.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth.dart';
 import '../teams/teams_providers.dart';
 import 'models.dart';
+import 'song_artwork.dart';
 import 'sheet_upload.dart';
 import 'song_form.dart';
 import 'songs_providers.dart';
@@ -96,7 +96,10 @@ class SongDetailScreen extends ConsumerWidget {
                 _VersionCard(
                   teamId: teamId,
                   version: v,
-                  played: [for (final h in d.history) if (h.versionId == v.id) h],
+                  played: [
+                    for (final h in d.history)
+                      if (h.versionId == v.id) h,
+                  ],
                   // A song keeps at least one version to play.
                   canDelete: d.song.versions.length > 1 && (isLeader || v.createdBy == me),
                   canDeleteSheet: (sheet) => isLeader || sheet.uploadedBy == me,
@@ -149,18 +152,25 @@ class _Header extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (songThumbnail(song) case final url?) ...[
+            SongArtwork(url: url, width: 160, height: 90),
+            const SizedBox(height: 12),
+          ],
           Text(
             stats.timesPlayed == 0
                 ? l10n.neverPlayed
                 : [
                     l10n.playedTimes(stats.timesPlayed),
-                    if (stats.lastPlayedAt != null) l10n.lastPlayed(timeAgo(l10n, stats.lastPlayedAt!)),
+                    if (stats.lastPlayedAt != null) l10n.lastPlayed(DateFormats(context).ago(stats.lastPlayedAt!)),
                     if (stats.usualKey != null) l10n.usualKey(stats.usualKey!),
                   ].join(', '),
             style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
           if (stats.nextPlannedAt != null)
-            Text(l10n.nextPlanned(DateFormats(context).dayWithWeekday(stats.nextPlannedAt!)), style: theme.textTheme.bodySmall),
+            Text(
+              l10n.nextPlanned(DateFormats(context).dayWithWeekday(stats.nextPlannedAt!)),
+              style: theme.textTheme.bodySmall,
+            ),
           if (song.timeSignature != null || song.tags.isNotEmpty) ...[
             const SizedBox(height: 12),
             Wrap(
@@ -169,15 +179,15 @@ class _Header extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 if (song.timeSignature case final time?)
-                  Padding(padding: const EdgeInsets.only(right: 6), child: Text(time, style: theme.textTheme.bodyMedium)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Text(time, style: theme.textTheme.bodyMedium),
+                  ),
                 for (final t in song.tags) Chip(label: Text(t), visualDensity: VisualDensity.compact),
               ],
             ),
           ],
-          if (song.notes != null) ...[
-            const SizedBox(height: 12),
-            Text(song.notes!, style: theme.textTheme.bodyMedium),
-          ],
+          if (song.notes != null) ...[const SizedBox(height: 12), Text(song.notes!, style: theme.textTheme.bodyMedium)],
         ],
       ),
     );
@@ -244,9 +254,17 @@ class _VersionCard extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: url, autofocus: true, keyboardType: TextInputType.url, decoration: InputDecoration(labelText: l10n.linkUrl)),
+            TextField(
+              controller: url,
+              autofocus: true,
+              keyboardType: TextInputType.url,
+              decoration: InputDecoration(labelText: l10n.linkUrl),
+            ),
             const SizedBox(height: 12),
-            TextField(controller: label, decoration: InputDecoration(labelText: l10n.linkLabel)),
+            TextField(
+              controller: label,
+              decoration: InputDecoration(labelText: l10n.linkLabel),
+            ),
           ],
         ),
         actions: [
@@ -292,7 +310,10 @@ class _VersionCard extends ConsumerWidget {
               const SizedBox(height: 12),
               KeyField(value: key, onChanged: (k) => setState(() => key = k)),
               const SizedBox(height: 12),
-              TextField(controller: label, decoration: InputDecoration(labelText: l10n.sheetLabel)),
+              TextField(
+                controller: label,
+                decoration: InputDecoration(labelText: l10n.sheetLabel),
+              ),
             ],
           ),
           actions: [
@@ -306,7 +327,9 @@ class _VersionCard extends ConsumerWidget {
     showMessage(context, l10n.uploading);
     final done = await runGuarded(
       context,
-      () => ref.read(songsRepositoryProvider).uploadSheet(
+      () => ref
+          .read(songsRepositoryProvider)
+          .uploadSheet(
             teamId: teamId,
             versionId: version.id,
             pdf: sheet.pdf,
@@ -328,7 +351,7 @@ class _VersionCard extends ConsumerWidget {
     final past = played.where((h) => !h.startsAt.isAfter(now)).toList();
     final usage = past.isEmpty
         ? l10n.neverPlayed
-        : '${l10n.playedTimes(past.length)}, ${l10n.lastPlayed(timeAgo(l10n, past.first.startsAt))}';
+        : '${l10n.playedTimes(past.length)}, ${l10n.lastPlayed(DateFormats(context).ago(past.first.startsAt))}';
 
     return Card(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -344,7 +367,10 @@ class _VersionCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-                      Text(usage, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                      Text(
+                        usage,
+                        style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      ),
                     ],
                   ),
                 ),
@@ -426,7 +452,12 @@ class _SheetRow extends ConsumerWidget {
               tooltip: l10n.delete,
               icon: const Icon(Icons.delete_outline),
               onPressed: () async {
-                final ok = await confirm(context, message: '${sheet.label ?? l10n.sheet} — ${l10n.delete}?', confirmLabel: l10n.delete, destructive: true);
+                final ok = await confirm(
+                  context,
+                  message: '${sheet.label ?? l10n.sheet} — ${l10n.delete}?',
+                  confirmLabel: l10n.delete,
+                  destructive: true,
+                );
                 if (!ok || !context.mounted) return;
                 if (await runGuarded(context, () => ref.read(songsRepositoryProvider).deleteSheet(sheet))) onChanged();
               },
@@ -445,23 +476,11 @@ class _LinkRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final id = youtubeId(link.url);
+    final thumbnail = linkThumbnail(link.url);
     final host = Uri.tryParse(link.url)?.host ?? link.url;
     return ListTile(
       onTap: () => launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication),
-      leading: id == null
-          ? const Icon(Icons.link)
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.network(
-                'https://i.ytimg.com/vi/$id/default.jpg',
-                width: 56,
-                height: 42,
-                fit: BoxFit.cover,
-                webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-                errorBuilder: (_, _, _) => const Icon(Icons.smart_display_outlined),
-              ),
-            ),
+      leading: thumbnail == null ? const Icon(Icons.link) : SongArtwork(url: thumbnail),
       title: Text(link.label ?? host),
       subtitle: link.label == null ? null : Text(host),
       trailing: IconButton(tooltip: l10n.delete, icon: const Icon(Icons.close), onPressed: onDelete),

@@ -29,19 +29,24 @@ class RotationTable extends ConsumerWidget {
   final List<Part> parts;
   final bool isLeader;
 
-  static const _labelWidth = 96.0;
-  static const _columnWidth = 108.0;
-  static const _headerHeight = 54.0;
-  static const _lineHeight = 22.0;
-  static const _padding = 8.0;
+  static const _headerHeight = 76.0;
+  static const _lineHeight = 28.0;
+  static const _padding = 12.0;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) =>
+      LayoutBuilder(builder: (context, constraints) => _table(context, ref, constraints.maxWidth));
+
+  Widget _table(BuildContext context, WidgetRef ref, double width) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final formats = DateFormats(context);
     final me = ref.watch(currentUserIdProvider);
     final sessions = board.sessions;
+    final labelWidth = width < 600 ? 100.0 : 132.0;
+    // Fill the available space on a wide screen; on phones retain readable
+    // columns and scroll only the services, keeping the part names in place.
+    final columnWidth = math.max(width < 600 ? 160.0 : 184.0, (width - labelWidth) / math.max(1, sessions.length));
     final rule = BorderSide(color: theme.colorScheme.outlineVariant, width: 0.5);
     final groupRule = BorderSide(color: theme.colorScheme.outline, width: 1);
     final muted = theme.colorScheme.onSurfaceVariant;
@@ -80,7 +85,7 @@ class RotationTable extends ConsumerWidget {
               a.userName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
+              style: theme.textTheme.bodyLarge?.copyWith(
                 color: draft ? muted : null,
                 fontWeight: a.userId == me ? FontWeight.w800 : null,
                 decoration: a.status == AssignmentStatus.declined ? TextDecoration.lineThrough : null,
@@ -95,15 +100,16 @@ class RotationTable extends ConsumerWidget {
       children: [
         Container(
           height: _headerHeight,
-          width: _labelWidth,
+          width: labelWidth,
           decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerLow,
             border: Border(bottom: groupRule, right: groupRule),
           ),
         ),
         for (final (i, p) in shown.indexed)
           Container(
             height: heightOf(p),
-            width: _labelWidth,
+            width: labelWidth,
             padding: const EdgeInsets.fromLTRB(16, _padding, 8, _padding),
             alignment: Alignment.topLeft,
             decoration: BoxDecoration(
@@ -126,10 +132,11 @@ class RotationTable extends ConsumerWidget {
               InkWell(
                 onTap: () => context.push('/t/$teamId/sessions/${s.id}'),
                 child: Container(
-                  width: _columnWidth,
+                  width: columnWidth,
                   height: _headerHeight,
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerLow,
                     border: Border(bottom: groupRule, right: rule),
                   ),
                   child: Column(
@@ -140,13 +147,13 @@ class RotationTable extends ConsumerWidget {
                         formats.dayWithWeekday(s.startsAt),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
+                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       Text(
                         s.title,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                        style: theme.textTheme.bodyMedium?.copyWith(color: muted),
                       ),
                     ],
                   ),
@@ -161,7 +168,7 @@ class RotationTable extends ConsumerWidget {
                 InkWell(
                   onTap: () => showServingSheet(context, teamId: teamId, session: s, part: p, isLeader: isLeader),
                   child: Container(
-                    width: _columnWidth,
+                    width: columnWidth,
                     height: heightOf(p),
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: _padding),
                     decoration: BoxDecoration(
@@ -178,7 +185,7 @@ class RotationTable extends ConsumerWidget {
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 l10n.openPlaces(n),
-                                style: theme.textTheme.labelSmall?.copyWith(color: muted),
+                                style: theme.textTheme.bodyMedium?.copyWith(color: muted),
                               ),
                             ),
                           ),

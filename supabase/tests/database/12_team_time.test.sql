@@ -1,0 +1,13 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(3);
+insert into auth.users (id, email) values ('eeee0000-0000-0000-0000-000000000001', 'team-time@test.local');
+insert into public.teams (name, timezone) values ('Time test', 'America/New_York');
+select set_config('test.time_team', (select id::text from public.teams where name = 'Time test'), true);
+select private.notify(current_setting('test.time_team')::bigint, array['eeee0000-0000-0000-0000-000000000001'::uuid], 'rehearsal_scheduled', '{"timezone":"Asia/Singapore"}');
+select is((select params ->> 'timezone' from public.notifications where team_id = current_setting('test.time_team')::bigint), 'America/New_York', 'notification records the team zone');
+update public.notifications set params = '{}' where team_id = current_setting('test.time_team')::bigint;
+select is((select params ->> 'timezone' from private.claim_push_batch(array(select id from public.notifications where team_id = current_setting('test.time_team')::bigint))), 'America/New_York', 'old queued notifications also get the team zone');
+select is((select push_status from public.notifications where team_id = current_setting('test.time_team')::bigint), 'sending', 'claiming still advances delivery state');
+select * from finish();
+rollback;

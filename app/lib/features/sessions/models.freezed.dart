@@ -872,7 +872,7 @@ as String,
 /// @nodoc
 mixin _$SetlistVersion {
 
- String? get name; String? get defaultKey; int? get bpm;
+ String? get name; String? get defaultKey; int? get bpm;@JsonKey(name: 'song_links') List<SongLink> get links;
 /// Create a copy of SetlistVersion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -886,20 +886,20 @@ $SetlistVersionCopyWith<SetlistVersion> get copyWith => _$SetlistVersionCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as SetlistVersion;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistVersion&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.defaultKey, _this.defaultKey) || other.defaultKey == _this.defaultKey)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SetlistVersion&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.defaultKey, _this.defaultKey) || other.defaultKey == _this.defaultKey)&&(identical(other.bpm, _this.bpm) || other.bpm == _this.bpm)&&const DeepCollectionEquality().equals(other.links, _this.links));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SetlistVersion;
-  return Object.hash(runtimeType,_this.name,_this.defaultKey,_this.bpm);
+  return Object.hash(runtimeType,_this.name,_this.defaultKey,_this.bpm,const DeepCollectionEquality().hash(_this.links));
 }
 
 @override
 String toString() {
   final _this = this as SetlistVersion;
-  return 'SetlistVersion(name: ${_this.name}, defaultKey: ${_this.defaultKey}, bpm: ${_this.bpm})';
+  return 'SetlistVersion(name: ${_this.name}, defaultKey: ${_this.defaultKey}, bpm: ${_this.bpm}, links: ${_this.links})';
 }
 
 
@@ -910,7 +910,7 @@ abstract mixin class $SetlistVersionCopyWith<$Res>  {
   factory $SetlistVersionCopyWith(SetlistVersion value, $Res Function(SetlistVersion) _then) = _$SetlistVersionCopyWithImpl;
 @useResult
 $Res call({
- String? name, String? defaultKey, int? bpm
+ String? name, String? defaultKey, int? bpm,@JsonKey(name: 'song_links') List<SongLink> links
 });
 
 
@@ -927,12 +927,13 @@ class _$SetlistVersionCopyWithImpl<$Res>
 
 /// Create a copy of SetlistVersion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? defaultKey = freezed,Object? bpm = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? defaultKey = freezed,Object? bpm = freezed,Object? links = null,}) {
   return _then(SetlistVersion(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,defaultKey: freezed == defaultKey ? _self.defaultKey : defaultKey // ignore: cast_nullable_to_non_nullable
 as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,links: null == links ? _self.links : links // ignore: cast_nullable_to_non_nullable
+as List<SongLink>,
   ));
 }
 
@@ -1017,10 +1018,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? defaultKey,  int? bpm)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? defaultKey,  int? bpm, @JsonKey(name: 'song_links')  List<SongLink> links)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SetlistVersion() when $default != null:
-return $default(_that.name,_that.defaultKey,_that.bpm);case _:
+return $default(_that.name,_that.defaultKey,_that.bpm,_that.links);case _:
   return orElse();
 
 }
@@ -1038,10 +1039,10 @@ return $default(_that.name,_that.defaultKey,_that.bpm);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? defaultKey,  int? bpm)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? defaultKey,  int? bpm, @JsonKey(name: 'song_links')  List<SongLink> links)  $default,) {final _that = this;
 switch (_that) {
 case _SetlistVersion():
-return $default(_that.name,_that.defaultKey,_that.bpm);case _:
+return $default(_that.name,_that.defaultKey,_that.bpm,_that.links);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1058,10 +1059,10 @@ return $default(_that.name,_that.defaultKey,_that.bpm);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? defaultKey,  int? bpm)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? defaultKey,  int? bpm, @JsonKey(name: 'song_links')  List<SongLink> links)?  $default,) {final _that = this;
 switch (_that) {
 case _SetlistVersion() when $default != null:
-return $default(_that.name,_that.defaultKey,_that.bpm);case _:
+return $default(_that.name,_that.defaultKey,_that.bpm,_that.links);case _:
   return null;
 
 }
@@ -1073,12 +1074,19 @@ return $default(_that.name,_that.defaultKey,_that.bpm);case _:
 @JsonSerializable()
 
 class _SetlistVersion implements SetlistVersion {
-  const _SetlistVersion({this.name, this.defaultKey, this.bpm});
+  const _SetlistVersion({this.name, this.defaultKey, this.bpm, @JsonKey(name: 'song_links')  List<SongLink> links = const <SongLink>[]}): _links = links;
   factory _SetlistVersion.fromJson(Map<String, dynamic> json) => _$SetlistVersionFromJson(json);
 
 @override final  String? name;
 @override final  String? defaultKey;
 @override final  int? bpm;
+ final  List<SongLink> _links;
+@override@JsonKey(name: 'song_links') List<SongLink> get links {
+  if (_links is EqualUnmodifiableListView) return _links;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_links);
+}
+
 
 /// Create a copy of SetlistVersion
 /// with the given fields replaced by the non-null parameter values.
@@ -1093,18 +1101,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistVersion&&(identical(other.name, name) || other.name == name)&&(identical(other.defaultKey, defaultKey) || other.defaultKey == defaultKey)&&(identical(other.bpm, bpm) || other.bpm == bpm));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SetlistVersion&&(identical(other.name, name) || other.name == name)&&(identical(other.defaultKey, defaultKey) || other.defaultKey == defaultKey)&&(identical(other.bpm, bpm) || other.bpm == bpm)&&const DeepCollectionEquality().equals(other.links, _links));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,name,defaultKey,bpm);
+    return Object.hash(runtimeType,name,defaultKey,bpm,const DeepCollectionEquality().hash(_links));
 }
 
 @override
 String toString() {
-    return 'SetlistVersion(name: $name, defaultKey: $defaultKey, bpm: $bpm)';
+    return 'SetlistVersion(name: $name, defaultKey: $defaultKey, bpm: $bpm, links: $links)';
 }
 
 
@@ -1115,7 +1123,7 @@ abstract mixin class _$SetlistVersionCopyWith<$Res> implements $SetlistVersionCo
   factory _$SetlistVersionCopyWith(_SetlistVersion value, $Res Function(_SetlistVersion) _then) = __$SetlistVersionCopyWithImpl;
 @override @useResult
 $Res call({
- String? name, String? defaultKey, int? bpm
+ String? name, String? defaultKey, int? bpm,@JsonKey(name: 'song_links') List<SongLink> links
 });
 
 
@@ -1132,12 +1140,13 @@ class __$SetlistVersionCopyWithImpl<$Res>
 
 /// Create a copy of SetlistVersion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? defaultKey = freezed,Object? bpm = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? defaultKey = freezed,Object? bpm = freezed,Object? links = null,}) {
   return _then(_SetlistVersion(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,defaultKey: freezed == defaultKey ? _self.defaultKey : defaultKey // ignore: cast_nullable_to_non_nullable
 as String?,bpm: freezed == bpm ? _self.bpm : bpm // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,links: null == links ? _self._links : links // ignore: cast_nullable_to_non_nullable
+as List<SongLink>,
   ));
 }
 

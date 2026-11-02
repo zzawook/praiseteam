@@ -400,6 +400,10 @@ verify_jwt = false
 [functions.calendar]
 verify_jwt = false
 
+# Internal storage cleanup after account deletion; database webhook secret.
+[functions.storage-cleanup]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

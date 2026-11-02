@@ -71,6 +71,11 @@ _SetlistVersion _$SetlistVersionFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String?,
       defaultKey: json['default_key'] as String?,
       bpm: (json['bpm'] as num?)?.toInt(),
+      links:
+          (json['song_links'] as List<dynamic>?)
+              ?.map((e) => SongLink.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <SongLink>[],
     );
 
 Map<String, dynamic> _$SetlistVersionToJson(_SetlistVersion instance) =>
@@ -78,6 +83,7 @@ Map<String, dynamic> _$SetlistVersionToJson(_SetlistVersion instance) =>
       'name': instance.name,
       'default_key': instance.defaultKey,
       'bpm': instance.bpm,
+      'song_links': instance.links.map((e) => e.toJson()).toList(),
     };
 
 _SetlistItem _$SetlistItemFromJson(Map<String, dynamic> json) => _SetlistItem(

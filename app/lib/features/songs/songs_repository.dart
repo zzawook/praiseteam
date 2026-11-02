@@ -22,17 +22,17 @@ class SongsRepository {
     final (songs, stats) = await (
       _db
           .from('songs')
-          .select('$_songColumns, song_versions($_versionColumns)')
+          .select('$_songColumns, song_versions($_versionColumns, song_links($_linkColumns))')
           .eq('team_id', teamId)
           .isFilter('archived_at', null)
           .order('title', ascending: true)
-          .order('id', referencedTable: 'song_versions', ascending: true),
+          .order('id', referencedTable: 'song_versions', ascending: true)
+          .order('sort_order', referencedTable: 'song_versions.song_links', ascending: true),
       _db.from('song_stats').select().eq('team_id', teamId),
     ).wait;
     final byId = {for (final row in stats) row['song_id'] as int: SongStats.fromJson(row)};
     return [
-      for (final row in songs)
-        SongEntry(Song.fromJson(row), byId[row['id']] ?? SongStats(songId: row['id'] as int)),
+      for (final row in songs) SongEntry(Song.fromJson(row), byId[row['id']] ?? SongStats(songId: row['id'] as int)),
     ];
   }
 
@@ -42,9 +42,7 @@ class SongsRepository {
     final (song, stats, history) = await (
       _db
           .from('songs')
-          .select(
-            '$_songColumns, song_versions($_versionColumns, sheets($_sheetColumns), song_links($_linkColumns))',
-          )
+          .select('$_songColumns, song_versions($_versionColumns, sheets($_sheetColumns), song_links($_linkColumns))')
           .eq('id', songId)
           .order('id', referencedTable: 'song_versions', ascending: true)
           .order('created_at', referencedTable: 'song_versions.sheets', ascending: true)
@@ -92,20 +90,21 @@ class SongsRepository {
 
   /// A song with its first version, in one step. [song]: title,
   /// time_signature, tags, notes; [version]: name, default_key, bpm.
-  Future<int> addSong(int teamId, Map<String, Object?> song, Map<String, Object?> version) async =>
-      await _db.rpc('add_song', params: {
-        'p_team_id': teamId,
-        'p_title': song['title'],
-        'p_time_signature': song['time_signature'],
-        'p_tags': song['tags'] ?? const <String>[],
-        'p_notes': song['notes'],
-        'p_version_name': version['name'],
-        'p_key': version['default_key'],
-        'p_bpm': version['bpm'],
-      }) as int;
+  Future<int> addSong(int teamId, Map<String, Object?> song, Map<String, Object?> version) async => await _db.rpc(
+    'add_song',
+    params: {
+      'p_team_id': teamId,
+      'p_title': song['title'],
+      'p_time_signature': song['time_signature'],
+      'p_tags': song['tags'] ?? const <String>[],
+      'p_notes': song['notes'],
+      'p_version_name': version['name'],
+      'p_key': version['default_key'],
+      'p_bpm': version['bpm'],
+    },
+  ) as int;
 
-  Future<void> updateSong(int songId, Map<String, Object?> fields) =>
-      _db.from('songs').update(fields).eq('id', songId);
+  Future<void> updateSong(int songId, Map<String, Object?> fields) => _db.from('songs').update(fields).eq('id', songId);
 
   /// Deletes the song with its versions, then their sheet files.
   Future<void> deleteSong(Song song) async {
@@ -165,7 +164,9 @@ class SongsRepository {
         'label': ?(label == null || label.trim().isEmpty ? null : label.trim()),
         'storage_path': path,
         'page_count': pageSizes.length,
-        'page_sizes': [for (final s in pageSizes) [s.width, s.height]],
+        'page_sizes': [
+          for (final s in pageSizes) [s.width, s.height],
+        ],
         'size_bytes': pdf.length,
       });
     } catch (_) {
@@ -192,11 +193,10 @@ class SongsRepository {
       _offline.file(storagePath, () => _db.storage.from('sheets').download(storagePath));
 
   Future<List<TopSong>> topSongs(int teamId, DateTime from, DateTime to) async {
-    final rows = await _db.rpc('top_songs', params: {
-      'p_team_id': teamId,
-      'p_from': from.toUtc().toIso8601String(),
-      'p_to': to.toUtc().toIso8601String(),
-    }) as List<dynamic>;
+    final rows = await _db.rpc(
+      'top_songs',
+      params: {'p_team_id': teamId, 'p_from': from.toUtc().toIso8601String(), 'p_to': to.toUtc().toIso8601String()},
+    ) as List<dynamic>;
     return [
       for (final r in rows.cast<Map<String, dynamic>>())
         TopSong(r['song_id'] as int, r['title'] as String, r['times'] as int),

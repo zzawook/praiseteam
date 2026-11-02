@@ -10,3 +10,9 @@ select vault.create_secret(
   'push_webhook_secret',
   'Must equal PUSH_WEBHOOK_SECRET in supabase/functions/.env'
 );
+
+select vault.create_secret(
+  'http://supabase_kong_praiseteam:8000/functions/v1/storage-cleanup',
+  'storage_cleanup_url',
+  'Local storage cleanup worker'
+);

@@ -1,7 +1,7 @@
 name: praiseteam
 description: "PraiseTeam - worship team app"
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ^3.13.7
@@ -33,6 +33,7 @@ dependencies:
   riverpod_annotation: ^4.0.7
   shared_preferences: ^2.5.6
   supabase_flutter: ^2.18.3
+  timezone: ^0.11.2
   url_launcher: ^6.3.3
   uuid: ^4.6.0
   wakelock_plus: ^1.8.2

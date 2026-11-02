@@ -11,6 +11,7 @@ import '../rotation/rotation_providers.dart';
 import '../rotation/rotation_repository.dart';
 import '../sessions/models.dart';
 import '../sessions/sessions_providers.dart';
+import '../songs/song_artwork.dart';
 import '../teams/models.dart';
 import '../teams/teams_providers.dart';
 
@@ -28,7 +29,7 @@ class NextServiceCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final palette = AppPalette.of(context);
     final formats = DateFormats(context);
-    final local = session.startsAt.toLocal();
+    final local = formats.clock.local(session.startsAt);
     final items = ref.watch(setlistProvider(session.id)).value ?? const <SetlistItem>[];
     final rehearsal = ref
         .watch(sessionRehearsalsProvider(session.id))
@@ -44,7 +45,7 @@ class NextServiceCard extends ConsumerWidget {
             (a.status == AssignmentStatus.pending || a.status == AssignmentStatus.accepted))
           a,
     ];
-    final days = DateUtils.dateOnly(local).difference(DateUtils.dateOnly(DateTime.now())).inDays;
+    final days = formats.clock.daysUntil(session.startsAt);
     final when = days <= 0
         ? l10n.today
         : days == 1
@@ -122,9 +123,20 @@ class NextServiceCard extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 3),
                     child: Row(
                       children: [
-                        SizedBox(width: 24, child: Text('${i + 1}', style: serif?.copyWith(color: soft))),
+                        SizedBox(
+                          width: 24,
+                          child: Text('${i + 1}', style: serif?.copyWith(color: soft)),
+                        ),
+                        if (linksThumbnail(item.version?.links ?? const []) case final url?) ...[
+                          SongArtwork(url: url, width: 48, height: 30),
+                          const SizedBox(width: 10),
+                        ],
                         Expanded(
-                          child: Text(item.song.title, overflow: TextOverflow.ellipsis, style: serif?.copyWith(color: fg)),
+                          child: Text(
+                            item.song.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: serif?.copyWith(color: fg),
+                          ),
                         ),
                         if (item.effectiveKey case final key?)
                           Container(

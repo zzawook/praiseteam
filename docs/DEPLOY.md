@@ -22,9 +22,10 @@ scripts/deploy.sh db
 scripts/deploy.sh functions
 ```
 이 명령이 하는 일이에요.
-- `push`, `calendar` 함수를 배포해요.
+- `push`, `calendar`, `storage-cleanup` 함수를 배포해요.
 - 함수 비밀 값(`PUSH_WEBHOOK_SECRET`, `WEB_APP_URL`)을 넣어요.
 - 데이터베이스 Vault에 푸시 함수 주소와 같은 비밀 값을 넣어요.
+- 계정 삭제 후 파일을 정리할 `storage_cleanup_url`도 Vault에 넣어요. 파일 삭제가 실패하면 5분 간격으로 다시 시도해요.
 
 `supabase db query --linked`가 로그인을 요구하면 `supabase login`을 한 뒤 다시 실행해요.
 
@@ -89,4 +90,9 @@ firebase appdistribution:distribute app/build/app/outputs/flutter-apk/app-releas
 
 ## 아직 안 한 것
 - **iOS:** Apple 개발자 계정, Mac(또는 Codemagic), APNs 키 등록, Sign in with Apple이 필요해요.
-- **계정 삭제:** 앱 안에서 계정을 지우는 기능은 아직 없어요. 지금은 개인정보처리방침의 연락처로 요청을 받아요. Play 스토어에 올리려면 앱 안 계정 삭제가 필요해요.
+
+## 계정 삭제 기능 업데이트
+계정 삭제 기능이 포함된 앱을 배포하기 전에 `scripts/deploy.sh db`와
+`scripts/deploy.sh functions`를 먼저 실행해요. 설정, 가입 전 화면, 승인 대기 화면에서
+삭제할 수 있어요. 다른 팀원이 있는 팀의 마지막 관리자는 권한을 넘겨야 하고,
+혼자 남은 팀은 함께 삭제돼요. 남아 있는 팀의 곡·악보·예배 기록은 유지돼요.

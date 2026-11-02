@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
+import '../settings/account_deletion.dart';
 import 'teams_providers.dart';
 
 /// Join with an invite code (the common case) or create a new team.
@@ -57,7 +58,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               children: [
                 Text(l10n.welcomeTitle, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
-                Text(l10n.welcomeBody, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                Text(
+                  l10n.welcomeBody,
+                  style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
                 const SizedBox(height: 32),
                 Text(l10n.joinWithCode, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 12),
@@ -66,7 +70,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                   textCapitalization: TextCapitalization.characters,
                   maxLength: 8,
                   style: theme.textTheme.titleLarge?.copyWith(letterSpacing: 4),
-                  decoration: InputDecoration(labelText: l10n.inviteCode, hintText: l10n.inviteCodeHint, counterText: ''),
+                  decoration: InputDecoration(
+                    labelText: l10n.inviteCode,
+                    hintText: l10n.inviteCodeHint,
+                    counterText: '',
+                  ),
                   onSubmitted: (_) => _submit(() => repo.joinTeam(_code.text)),
                 ),
                 const SizedBox(height: 12),
@@ -90,6 +98,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                   onPressed: _busy ? null : () => _submit(() => repo.createTeam(_name.text)),
                   child: Text(l10n.create),
                 ),
+                const SizedBox(height: 24),
+                const DeleteAccountTile(),
               ],
             ),
           ),

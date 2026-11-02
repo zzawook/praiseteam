@@ -2,6 +2,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 
 import '../../core/offline/offline_store.dart';
+import '../../core/team_time.dart';
 import 'models.dart';
 
 /// Sessions and setlists. The reads the music stand needs are kept on the
@@ -15,45 +16,46 @@ class SessionsRepository {
       'id, team_id, title, starts_at, location, theme, notes, setlist_status, published_at, setlist_items(count)';
   static const _itemColumns =
       'id, session_id, position, song_id, version_id, key, bpm, sheet_id, song_form, notes, songs(title), '
-      'song_versions(name, default_key, bpm)';
+      'song_versions(name, default_key, bpm, song_links(id, version_id, label, url, sort_order))';
 
-  /// A session stays "upcoming" for the rest of its day.
-  static DateTime get _upcomingCutoff => DateTime.now().subtract(const Duration(hours: 12)).toUtc();
-
-  Future<List<Session>> upcoming(int teamId) async {
+  /// A session stays upcoming through the end of its team's calendar day.
+  Future<List<Session>> upcoming(int teamId, {required TeamTime time}) async {
     final rows = await _offline.list(
       'sessions:upcoming:$teamId',
       () => _db
           .from('sessions')
           .select(_sessionColumns)
           .eq('team_id', teamId)
-          .gte('starts_at', _upcomingCutoff.toIso8601String())
+          .gte('starts_at', time.startOfDay().toUtc().toIso8601String())
           .order('starts_at', ascending: true)
           .limit(100),
     );
     return rows.map(Session.fromJson).toList();
   }
 
-  Future<List<Session>> past(int teamId) async {
+  Future<List<Session>> past(int teamId, {required TeamTime time}) async {
     final rows = await _db
         .from('sessions')
         .select(_sessionColumns)
         .eq('team_id', teamId)
-        .lt('starts_at', _upcomingCutoff.toIso8601String())
+        .lt('starts_at', time.startOfDay().toUtc().toIso8601String())
         .order('starts_at', ascending: false)
         .limit(50);
     return rows.map(Session.fromJson).toList();
   }
 
-  Future<Session> session(int sessionId) async => Session.fromJson(await _offline.single(
-        'session:$sessionId',
-        () => _db.from('sessions').select(_sessionColumns).eq('id', sessionId).single(),
-      ));
+  Future<Session> session(int sessionId) async => Session.fromJson(
+    await _offline.single(
+      'session:$sessionId',
+      () => _db.from('sessions').select(_sessionColumns).eq('id', sessionId).single(),
+    ),
+  );
 
   Future<List<SetlistItem>> setlist(int sessionId) async {
     final rows = await _offline.list(
       'setlist:$sessionId',
-      () => _db.from('setlist_items').select(_itemColumns).eq('session_id', sessionId).order('position', ascending: true),
+      () =>
+          _db.from('setlist_items').select(_itemColumns).eq('session_id', sessionId).order('position', ascending: true),
     );
     return rows.map(SetlistItem.fromJson).toList();
   }
@@ -62,7 +64,9 @@ class SessionsRepository {
   Future<List<int>> createSessions(int teamId, List<Map<String, Object?>> sessions) async {
     final rows = await _db
         .from('sessions')
-        .insert([for (final s in sessions) {'team_id': teamId, ...s}])
+        .insert([
+          for (final s in sessions) {'team_id': teamId, ...s},
+        ])
         .select('id');
     return [for (final r in rows) r['id'] as int];
   }
@@ -81,17 +85,16 @@ class SessionsRepository {
     String? key,
     int? bpm,
     int? sheetId,
-  }) =>
-      _db.from('setlist_items').insert({
-        'team_id': teamId,
-        'session_id': sessionId,
-        'song_id': songId,
-        'version_id': versionId,
-        'position': position,
-        'key': ?key,
-        'bpm': ?bpm,
-        'sheet_id': ?sheetId,
-      });
+  }) => _db.from('setlist_items').insert({
+    'team_id': teamId,
+    'session_id': sessionId,
+    'song_id': songId,
+    'version_id': versionId,
+    'position': position,
+    'key': ?key,
+    'bpm': ?bpm,
+    'sheet_id': ?sheetId,
+  });
 
   Future<void> updateItem(int itemId, Map<String, Object?> fields) =>
       _db.from('setlist_items').update(fields).eq('id', itemId);

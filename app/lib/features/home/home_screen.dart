@@ -828,7 +828,7 @@ class _SongNotes extends ConsumerWidget {
           SizedBox(
             width: 260,
             child: column(l10n.notPlayedLately, [
-              for (final e in quiet) (e.song.title, timeAgo(l10n, e.stats.lastPlayedAt!)),
+              for (final e in quiet) (e.song.title, DateFormats(context).ago(e.stats.lastPlayedAt!)),
             ]),
           ),
         ],

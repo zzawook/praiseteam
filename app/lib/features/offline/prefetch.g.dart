@@ -53,4 +53,4 @@ final class OfflinePrefetchProvider
   }
 }
 
-String _$offlinePrefetchHash() => r'976757c98295fa961af9c0130e80590b4219c55d';
+String _$offlinePrefetchHash() => r'3ebffb637afc79b86cd6ae8722ef37bfe591d1ff';

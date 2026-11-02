@@ -153,7 +153,7 @@ final class ServingCountsProvider
   }
 }
 
-String _$servingCountsHash() => r'3822b841200c859119a3da13da3b83bd7f1f8f43';
+String _$servingCountsHash() => r'f768b9850045ca97ea3a59eef04954e854e24788';
 
 /// Times each person was asked to serve (sent requests) in the last 8 weeks.
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/auth/auth.dart';
+import '../core/dates.dart';
+import '../core/team_time.dart';
+import '../features/teams/teams_providers.dart';
 import '../features/notifications/push.dart';
 import '../features/settings/settings_providers.dart';
 import '../l10n/app_localizations.dart';
@@ -23,7 +26,29 @@ class PraiseTeamApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: ref.watch(routerProvider),
-      builder: (context, child) => _ProfileLocaleSyncer(child: PushHandler(child: child ?? const SizedBox.shrink())),
+      builder: (context, child) => _TeamClock(
+        child: _ProfileLocaleSyncer(child: PushHandler(child: child ?? const SizedBox.shrink())),
+      ),
+    );
+  }
+}
+
+class _TeamClock extends ConsumerWidget {
+  const _TeamClock({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    final memberships = ref.watch(myMembershipsProvider).value ?? const [];
+    return ListenableBuilder(
+      listenable: router.routeInformationProvider,
+      builder: (context, _) {
+        final path = router.routeInformationProvider.value.uri.pathSegments;
+        final id = path.length > 1 && path.first == 't' ? int.tryParse(path[1]) : null;
+        final zone = memberships.where((m) => m.teamId == id).firstOrNull?.team.timezone;
+        return TeamTimeScope(time: TeamTime(zone ?? TeamTime.defaultZone), child: child);
+      },
     );
   }
 }

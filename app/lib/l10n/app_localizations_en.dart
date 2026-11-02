@@ -1482,4 +1482,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showCues => 'Show cues';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountWarning =>
+      'Your account, profile, chat messages, notes, assignments and personal settings will be permanently deleted. Songs, sheets and services shared with other members stay with their teams. Notes saved only on this device will also be deleted.';
+
+  @override
+  String get deleteAccountUnderstand =>
+      'I understand that my account and personal data cannot be recovered.';
+
+  @override
+  String get accountNeedsOwner =>
+      'You are the only owner of the teams below. Make another member an owner on the team page before deleting your account.';
+
+  @override
+  String deleteSoloTeams(String teams) {
+    return 'Teams where you are the only member ($teams) and all their songs, sheets and services will also be deleted.';
+  }
+
+  @override
+  String inTeamTimezone(String timezone) {
+    return 'Team time zone: $timezone';
+  }
 }

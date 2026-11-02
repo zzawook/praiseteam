@@ -1353,4 +1353,28 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get showCues => '큐 보이기';
+
+  @override
+  String get deleteAccount => '계정 삭제';
+
+  @override
+  String get deleteAccountWarning =>
+      '계정과 프로필, 채팅 메시지, 필기, 편성 및 개인 설정이 영구 삭제돼요. 다른 팀원들과 공유한 곡·악보·예배 기록은 팀에 남아요. 기기에만 저장된 필기도 삭제돼요.';
+
+  @override
+  String get deleteAccountUnderstand => '삭제한 계정과 개인 데이터는 복구할 수 없다는 점을 이해했어요.';
+
+  @override
+  String get accountNeedsOwner =>
+      '아래 팀의 유일한 관리자예요. 팀 화면에서 다른 팀원에게 관리자 권한을 넘긴 뒤 계정을 삭제해 주세요.';
+
+  @override
+  String deleteSoloTeams(String teams) {
+    return '혼자 남아 있는 팀($teams)과 그 팀의 모든 곡·악보·일정도 삭제돼요.';
+  }
+
+  @override
+  String inTeamTimezone(String timezone) {
+    return '팀 시간대: $timezone';
+  }
 }

@@ -30,10 +30,14 @@ void main() {
 
   group('youtube', () {
     test('finds the video id in common link shapes', () {
-      expect(youtubeId('https://www.youtube.com/watch?v=abc123&t=30'), 'abc123');
-      expect(youtubeId('https://youtu.be/abc123?si=x'), 'abc123');
-      expect(youtubeId('https://www.youtube.com/shorts/abc123'), 'abc123');
+      expect(youtubeId('https://www.youtube.com/watch?v=aqz-KE-bpKQ&t=30'), 'aqz-KE-bpKQ');
+      expect(youtubeId('https://youtu.be/aqz-KE-bpKQ?si=x'), 'aqz-KE-bpKQ');
+      expect(youtubeId('https://www.youtube.com/shorts/aqz-KE-bpKQ'), 'aqz-KE-bpKQ');
       expect(youtubeId('https://open.spotify.com/track/1'), isNull);
+      expect(youtubeId('https://music.youtube.com/watch?v=aqz-KE-bpKQ'), 'aqz-KE-bpKQ');
+      expect(youtubeId('https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ'), 'aqz-KE-bpKQ');
+      expect(youtubeId('https://youtube.com.example.org/watch?v=aqz-KE-bpKQ'), isNull);
+      expect(youtubeId('https://youtu.be/too-short'), isNull);
     });
   });
 

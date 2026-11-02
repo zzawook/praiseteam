@@ -150,9 +150,9 @@ class _SessionRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final formats = DateFormats(context);
-    final local = session.startsAt.toLocal();
+    final local = formats.clock.local(session.startsAt);
     final published = session.setlistStatus == SetlistStatus.published;
-    final thisWeek = !muted && DateUtils.dateOnly(local).difference(DateUtils.dateOnly(DateTime.now())).inDays < 7;
+    final thisWeek = !muted && formats.clock.daysUntil(session.startsAt) < 7;
 
     // Published setlists are shared with the team (ink); drafts are still
     // only the leaders' (members never see them).

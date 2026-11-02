@@ -6,6 +6,7 @@ import '../rotation/rehearsals.dart';
 import '../rotation/rotation_providers.dart';
 import '../rotation/rotation_repository.dart';
 import '../sessions/models.dart';
+import '../teams/teams_providers.dart';
 
 part 'home_providers.g.dart';
 
@@ -25,10 +26,16 @@ Future<List<Rehearsal>> upcomingRehearsals(Ref ref, int teamId) {
 /// Times each person was asked to serve (sent requests) in the last 8 weeks.
 @riverpod
 Future<Map<String, int>> servingCounts(Ref ref, int teamId) async {
-  final now = DateTime.now();
+  final time = ref.watch(teamTimeProvider(teamId));
+  final now = time.now();
   final history = await ref
       .watch(rotationRepositoryProvider)
-      .history(teamId, since: now.subtract(const Duration(days: 56)), before: now);
+      .history(
+        teamId,
+        since: time.at(now.year, now.month, now.day - 56, now.hour, now.minute),
+        before: now,
+        time: time,
+      );
   final counts = <String, int>{};
   for (final s in history) {
     counts[s.userId] = (counts[s.userId] ?? 0) + 1;

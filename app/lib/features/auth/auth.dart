@@ -20,10 +20,7 @@ class AuthRepository {
 
   Future<void> signInWithGoogle() async {
     if (kIsWeb) {
-      await _client.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: Uri.base.origin,
-      );
+      await _client.auth.signInWithOAuth(OAuthProvider.google, redirectTo: Uri.base.origin);
       return;
     }
     if (Env.googleWebClientId.isEmpty) {
@@ -42,10 +39,7 @@ class AuthRepository {
     if (idToken == null) {
       throw const AppError(AppErrorKind.other, 'Google returned no ID token');
     }
-    await _client.auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-    );
+    await _client.auth.signInWithIdToken(provider: OAuthProvider.google, idToken: idToken);
   }
 
   Future<void> signInWithPassword(String email, String password) =>
@@ -57,6 +51,18 @@ class AuthRepository {
   Future<void> signOut() async {
     if (_googleReady) await GoogleSignIn.instance.signOut();
     await _client.auth.signOut();
+  }
+
+  Future<void> deleteAccount() => _client.rpc('delete_account');
+
+  Future<void> clearDeletedSession() async {
+    try {
+      if (_googleReady) await GoogleSignIn.instance.signOut();
+    } finally {
+      // GoTrue removes local credentials before attempting its server call;
+      // the deleted account's sessions have already been revoked in SQL.
+      await _client.auth.signOut(scope: SignOutScope.local);
+    }
   }
 }
 

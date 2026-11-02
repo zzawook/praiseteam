@@ -29,13 +29,7 @@ enum Rsvp {
 enum Attendance { present, late, absent }
 
 class Rehearsal {
-  const Rehearsal({
-    required this.id,
-    required this.startsAt,
-    this.sessionId,
-    this.location,
-    this.responses = const {},
-  });
+  const Rehearsal({required this.id, required this.startsAt, this.sessionId, this.location, this.responses = const {}});
   final int id;
   final DateTime startsAt;
 
@@ -79,33 +73,33 @@ class RehearsalsRepository {
   }
 
   static Rehearsal _rehearsal(Map<String, dynamic> r, int? sessionId) => Rehearsal(
-          id: r['id'] as int,
-          startsAt: DateTime.parse(r['starts_at'] as String),
-          sessionId: sessionId,
-          location: r['location'] as String?,
-          responses: {
-            for (final x in (r['rehearsal_responses'] as List).cast<Map<String, dynamic>>())
-              x['user_id'] as String: (
-                rsvp: x['rsvp'] == null ? null : Rsvp.fromDb(x['rsvp'] as String),
-                attendance: x['attendance'] == null ? null : Attendance.values.byName(x['attendance'] as String),
-              ),
-          },
-        );
+    id: r['id'] as int,
+    startsAt: DateTime.parse(r['starts_at'] as String),
+    sessionId: sessionId,
+    location: r['location'] as String?,
+    responses: {
+      for (final x in (r['rehearsal_responses'] as List).cast<Map<String, dynamic>>())
+        x['user_id'] as String: (
+          rsvp: x['rsvp'] == null ? null : Rsvp.fromDb(x['rsvp'] as String),
+          attendance: x['attendance'] == null ? null : Attendance.values.byName(x['attendance'] as String),
+        ),
+    },
+  );
 
   Future<void> add(int teamId, int sessionId, DateTime startsAt, String? location) => _db.from('rehearsals').insert({
-        'team_id': teamId,
-        'session_id': sessionId,
-        'starts_at': startsAt.toUtc().toIso8601String(),
-        'location': ?(location == null || location.trim().isEmpty ? null : location.trim()),
-      });
+    'team_id': teamId,
+    'session_id': sessionId,
+    'starts_at': startsAt.toUtc().toIso8601String(),
+    'location': ?(location == null || location.trim().isEmpty ? null : location.trim()),
+  });
 
   Future<void> rsvp(int rehearsalId, Rsvp value) =>
       _db.rpc('set_rsvp', params: {'p_rehearsal_id': rehearsalId, 'p_rsvp': value.db});
 
   Future<void> attendance(int rehearsalId, String userId, Attendance? value) => _db.rpc(
-        'record_attendance',
-        params: {'p_rehearsal_id': rehearsalId, 'p_user_id': userId, 'p_attendance': value?.name},
-      );
+    'record_attendance',
+    params: {'p_rehearsal_id': rehearsalId, 'p_user_id': userId, 'p_attendance': value?.name},
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -142,7 +136,10 @@ class SessionServingSection extends ConsumerWidget {
     final board = ref.watch(rotationBoardProvider(teamId)).value;
     final serving = [
       for (final a in board?.assignments ?? const <Assignment>[])
-        if (a.sessionId == sessionId && a.status != AssignmentStatus.declined && (isLeader || a.status != AssignmentStatus.draft)) a,
+        if (a.sessionId == sessionId &&
+            a.status != AssignmentStatus.declined &&
+            (isLeader || a.status != AssignmentStatus.draft))
+          a,
     ];
     final rehearsals = ref.watch(sessionRehearsalsProvider(sessionId));
     final formats = DateFormats(context);
@@ -168,7 +165,9 @@ class SessionServingSection extends ConsumerWidget {
                         avatar: Icon(icon, size: 16, color: color),
                         label: Text('${partNames[a.partId] ?? ''} ${a.userName}'),
                         backgroundColor: a.status == AssignmentStatus.accepted ? color.withValues(alpha: 0.14) : null,
-                        side: BorderSide(color: color.withValues(alpha: a.status == AssignmentStatus.accepted ? 0.0 : 0.6)),
+                        side: BorderSide(
+                          color: color.withValues(alpha: a.status == AssignmentStatus.accepted ? 0.0 : 0.6),
+                        ),
                       );
                     },
                   ),
@@ -194,7 +193,10 @@ class SessionServingSection extends ConsumerWidget {
               if (items.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Align(alignment: Alignment.centerLeft, child: Text(l10n.noRehearsals, style: theme.textTheme.bodySmall)),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(l10n.noRehearsals, style: theme.textTheme.bodySmall),
+                  ),
                 ),
               for (final r in items)
                 ListTile(
@@ -225,8 +227,15 @@ class SessionServingSection extends ConsumerWidget {
 
   Future<void> _add(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
-    final before = sessionStart.toLocal().subtract(const Duration(days: 1));
-    final date = await showDatePicker(context: context, initialDate: before, firstDate: DateTime(2020), lastDate: DateTime(2100));
+    final clock = TeamTimeScope.of(context);
+    final service = clock.local(sessionStart);
+    final before = clock.at(service.year, service.month, service.day - 1);
+    final date = await showDatePicker(
+      context: context,
+      initialDate: before,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
     if (date == null || !context.mounted) return;
     final time = await showTimePicker(context: context, initialTime: const TimeOfDay(hour: 19, minute: 30));
     if (time == null || !context.mounted) return;
@@ -234,7 +243,10 @@ class SessionServingSection extends ConsumerWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        content: TextField(controller: place, decoration: InputDecoration(labelText: l10n.location)),
+        content: TextField(
+          controller: place,
+          decoration: InputDecoration(labelText: l10n.location),
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.cancel)),
           FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(l10n.save)),
@@ -242,21 +254,30 @@ class SessionServingSection extends ConsumerWidget {
       ),
     );
     if (ok != true || !context.mounted) return;
-    final start = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-    if (await runGuarded(context, () => ref.read(rehearsalsRepositoryProvider).add(teamId, sessionId, start, place.text))) {
+    final start = clock.at(date.year, date.month, date.day, time.hour, time.minute);
+    if (await runGuarded(
+      context,
+      () => ref.read(rehearsalsRepositoryProvider).add(teamId, sessionId, start, place.text),
+    )) {
       ref.invalidate(sessionRehearsalsProvider(sessionId));
     }
   }
 
   /// Leaders record who came. Attendance stays with the leaders.
-  Future<void> _attendance(BuildContext context, WidgetRef ref, Rehearsal r, List<Assignment> serving) => showModalBottomSheet<void>(
+  Future<void> _attendance(BuildContext context, WidgetRef ref, Rehearsal r, List<Assignment> serving) =>
+      showModalBottomSheet<void>(
         context: context,
         showDragHandle: true,
         isScrollControlled: true,
         builder: (_) => Consumer(
           builder: (context, ref, _) {
             final l10n = AppLocalizations.of(context);
-            final latest = ref.watch(sessionRehearsalsProvider(sessionId)).value?.firstWhere((x) => x.id == r.id, orElse: () => r) ?? r;
+            final latest =
+                ref
+                    .watch(sessionRehearsalsProvider(sessionId))
+                    .value
+                    ?.firstWhere((x) => x.id == r.id, orElse: () => r) ??
+                r;
             final people = {for (final a in serving) a.userId: a.userName};
             return SafeArea(
               child: ListView(
@@ -283,7 +304,10 @@ class SessionServingSection extends ConsumerWidget {
                         selected: {?latest.responses[userId]?.attendance},
                         onSelectionChanged: (s) async {
                           final value = s.isEmpty ? null : s.first;
-                          if (await runGuarded(context, () => ref.read(rehearsalsRepositoryProvider).attendance(r.id, userId, value))) {
+                          if (await runGuarded(
+                            context,
+                            () => ref.read(rehearsalsRepositoryProvider).attendance(r.id, userId, value),
+                          )) {
                             ref.invalidate(sessionRehearsalsProvider(sessionId));
                           }
                         },

@@ -17,11 +17,11 @@ import 'rotation_repository.dart';
 import 'rotation_table.dart';
 
 String statusLabel(AppLocalizations l10n, AssignmentStatus s) => switch (s) {
-      AssignmentStatus.draft => l10n.statusDraft,
-      AssignmentStatus.pending => l10n.statusPending,
-      AssignmentStatus.accepted => l10n.statusAccepted,
-      AssignmentStatus.declined => l10n.statusDeclined,
-    };
+  AssignmentStatus.draft => l10n.statusDraft,
+  AssignmentStatus.pending => l10n.statusPending,
+  AssignmentStatus.accepted => l10n.statusAccepted,
+  AssignmentStatus.declined => l10n.statusDeclined,
+};
 
 /// Where a serving request stands, in the same color and icon everywhere:
 /// drafts in pencil, waiting in amber, accepted in green, declined in red.
@@ -75,7 +75,11 @@ class _RotationScreenState extends ConsumerState<RotationScreen> {
     }
 
     Future<void> send() async {
-      final ok = await confirm(context, message: l10n.sendDraftsConfirm(drafts.length), confirmLabel: l10n.sendDrafts(drafts.length));
+      final ok = await confirm(
+        context,
+        message: l10n.sendDraftsConfirm(drafts.length),
+        confirmLabel: l10n.sendDrafts(drafts.length),
+      );
       if (!ok || !context.mounted) return;
       var count = 0;
       final sessions = {for (final d in drafts) d.sessionId}.toList();
@@ -104,7 +108,9 @@ class _RotationScreenState extends ConsumerState<RotationScreen> {
           ? SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-                child: ContentWidth(child: FilledButton(onPressed: send, child: Text(l10n.sendDrafts(drafts.length)))),
+                child: ContentWidth(
+                  child: FilledButton(onPressed: send, child: Text(l10n.sendDrafts(drafts.length))),
+                ),
               ),
             )
           : null,
@@ -119,8 +125,16 @@ class _RotationScreenState extends ConsumerState<RotationScreen> {
                 alignment: Alignment.centerLeft,
                 child: SegmentedButton<bool>(
                   segments: [
-                    ButtonSegment(value: false, icon: const Icon(Icons.view_agenda_outlined), label: Text(l10n.rotationList)),
-                    ButtonSegment(value: true, icon: const Icon(Icons.table_chart_outlined), label: Text(l10n.rotationTable)),
+                    ButtonSegment(
+                      value: false,
+                      icon: const Icon(Icons.view_agenda_outlined),
+                      label: Text(l10n.rotationList),
+                    ),
+                    ButtonSegment(
+                      value: true,
+                      icon: const Icon(Icons.table_chart_outlined),
+                      label: Text(l10n.rotationTable),
+                    ),
                   ],
                   selected: {_table},
                   showSelectedIcon: false,
@@ -131,31 +145,32 @@ class _RotationScreenState extends ConsumerState<RotationScreen> {
             if (isLeader && b.sessions.isNotEmpty && b.slots.isEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: OutlinedButton(onPressed: () => _editDefaults(context, ref, parts), child: Text(l10n.defaultNeeded)),
+                child: OutlinedButton(
+                  onPressed: () => _editDefaults(context, ref, parts),
+                  child: Text(l10n.defaultNeeded),
+                ),
               ),
           ];
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(rotationBoardProvider(teamId)),
-            // The table takes the whole width; the list keeps reading width.
-            child: _table
-                ? ListView(
-                    padding: const EdgeInsets.only(bottom: 48),
-                    children: [
-                      ...top,
-                      const SizedBox(height: 8),
-                      RotationTable(teamId: teamId, board: b, parts: parts, isLeader: isLeader),
-                    ],
-                  )
-                : ContentWidth(
-                    child: ListView(
-                      padding: const EdgeInsets.only(bottom: 48),
-                      children: [
-                        ...top,
-                        for (final s in b.sessions)
-                          _SessionBlock(teamId: teamId, session: s, board: b, parts: parts, isLeader: isLeader),
-                      ],
+            child: ContentWidth(
+              maxWidth: _table ? 1200 : 720,
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 48),
+                children: [
+                  ...top,
+                  if (_table) ...[
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: RotationTable(teamId: teamId, board: b, parts: parts, isLeader: isLeader),
                     ),
-                  ),
+                  ] else
+                    for (final s in b.sessions)
+                      _SessionBlock(teamId: teamId, session: s, board: b, parts: parts, isLeader: isLeader),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -184,9 +199,15 @@ class _RotationScreenState extends ConsumerState<RotationScreen> {
                 Row(
                   children: [
                     Expanded(child: Text(p.name)),
-                    IconButton(onPressed: counts[p.id]! > 0 ? () => setState(() => counts[p.id] = counts[p.id]! - 1) : null, icon: const Icon(Icons.remove)),
+                    IconButton(
+                      onPressed: counts[p.id]! > 0 ? () => setState(() => counts[p.id] = counts[p.id]! - 1) : null,
+                      icon: const Icon(Icons.remove),
+                    ),
                     SizedBox(width: 24, child: Text('${counts[p.id]}', textAlign: TextAlign.center)),
-                    IconButton(onPressed: counts[p.id]! < 20 ? () => setState(() => counts[p.id] = counts[p.id]! + 1) : null, icon: const Icon(Icons.add)),
+                    IconButton(
+                      onPressed: counts[p.id]! < 20 ? () => setState(() => counts[p.id] = counts[p.id]! + 1) : null,
+                      icon: const Icon(Icons.add),
+                    ),
                   ],
                 ),
             ],
@@ -243,7 +264,7 @@ class _ServingSheet extends ConsumerWidget {
     final theme = Theme.of(context);
     final formats = DateFormats(context);
     final board = ref.watch(rotationBoardProvider(teamId)).value;
-    final local = session.startsAt.toLocal();
+    final local = DateFormats(context).clock.local(session.startsAt);
 
     return SafeArea(
       child: Padding(
@@ -280,7 +301,13 @@ class _ServingSheet extends ConsumerWidget {
 }
 
 class _SessionBlock extends ConsumerWidget {
-  const _SessionBlock({required this.teamId, required this.session, required this.board, required this.parts, required this.isLeader});
+  const _SessionBlock({
+    required this.teamId,
+    required this.session,
+    required this.board,
+    required this.parts,
+    required this.isLeader,
+  });
   final int teamId;
   final Session session;
   final RotationBoard board;
@@ -291,8 +318,10 @@ class _SessionBlock extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final formats = DateFormats(context);
     final theme = Theme.of(context);
-    final local = session.startsAt.toLocal();
-    final shown = parts.where((p) => (board.slots[(session.id, p.id)] ?? 0) > 0 || board.of(session.id, p.id).isNotEmpty).toList();
+    final local = DateFormats(context).clock.local(session.startsAt);
+    final shown = parts
+        .where((p) => (board.slots[(session.id, p.id)] ?? 0) > 0 || board.of(session.id, p.id).isNotEmpty)
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -428,7 +457,12 @@ class _PartRow extends ConsumerWidget {
       ),
     );
     if (ok != true || !context.mounted) return;
-    if (await runGuarded(context, () => ref.read(rotationRepositoryProvider).setSlot(teamId, session.id, part.id, count))) _refresh(ref);
+    if (await runGuarded(
+      context,
+      () => ref.read(rotationRepositoryProvider).setSlot(teamId, session.id, part.id, count),
+    )) {
+      _refresh(ref);
+    }
   }
 
   /// Members who play this part; unavailable or already-serving people are
@@ -438,9 +472,11 @@ class _PartRow extends ConsumerWidget {
     final members = await ref.read(teamMembersProvider(teamId).future);
     final blocked = await ref.read(blockoutsProvider(teamId).future);
     final board = await ref.read(rotationBoardProvider(teamId).future);
-    final local = session.startsAt.toLocal();
-    final day = DateTime(local.year, local.month, local.day);
-    final serving = {for (final a in board.assignments) if (a.sessionId == session.id && a.status != AssignmentStatus.declined) a.userId};
+    final day = ref.read(teamTimeProvider(teamId)).date(session.startsAt);
+    final serving = {
+      for (final a in board.assignments)
+        if (a.sessionId == session.id && a.status != AssignmentStatus.declined) a.userId,
+    };
     final candidates = members.where((m) => m.status == MemberStatus.active && m.partIds.contains(part.id)).toList();
     if (!context.mounted) return null;
     return showModalBottomSheet<String>(
@@ -451,16 +487,20 @@ class _PartRow extends ConsumerWidget {
           shrinkWrap: true,
           children: [
             for (final m in candidates)
-              Builder(builder: (context) {
-                final unavailable = blocked.any((b) => b.userId == m.userId && !day.isBefore(b.from) && !day.isAfter(b.to));
-                final busy = serving.contains(m.userId) || exclude.contains(m.userId);
-                return ListTile(
-                  enabled: !unavailable && !busy,
-                  title: Text(m.profile.displayName),
-                  subtitle: unavailable ? Text(l10n.unavailableThatDay) : (busy ? Text(l10n.alreadyServing) : null),
-                  onTap: () => Navigator.pop(context, m.userId),
-                );
-              }),
+              Builder(
+                builder: (context) {
+                  final unavailable = blocked.any(
+                    (b) => b.userId == m.userId && !day.isBefore(b.from) && !day.isAfter(b.to),
+                  );
+                  final busy = serving.contains(m.userId) || exclude.contains(m.userId);
+                  return ListTile(
+                    enabled: !unavailable && !busy,
+                    title: Text(m.profile.displayName),
+                    subtitle: unavailable ? Text(l10n.unavailableThatDay) : (busy ? Text(l10n.alreadyServing) : null),
+                    onTap: () => Navigator.pop(context, m.userId),
+                  );
+                },
+              ),
           ],
         ),
       ),
@@ -502,24 +542,35 @@ class _PersonChip extends ConsumerWidget {
       if (isMe && a.status != AssignmentStatus.draft) ...[
         if (a.status != AssignmentStatus.accepted) (l10n.accept, () => repo.respond(a.id, accept: true)),
         if (a.status != AssignmentStatus.declined)
-          (l10n.decline, () async {
-            final reason = await _ask(context, l10n.declineReason);
-            if (reason != null) await repo.respond(a.id, accept: false, reason: reason);
-          }),
+          (
+            l10n.decline,
+            () async {
+              final reason = await _ask(context, l10n.declineReason);
+              if (reason != null) await repo.respond(a.id, accept: false, reason: reason);
+            },
+          ),
         if (swap == null && a.status != AssignmentStatus.declined)
-          (l10n.requestSwap, () async {
-            final message = await _ask(context, l10n.swapMessage);
-            if (message != null) await repo.requestSwap(a.id, message);
-          }),
+          (
+            l10n.requestSwap,
+            () async {
+              final message = await _ask(context, l10n.swapMessage);
+              if (message != null) await repo.requestSwap(a.id, message);
+            },
+          ),
         if (swap != null) (l10n.cancelSwap, () => repo.cancelSwap(swap!.id)),
       ],
       if (!isMe && swap != null) (l10n.takeSwap, () => repo.acceptSwap(swap!.id)),
       if (isLeader) ...[
-        (l10n.replacePerson, () async {
-          final userId = await pickPerson({a.userId});
-          if (userId == null) return;
-          a.status == AssignmentStatus.draft ? await repo.replaceDraft(a.id, userId) : await repo.reassign(a.id, userId);
-        }),
+        (
+          l10n.replacePerson,
+          () async {
+            final userId = await pickPerson({a.userId});
+            if (userId == null) return;
+            a.status == AssignmentStatus.draft
+                ? await repo.replaceDraft(a.id, userId)
+                : await repo.reassign(a.id, userId);
+          },
+        ),
         (l10n.removePerson, () => a.status == AssignmentStatus.draft ? repo.deleteDraft(a.id) : repo.remove(a.id)),
       ],
     ];
@@ -539,25 +590,25 @@ class _PersonChip extends ConsumerWidget {
       onPressed: actions.isEmpty
           ? null
           : () => showModalBottomSheet<void>(
-                context: context,
-                showDragHandle: true,
-                builder: (sheet) => SafeArea(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(title: Text('${a.userName}  ${part.name}'), subtitle: Text(statusLabel(l10n, a.status))),
-                      for (final (label, run) in actions)
-                        ListTile(
-                          title: Text(label),
-                          onTap: () async {
-                            Navigator.pop(sheet);
-                            if (await runGuarded(context, run)) _refresh(ref);
-                          },
-                        ),
-                    ],
-                  ),
+              context: context,
+              showDragHandle: true,
+              builder: (sheet) => SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(title: Text('${a.userName}  ${part.name}'), subtitle: Text(statusLabel(l10n, a.status))),
+                    for (final (label, run) in actions)
+                      ListTile(
+                        title: Text(label),
+                        onTap: () async {
+                          Navigator.pop(sheet);
+                          if (await runGuarded(context, run)) _refresh(ref);
+                        },
+                      ),
+                  ],
                 ),
               ),
+            ),
     );
   }
 
@@ -567,7 +618,12 @@ class _PersonChip extends ConsumerWidget {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        content: TextField(controller: controller, autofocus: true, maxLength: 200, decoration: InputDecoration(labelText: label)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLength: 200,
+          decoration: InputDecoration(labelText: label),
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
           FilledButton(onPressed: () => Navigator.pop(context, controller.text), child: Text(l10n.save)),

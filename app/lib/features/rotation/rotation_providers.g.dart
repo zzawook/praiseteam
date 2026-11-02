@@ -112,7 +112,7 @@ final class RotationBoardProvider
   }
 }
 
-String _$rotationBoardHash() => r'9fe34b4acc04bdf422e3877043db5f90a4f74406';
+String _$rotationBoardHash() => r'5dd3c8e1463732f61b78b36dd04dd000c392c647';
 
 final class RotationBoardFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<RotationBoard>, int> {

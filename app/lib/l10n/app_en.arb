@@ -415,5 +415,25 @@
   "@rehearsalAt": {"placeholders": {"when": {"type": "String"}}},
   "moreCues": "More cues",
   "hideCues": "Hide cues",
-  "showCues": "Show cues"
+  "showCues": "Show cues",
+  "deleteAccount": "Delete account",
+  "deleteAccountWarning": "Your account, profile, chat messages, notes, assignments and personal settings will be permanently deleted. Songs, sheets and services shared with other members stay with their teams. Notes saved only on this device will also be deleted.",
+  "deleteAccountUnderstand": "I understand that my account and personal data cannot be recovered.",
+  "accountNeedsOwner": "You are the only owner of the teams below. Make another member an owner on the team page before deleting your account.",
+  "deleteSoloTeams": "Teams where you are the only member ({teams}) and all their songs, sheets and services will also be deleted.",
+  "@deleteSoloTeams": {
+    "placeholders": {
+      "teams": {
+        "type": "String"
+      }
+    }
+  },
+  "inTeamTimezone": "Team time zone: {timezone}",
+  "@inTeamTimezone": {
+    "placeholders": {
+      "timezone": {
+        "type": "String"
+      }
+    }
+  }
 }

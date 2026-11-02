@@ -2497,6 +2497,42 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'큐 보이기'**
   String get showCues;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정 삭제'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountWarning.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정과 프로필, 채팅 메시지, 필기, 편성 및 개인 설정이 영구 삭제돼요. 다른 팀원들과 공유한 곡·악보·예배 기록은 팀에 남아요. 기기에만 저장된 필기도 삭제돼요.'**
+  String get deleteAccountWarning;
+
+  /// No description provided for @deleteAccountUnderstand.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제한 계정과 개인 데이터는 복구할 수 없다는 점을 이해했어요.'**
+  String get deleteAccountUnderstand;
+
+  /// No description provided for @accountNeedsOwner.
+  ///
+  /// In ko, this message translates to:
+  /// **'아래 팀의 유일한 관리자예요. 팀 화면에서 다른 팀원에게 관리자 권한을 넘긴 뒤 계정을 삭제해 주세요.'**
+  String get accountNeedsOwner;
+
+  /// No description provided for @deleteSoloTeams.
+  ///
+  /// In ko, this message translates to:
+  /// **'혼자 남아 있는 팀({teams})과 그 팀의 모든 곡·악보·일정도 삭제돼요.'**
+  String deleteSoloTeams(String teams);
+
+  /// No description provided for @inTeamTimezone.
+  ///
+  /// In ko, this message translates to:
+  /// **'팀 시간대: {timezone}'**
+  String inTeamTimezone(String timezone);
 }
 
 class _AppLocalizationsDelegate

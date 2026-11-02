@@ -9,6 +9,83 @@ part of 'teams_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(teamTime)
+final teamTimeProvider = TeamTimeFamily._();
+
+final class TeamTimeProvider
+    extends $FunctionalProvider<TeamTime, TeamTime, TeamTime>
+    with $Provider<TeamTime> {
+  TeamTimeProvider._({
+    required TeamTimeFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'teamTimeProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$teamTimeHash();
+
+  @override
+  String toString() {
+    return r'teamTimeProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<TeamTime> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  TeamTime create(Ref ref) {
+    final argument = this.argument as int;
+    return teamTime(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TeamTime value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TeamTime>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TeamTimeProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$teamTimeHash() => r'c0b5be4cd32ba5f87728cde30588f8f5e8d093d4';
+
+final class TeamTimeFamily extends $Family
+    with $FunctionalFamilyOverride<TeamTime, int> {
+  TeamTimeFamily._()
+    : super(
+        retry: null,
+        name: r'teamTimeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TeamTimeProvider call(int teamId) =>
+      TeamTimeProvider._(argument: teamId, from: this);
+
+  @override
+  String toString() => r'teamTimeProvider';
+}
+
 @ProviderFor(teamsRepository)
 final teamsRepositoryProvider = TeamsRepositoryProvider._();
 

@@ -498,7 +498,7 @@ final class TopSongsProvider
   }
 }
 
-String _$topSongsHash() => r'7c6e7f66711653384adb39acf9406c81207f7b8a';
+String _$topSongsHash() => r'4dae7ad8a9e071c44a1dc3f19144e6a54183e1f9';
 
 final class TopSongsFamily extends $Family
     with

@@ -9,16 +9,18 @@ import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import '../notifications/notification_bell.dart';
 import 'models.dart';
+import 'song_artwork.dart';
 import 'song_form.dart';
 import 'songs_providers.dart';
 
 enum SongSort { title, recent, most, longAgo }
 
 /// "총 12회, 마지막 3주 전" / "아직 안 했어요"
-String statsLine(AppLocalizations l10n, SongStats stats) {
+String statsLine(BuildContext context, SongStats stats) {
+  final l10n = AppLocalizations.of(context);
   final last = stats.lastPlayedAt;
   if (stats.timesPlayed == 0 || last == null) return l10n.neverPlayed;
-  return '${l10n.playedTimes(stats.timesPlayed)}, ${l10n.lastPlayed(timeAgo(l10n, last))}';
+  return '${l10n.playedTimes(stats.timesPlayed)}, ${l10n.lastPlayed(DateFormats(context).ago(last))}';
 }
 
 class SongsScreen extends ConsumerStatefulWidget {
@@ -38,11 +40,13 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
     final filtered = q.isEmpty
         ? [...songs]
         : songs
-            .where((e) =>
-                e.song.title.toLowerCase().contains(q) ||
-                (e.versionNames ?? '').toLowerCase().contains(q) ||
-                e.song.tags.any((t) => t.toLowerCase().contains(q)))
-            .toList();
+              .where(
+                (e) =>
+                    e.song.title.toLowerCase().contains(q) ||
+                    (e.versionNames ?? '').toLowerCase().contains(q) ||
+                    e.song.tags.any((t) => t.toLowerCase().contains(q)),
+              )
+              .toList();
     final never = DateTime(1900);
     switch (_sort) {
       case SongSort.title:
@@ -152,8 +156,9 @@ class _SongsScreenState extends ConsumerState<SongsScreen> {
                     final e = shown[i];
                     return ListTile(
                       onTap: () => context.push('/t/${widget.teamId}/songs/${e.song.id}'),
+                      leading: SongArtwork(url: songThumbnail(e.song)),
                       title: Text(e.song.title),
-                      subtitle: Text([?e.versionNames, statsLine(l10n, e.stats)].join('\n')),
+                      subtitle: Text([?e.versionNames, statsLine(context, e.stats)].join('\n')),
                       isThreeLine: e.versionNames != null,
                       trailing: KeyBadge(e.displayKey),
                     );

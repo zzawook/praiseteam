@@ -9,7 +9,7 @@ import 'sessions_providers.dart';
 
 /// "일 오전 11:00", or "일요일 오전 11:00" when not [short].
 String templateSchedule(DateFormats formats, SessionTemplate t, {bool short = true}) =>
-    '${formats.weekdayName(t.weekday, short: short)} ${formats.time(DateTime(2024, 1, 1, t.hour, t.minute))}';
+    '${formats.weekdayName(t.weekday, short: short)} ${formats.wallTime(t.hour, t.minute)}';
 
 /// A template row: [time] as 'HH:MM', a blank place as none.
 Map<String, Object?> templateFields({

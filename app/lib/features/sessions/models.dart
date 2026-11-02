@@ -1,5 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../songs/models.dart' show SongLink;
+import '../../core/team_time.dart';
+
 part 'models.freezed.dart';
 part 'models.g.dart';
 
@@ -56,15 +59,16 @@ abstract class SessionTemplate with _$SessionTemplate {
 
   /// The first [weekday] at this time, after [now], whose day has no
   /// service with this title or starting at this time among [existing].
-  DateTime nextStart(DateTime now, Iterable<Session> existing) {
+  DateTime nextStart(DateTime now, Iterable<Session> existing, {required TeamTime time}) {
+    final localNow = time.local(now);
     final taken = {
       for (final s in existing)
-        if (s.title == title || (s.startsAt.toLocal().hour == hour && s.startsAt.toLocal().minute == minute))
-          _dayKey(s.startsAt.toLocal()),
+        if (s.title == title || (time.local(s.startsAt).hour == hour && time.local(s.startsAt).minute == minute))
+          _dayKey(time.local(s.startsAt)),
     };
-    final first = now.day + (weekday - now.weekday) % 7;
-    for (var week = 0;; week++) {
-      final start = DateTime(now.year, now.month, first + 7 * week, hour, minute);
+    final first = localNow.day + (weekday - localNow.weekday) % 7;
+    for (var week = 0; ; week++) {
+      final start = time.at(localNow.year, localNow.month, first + 7 * week, hour, minute);
       if (start.isAfter(now) && !taken.contains(_dayKey(start))) return start;
     }
   }
@@ -84,7 +88,12 @@ abstract class SetlistSong with _$SetlistSong {
 /// The version a setlist entry plays, as embedded with the entry.
 @freezed
 abstract class SetlistVersion with _$SetlistVersion {
-  const factory SetlistVersion({String? name, String? defaultKey, int? bpm}) = _SetlistVersion;
+  const factory SetlistVersion({
+    String? name,
+    String? defaultKey,
+    int? bpm,
+    @JsonKey(name: 'song_links') @Default(<SongLink>[]) List<SongLink> links,
+  }) = _SetlistVersion;
 
   factory SetlistVersion.fromJson(Map<String, dynamic> json) => _$SetlistVersionFromJson(json);
 }
@@ -133,22 +142,22 @@ class SetlistChanges {
   });
 
   factory SetlistChanges.fromJson(Map<String, dynamic>? json) => SetlistChanges(
-        added: [for (final t in (json?['added'] as List? ?? const [])) t.toString()],
-        removed: [for (final t in (json?['removed'] as List? ?? const [])) t.toString()],
-        versionChanged: [
-          for (final v in (json?['version_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
-            (title: v['title'].toString(), from: v['from'] as String?, to: v['to'] as String?),
-        ],
-        keyChanged: [
-          for (final k in (json?['key_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
-            (title: k['title'].toString(), from: k['from'] as String?, to: k['to'] as String?),
-        ],
-        tempoChanged: [
-          for (final t in (json?['tempo_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
-            (title: t['title'].toString(), from: t['from'] as int?, to: t['to'] as int?),
-        ],
-        reordered: json?['reordered'] == true,
-      );
+    added: [for (final t in (json?['added'] as List? ?? const [])) t.toString()],
+    removed: [for (final t in (json?['removed'] as List? ?? const [])) t.toString()],
+    versionChanged: [
+      for (final v in (json?['version_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
+        (title: v['title'].toString(), from: v['from'] as String?, to: v['to'] as String?),
+    ],
+    keyChanged: [
+      for (final k in (json?['key_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
+        (title: k['title'].toString(), from: k['from'] as String?, to: k['to'] as String?),
+    ],
+    tempoChanged: [
+      for (final t in (json?['tempo_changed'] as List? ?? const []).cast<Map<String, dynamic>>())
+        (title: t['title'].toString(), from: t['from'] as int?, to: t['to'] as int?),
+    ],
+    reordered: json?['reordered'] == true,
+  );
 
   final List<String> added;
   final List<String> removed;

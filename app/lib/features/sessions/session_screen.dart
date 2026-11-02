@@ -11,6 +11,7 @@ import '../notifications/notification_bell.dart';
 import '../rotation/rehearsals.dart';
 import '../songs/models.dart' show Sheet;
 import '../songs/songs_providers.dart';
+import '../songs/song_artwork.dart';
 import '../teams/teams_providers.dart';
 import 'models.dart';
 import 'session_editor.dart';
@@ -59,7 +60,9 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
       final sheets = versions.where((v) => v.id == version.id).firstOrNull?.sheets ?? const <Sheet>[];
       final key = version.defaultKey ?? entry.stats.usualKey;
       final sheet = sheets.where((s) => s.key == key).firstOrNull ?? sheets.firstOrNull;
-      await ref.read(sessionsRepositoryProvider).addItem(
+      await ref
+          .read(sessionsRepositoryProvider)
+          .addItem(
             teamId: widget.teamId,
             sessionId: widget.sessionId,
             songId: entry.song.id,
@@ -98,7 +101,10 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
     if (!ok || !mounted) return;
     setState(() => _publishing = true);
     SetlistChanges? changes;
-    await runGuarded(context, () async => changes = await ref.read(sessionsRepositoryProvider).publish(widget.sessionId));
+    await runGuarded(
+      context,
+      () async => changes = await ref.read(sessionsRepositoryProvider).publish(widget.sessionId),
+    );
     if (!mounted) return;
     setState(() => _publishing = false);
     final result = changes;
@@ -108,8 +114,8 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
       first
           ? l10n.published
           : result.isEmpty
-              ? l10n.noChanges
-              : '${l10n.published}: ${describeSetlistChanges(l10n, result)}',
+          ? l10n.noChanges
+          : '${l10n.published}: ${describeSetlistChanges(l10n, result)}',
     );
     _refresh();
   }
@@ -209,7 +215,9 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
                       sessionId: widget.sessionId,
                       sessionStart: s.startsAt,
                       isLeader: isLeader,
-                      partNames: {for (final p in ref.watch(teamPartsProvider(widget.teamId)).value ?? const []) p.id: p.name},
+                      partNames: {
+                        for (final p in ref.watch(teamPartsProvider(widget.teamId)).value ?? const []) p.id: p.name,
+                      },
                     ),
                   ),
                 ),
@@ -230,7 +238,7 @@ class _SessionInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final formats = DateFormats(context);
-    final local = session.startsAt.toLocal();
+    final local = DateFormats(context).clock.local(session.startsAt);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
       child: Column(
@@ -244,7 +252,10 @@ class _SessionInfo extends StatelessWidget {
           ],
           if (session.notes != null) ...[
             const SizedBox(height: 8),
-            Text(session.notes!, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            Text(
+              session.notes!,
+              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
           ],
         ],
       ),
@@ -284,7 +295,10 @@ class _SetlistSheet extends StatelessWidget {
         children: [
           Text(
             l10n.setlist,
-            style: theme.textTheme.headlineSmall?.copyWith(fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700),
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontFamily: AppType.setlistFamily,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const Spacer(),
           Text(
@@ -296,17 +310,20 @@ class _SetlistSheet extends StatelessWidget {
     );
 
     Widget row(SetlistItem item, int index) => _SetlistRow(
-          key: ValueKey(item.id),
-          index: index,
-          item: item,
-          draggable: isLeader,
-          onTap: () => onTapItem(item),
-        );
+      key: ValueKey(item.id),
+      index: index,
+      item: item,
+      draggable: isLeader,
+      onTap: () => onTapItem(item),
+    );
 
     final empty = items.isEmpty
         ? Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-            child: Text(isLeader ? l10n.setlistEmptyLeader : l10n.setlistEmptyMember, style: theme.textTheme.bodyMedium),
+            child: Text(
+              isLeader ? l10n.setlistEmptyLeader : l10n.setlistEmptyMember,
+              style: theme.textTheme.bodyMedium,
+            ),
           )
         : const SizedBox.shrink();
 
@@ -334,7 +351,11 @@ class _SetlistSheet extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: TextButton.icon(onPressed: onAdd, icon: const Icon(Icons.add), label: Text(l10n.addSongToSetlist)),
+                  child: TextButton.icon(
+                    onPressed: onAdd,
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.addSongToSetlist),
+                  ),
                 ),
               ),
             )
@@ -369,7 +390,14 @@ class _SetlistRow extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: 28, child: Text('${index + 1}', style: serif?.copyWith(color: theme.colorScheme.onSurfaceVariant))),
+            SizedBox(
+              width: 28,
+              child: Text('${index + 1}', style: serif?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            ),
+            if (linksThumbnail(item.version?.links ?? const []) case final url?) ...[
+              SongArtwork(url: url, width: 64, height: 40),
+              const SizedBox(width: 12),
+            ],
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +406,10 @@ class _SetlistRow extends StatelessWidget {
                   for (final d in details)
                     Padding(
                       padding: const EdgeInsets.only(top: 2),
-                      child: Text(d, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                      child: Text(
+                        d,
+                        style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                      ),
                     ),
                 ],
               ),

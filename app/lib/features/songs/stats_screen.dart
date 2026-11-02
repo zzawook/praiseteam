@@ -7,6 +7,7 @@ import '../../core/music_widgets.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
 import 'songs_providers.dart';
+import 'song_artwork.dart';
 
 /// Most played songs in a period, and songs not played for a while.
 class StatsScreen extends ConsumerStatefulWidget {
@@ -27,6 +28,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
     final theme = Theme.of(context);
     final top = ref.watch(topSongsProvider(widget.teamId, _period));
     final library = ref.watch(songLibraryProvider(widget.teamId)).value ?? const [];
+    final thumbnails = {for (final e in library) e.song.id: songThumbnail(e.song)};
     final cutoff = DateTime.now().subtract(const Duration(days: 30 * _staleMonths));
     final stale = library.where((e) => e.stats.lastPlayedAt != null && e.stats.lastPlayedAt!.isBefore(cutoff)).toList()
       ..sort((a, b) => a.stats.lastPlayedAt!.compareTo(b.stats.lastPlayedAt!));
@@ -67,6 +69,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   children: [
                     for (final s in songs)
                       ListTile(
+                        leading: SongArtwork(url: thumbnails[s.songId]),
                         onTap: () => context.push('/t/${widget.teamId}/songs/${s.songId}'),
                         title: Text(s.title),
                         subtitle: Padding(
@@ -89,9 +92,10 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
             SectionHeader(l10n.notPlayedSince(_staleMonths)),
             for (final e in stale)
               ListTile(
+                leading: SongArtwork(url: songThumbnail(e.song)),
                 onTap: () => context.push('/t/${widget.teamId}/songs/${e.song.id}'),
                 title: Text(e.song.title),
-                subtitle: Text(l10n.lastPlayed(timeAgo(l10n, e.stats.lastPlayedAt!))),
+                subtitle: Text(l10n.lastPlayed(DateFormats(context).ago(e.stats.lastPlayedAt!))),
                 trailing: KeyBadge(e.displayKey),
               ),
           ],

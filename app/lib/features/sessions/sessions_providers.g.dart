@@ -112,7 +112,7 @@ final class UpcomingSessionsProvider
   }
 }
 
-String _$upcomingSessionsHash() => r'476475d367a204de8abe296b56cfa34a3c9a7a44';
+String _$upcomingSessionsHash() => r'513e6840edcf05b172c2a1c290ed58fb6c8f3590';
 
 final class UpcomingSessionsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<Session>>, int> {
@@ -187,7 +187,7 @@ final class PastSessionsProvider
   }
 }
 
-String _$pastSessionsHash() => r'5465377c143c267338ca17726df792a1430bef6b';
+String _$pastSessionsHash() => r'38d9b79ac2b77f347ae08cd3d490749e1dd70974';
 
 final class PastSessionsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<Session>>, int> {

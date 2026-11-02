@@ -15,15 +15,13 @@ const boardWeeks = 8;
 @Riverpod(keepAlive: true)
 RotationRepository rotationRepository(Ref ref) => RotationRepository(ref.watch(supabaseProvider));
 
-DateTime _startOfToday() {
-  final now = DateTime.now();
-  return DateTime(now.year, now.month, now.day);
-}
-
 @riverpod
 Future<RotationBoard> rotationBoard(Ref ref, int teamId) {
-  final from = _startOfToday();
-  return ref.watch(rotationRepositoryProvider).board(teamId, from: from, to: from.add(const Duration(days: 7 * boardWeeks)));
+  final time = ref.watch(teamTimeProvider(teamId));
+  final from = time.startOfDay();
+  return ref
+      .watch(rotationRepositoryProvider)
+      .board(teamId, from: from, to: time.at(from.year, from.month, from.day + 7 * boardWeeks));
 }
 
 /// Visible blockouts: your own, and everyone's for leaders (RLS).
@@ -33,16 +31,22 @@ Future<List<Blockout>> blockouts(Ref ref, int teamId) => ref.watch(rotationRepos
 /// Fills every open place on the board with drafts; returns how many.
 Future<int> autoFill(WidgetRef ref, int teamId) async {
   final repo = ref.read(rotationRepositoryProvider);
-  final today = _startOfToday();
+  final time = ref.read(teamTimeProvider(teamId));
+  final start = time.startOfDay();
+  final today = time.date(start);
   final (board, members, history, blocked) = await (
     ref.read(rotationBoardProvider(teamId).future),
     ref.read(teamMembersProvider(teamId).future),
-    repo.history(teamId, since: today.subtract(fairnessWindow), before: today),
+    repo.history(
+      teamId,
+      since: time.at(start.year, start.month, start.day - fairnessWindow.inDays),
+      before: start,
+      time: time,
+    ),
     repo.blockouts(teamId),
   ).wait;
 
-  DateTime dayOf(DateTime t) => DateTime(t.toLocal().year, t.toLocal().month, t.toLocal().day);
-  final sessionDay = {for (final s in board.sessions) s.id: dayOf(s.startsAt)};
+  final sessionDay = {for (final s in board.sessions) s.id: time.date(s.startsAt)};
 
   final proposals = proposeAssignments(
     needs: [
@@ -51,7 +55,8 @@ Future<int> autoFill(WidgetRef ref, int teamId) async {
     ],
     members: [
       for (final m in members)
-        if (m.status == MemberStatus.active) Candidate(userId: m.userId, name: m.profile.displayName, partIds: m.partIds.toSet()),
+        if (m.status == MemberStatus.active)
+          Candidate(userId: m.userId, name: m.profile.displayName, partIds: m.partIds.toSet()),
     ],
     unavailable: [for (final b in blocked) Unavailable(userId: b.userId, from: b.from, to: b.to)],
     history: history,

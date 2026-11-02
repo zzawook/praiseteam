@@ -1,5 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:praiseteam/features/sessions/models.dart';
+import 'package:praiseteam/core/team_time.dart';
+
+final time = TeamTime('Asia/Singapore');
 
 SessionTemplate template({int weekday = DateTime.sunday, String startTime = '11:00:00', String title = '주일 2부 예배'}) =>
     SessionTemplate(id: 1, teamId: 1, title: title, weekday: weekday, startTime: startTime);
@@ -21,42 +24,42 @@ void main() {
   });
 
   group('next start', () {
-    final wednesday = DateTime(2026, 11, 4, 10);
+    final wednesday = time.at(2026, 11, 4, 10);
 
     test('is the coming weekday at its time', () {
-      expect(template().nextStart(wednesday, const []), DateTime(2026, 11, 8, 11));
+      expect(template().nextStart(wednesday, const [], time: time), time.at(2026, 11, 8, 11));
       expect(
-        template(weekday: DateTime.friday, startTime: '20:00:00').nextStart(wednesday, const []),
-        DateTime(2026, 11, 6, 20),
+        template(weekday: DateTime.friday, startTime: '20:00:00').nextStart(wednesday, const [], time: time),
+        time.at(2026, 11, 6, 20),
       );
     });
 
     test('is today while the service is still ahead, else next week', () {
-      expect(template().nextStart(DateTime(2026, 11, 8, 8), const []), DateTime(2026, 11, 8, 11));
-      expect(template().nextStart(DateTime(2026, 11, 8, 12), const []), DateTime(2026, 11, 15, 11));
+      expect(template().nextStart(time.at(2026, 11, 8, 8), const [], time: time), time.at(2026, 11, 8, 11));
+      expect(template().nextStart(time.at(2026, 11, 8, 12), const [], time: time), time.at(2026, 11, 15, 11));
     });
 
     test('skips weeks that already have the service', () {
-      final planned = [session('주일 2부 예배', DateTime(2026, 11, 8, 11)), session('주일 2부 예배', DateTime(2026, 11, 15, 11))];
-      expect(template().nextStart(wednesday, planned), DateTime(2026, 11, 22, 11));
+      final planned = [session('주일 2부 예배', time.at(2026, 11, 8, 11)), session('주일 2부 예배', time.at(2026, 11, 15, 11))];
+      expect(template().nextStart(wednesday, planned, time: time), time.at(2026, 11, 22, 11));
     });
 
     test('skips a week whose time is taken by another service', () {
-      final christmas = [session('성탄 예배', DateTime(2026, 11, 8, 11))];
-      expect(template().nextStart(wednesday, christmas), DateTime(2026, 11, 15, 11));
+      final christmas = [session('성탄 예배', time.at(2026, 11, 8, 11))];
+      expect(template().nextStart(wednesday, christmas, time: time), time.at(2026, 11, 15, 11));
     });
 
     test('keeps a week where other services meet at other times', () {
-      final first = [session('주일 1부 예배', DateTime(2026, 11, 8, 9))];
-      expect(template().nextStart(wednesday, first), DateTime(2026, 11, 8, 11));
+      final first = [session('주일 1부 예배', time.at(2026, 11, 8, 9))];
+      expect(template().nextStart(wednesday, first, time: time), time.at(2026, 11, 8, 11));
     });
 
     test('runs on into the next month', () {
-      final saturday = DateTime(2026, 11, 28, 10);
-      expect(template().nextStart(saturday, const []), DateTime(2026, 11, 29, 11));
+      final saturday = time.at(2026, 11, 28, 10);
+      expect(template().nextStart(saturday, const [], time: time), time.at(2026, 11, 29, 11));
       expect(
-        template().nextStart(saturday, [session('주일 2부 예배', DateTime(2026, 11, 29, 11))]),
-        DateTime(2026, 12, 6, 11),
+        template().nextStart(saturday, [session('주일 2부 예배', time.at(2026, 11, 29, 11))], time: time),
+        time.at(2026, 12, 6, 11),
       );
     });
   });

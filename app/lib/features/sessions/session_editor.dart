@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/dates.dart';
 import '../../core/widgets.dart';
+import '../../core/team_time.dart';
+import '../teams/teams_providers.dart';
 import '../../l10n/app_localizations.dart';
 import 'models.dart';
 import 'session_templates.dart';
@@ -48,20 +50,20 @@ class _SessionEditorState extends ConsumerState<_SessionEditor> {
   bool _busy = false;
 
   bool get _isNew => widget.session == null;
+  TeamTime get _clock => ref.read(teamTimeProvider(widget.teamId));
 
   @override
   void initState() {
     super.initState();
-    final start = widget.session?.startsAt.toLocal() ?? _nextSunday();
+    final start = widget.session == null ? _nextSunday() : _clock.local(widget.session!.startsAt);
     _date = DateTime(start.year, start.month, start.day);
     _time = TimeOfDay(hour: start.hour, minute: start.minute);
   }
 
   DateTime _nextSunday() {
-    final now = DateTime.now();
+    final now = _clock.now();
     final days = (DateTime.sunday - now.weekday) % 7;
-    final d = now.add(Duration(days: days == 0 ? 7 : days));
-    return DateTime(d.year, d.month, d.day, 11);
+    return _clock.at(now.year, now.month, now.day + (days == 0 ? 7 : days), 11);
   }
 
   @override
@@ -83,7 +85,7 @@ class _SessionEditorState extends ConsumerState<_SessionEditor> {
       _location.text.trim() == (t.location ?? '');
 
   void _apply(SessionTemplate t) {
-    final start = t.nextStart(DateTime.now(), widget.upcoming);
+    final start = t.nextStart(_clock.now(), widget.upcoming, time: _clock);
     setState(() {
       _title.text = t.title;
       _location.text = t.location ?? '';
@@ -101,20 +103,17 @@ class _SessionEditorState extends ConsumerState<_SessionEditor> {
 
   Future<void> _submit(List<SessionTemplate>? templates) async {
     if (!_form.currentState!.validate()) return;
-    final start = DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute);
+    final start = _clock.at(_date.year, _date.month, _date.day, _time.hour, _time.minute);
     final count = _isNew && _repeat ? _weeks : 1;
     final rows = [
       for (var i = 0; i < count; i++)
         {
           'title': _title.text.trim(),
-          // Local wall-clock time each week (DST-safe), stored as UTC.
-          'starts_at': DateTime(
-            start.year,
-            start.month,
-            start.day + 7 * i,
-            start.hour,
-            start.minute,
-          ).toUtc().toIso8601String(),
+          // The same team wall-clock time each week, including across DST.
+          'starts_at': _clock
+              .at(start.year, start.month, start.day + 7 * i, start.hour, start.minute)
+              .toUtc()
+              .toIso8601String(),
           'location': _blankToNull(_location),
           'theme': _blankToNull(_theme),
           'notes': _blankToNull(_notes),
@@ -153,7 +152,7 @@ class _SessionEditorState extends ConsumerState<_SessionEditor> {
     final muted = TextStyle(color: theme.colorScheme.onSurfaceVariant);
     final dateButton = OutlinedButton.icon(
       icon: const Icon(Icons.event),
-      label: Text(formats.dayWithWeekday(_date)),
+      label: Text(formats.calendarDate(_date)),
       onPressed: () async {
         final picked = await showDatePicker(
           context: context,
@@ -241,6 +240,10 @@ class _SessionEditorState extends ConsumerState<_SessionEditor> {
                     Expanded(child: timeButton),
                   ],
                 ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(l10n.inTeamTimezone(_clock.name), style: theme.textTheme.bodySmall),
+              ),
               if (_isNew) ...[
                 const SizedBox(height: 8),
                 SwitchListTile(

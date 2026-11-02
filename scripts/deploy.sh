@@ -61,10 +61,11 @@ functions() {
   secret="$(cat "$secret_file")"
 
   supabase secrets set --project-ref "$PROJECT_REF" PUSH_WEBHOOK_SECRET="$secret" WEB_APP_URL="$WEB_APP_URL" >/dev/null
-  supabase functions deploy push calendar --project-ref "$PROJECT_REF"
-  supabase db query --linked "$(vault_sql push_function_url "https://$PROJECT_REF.supabase.co/functions/v1/push")
-$(vault_sql push_webhook_secret "$secret")" >/dev/null
-  echo "Functions deployed; Vault secrets push_function_url and push_webhook_secret are set."
+  supabase functions deploy push calendar storage-cleanup --project-ref "$PROJECT_REF"
+  supabase db query --linked "$(vault_sql push_function_url "https://$PROJECT_REF.supabase.co/functions/v1/push")" >/dev/null
+  supabase db query --linked "$(vault_sql push_webhook_secret "$secret")" >/dev/null
+  supabase db query --linked "$(vault_sql storage_cleanup_url "https://$PROJECT_REF.supabase.co/functions/v1/storage-cleanup")" >/dev/null
+  echo "Functions deployed; push and storage-cleanup Vault settings are set."
 }
 
 fcm() {

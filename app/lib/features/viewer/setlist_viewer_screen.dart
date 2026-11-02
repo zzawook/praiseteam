@@ -23,6 +23,7 @@ import '../live/live_session.dart';
 import '../sessions/models.dart';
 import '../sessions/sessions_providers.dart';
 import '../songs/models.dart';
+import '../songs/song_artwork.dart';
 import '../songs/songs_providers.dart';
 import '../teams/models.dart';
 import '../teams/teams_providers.dart';
@@ -558,6 +559,10 @@ class _PageSlot extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (linksThumbnail(page.item.version?.links ?? const []) case final url?) ...[
+                SongArtwork(url: url, width: 256, height: 144),
+                const SizedBox(height: 20),
+              ],
               Text(
                 page.item.song.title,
                 style: Theme.of(context).textTheme.headlineMedium
