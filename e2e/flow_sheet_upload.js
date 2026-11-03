@@ -93,6 +93,9 @@ const photo = path.resolve(__dirname, 'sheet.png');
     await retry.setFiles(pdf);
     await waitText(page, '취소');
     await btn(page, '취소').click();
+    // Flutter's semantics update before the modal exit animation stops
+    // intercepting taps. Let the real route finish closing before another tap.
+    await page.waitForTimeout(350);
     await btn(page, '악보 올리기').first().waitFor();
     console.log('PASS picker cancel, same-file retry and confirmation cancel');
 
