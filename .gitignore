@@ -26,3 +26,10 @@ node_modules/
 /firebase-debug*.log
 __pycache__/
 *.pyc
+
+# Mobile signing material.
+*.p8
+*.p12
+*.mobileprovision
+*.jks
+*.keystore

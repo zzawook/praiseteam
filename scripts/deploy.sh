@@ -30,6 +30,7 @@ db() {
   # A migration can move data, so production is dumped first; restoring
   # from these files is the way back.
   local backup
+  umask 077
   backup="$SECRETS/backups/$(date -u +%Y%m%dT%H%M%SZ)"
   (umask 077 && mkdir -p "$SECRETS/backups")
   supabase db dump --linked -f "$backup-schema.sql"
@@ -61,11 +62,15 @@ functions() {
   secret="$(cat "$secret_file")"
 
   supabase secrets set --project-ref "$PROJECT_REF" PUSH_WEBHOOK_SECRET="$secret" WEB_APP_URL="$WEB_APP_URL" >/dev/null
-  supabase functions deploy push calendar storage-cleanup --project-ref "$PROJECT_REF"
+  if [[ -f "$SECRETS/apple-signin.env" ]]; then
+    supabase secrets set --project-ref "$PROJECT_REF" --env-file "$SECRETS/apple-signin.env" >/dev/null
+  fi
+  supabase functions deploy push calendar storage-cleanup apple-auth apple-revoke --project-ref "$PROJECT_REF"
   supabase db query --linked "$(vault_sql push_function_url "https://$PROJECT_REF.supabase.co/functions/v1/push")" >/dev/null
   supabase db query --linked "$(vault_sql push_webhook_secret "$secret")" >/dev/null
   supabase db query --linked "$(vault_sql storage_cleanup_url "https://$PROJECT_REF.supabase.co/functions/v1/storage-cleanup")" >/dev/null
-  echo "Functions deployed; push and storage-cleanup Vault settings are set."
+  supabase db query --linked "$(vault_sql apple_revocation_url "https://$PROJECT_REF.supabase.co/functions/v1/apple-revoke")" >/dev/null
+  echo "Functions deployed; push, storage and Apple revocation worker settings are set."
 }
 
 fcm() {

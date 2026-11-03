@@ -60,7 +60,7 @@ templates and publication, rota assignment/response, live page/cue exchange
 with a second authenticated client, private/shared ink permissions, realtime
 chat, polls, pinned announcements and calendar subscription. The fixture server
 depends on the ignored `demo/media/work/seed.json`, produced by
-`dart run app/tool/export_demo_data.dart` from the repository root.
+`(cd app && dart run tool/export_demo_data.dart)` from the repository root.
 
 Pages are awaited with `load`, then the text each step expects: the app's local
 database runs in a web worker, and Playwright never reports that worker's script

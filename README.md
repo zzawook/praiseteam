@@ -1,7 +1,8 @@
 # PraiseTeam
 
 찬양팀의 예배 일정, 콘티, 곡·악보, 담당자 편성, 채팅을 함께 관리하는 Flutter 앱.
-웹과 Android를 지원하며, iOS 배포 설정은 아직 준비 중입니다.
+웹과 Android를 지원하며, iOS는 Codemagic 시뮬레이터 검증 및 TestFlight 워크플로우를 제공합니다.
+스토어 서명·Apple 계정 설정과 배포 절차는 [docs/STORES.md](docs/STORES.md)를 참고하세요.
 
 ## 구성
 

@@ -19,6 +19,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get continueWithGoogle => 'Google로 계속하기';
 
   @override
+  String get continueWithApple => 'Apple로 계속하기';
+
+  @override
   String get devLoginTitle => '개발용 로그인 (로컬 서버 전용)';
 
   @override

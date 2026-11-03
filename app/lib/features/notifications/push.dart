@@ -19,12 +19,20 @@ import 'notifications_screen.dart' show notificationRoute;
 
 part 'push.g.dart';
 
-/// Push works on Android and the web for now; iOS needs APNs set up first.
-bool get pushSupported => !Env.demo && (kIsWeb || defaultTargetPlatform == TargetPlatform.android);
+/// iOS delivery also requires the app's APNs key in Firebase.
+bool get pushSupported =>
+    !Env.demo &&
+    (kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS);
 
 /// Called once in main(), before runApp.
 Future<void> initPush() async {
-  if (pushSupported) await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (pushSupported) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 }
 
 enum PushState { unsupported, off, blocked, on }
@@ -57,7 +65,8 @@ class PushRegistration extends _$PushRegistration {
     final user = ref.watch(currentUserIdProvider);
     if (!pushSupported) return PushState.unsupported;
     if (user == null) return PushState.off;
-    final status = (await FirebaseMessaging.instance.getNotificationSettings()).authorizationStatus;
+    final status = (await FirebaseMessaging.instance.getNotificationSettings())
+        .authorizationStatus;
     switch (status) {
       case AuthorizationStatus.authorized || AuthorizationStatus.provisional:
         return _register();
@@ -74,14 +83,19 @@ class PushRegistration extends _$PushRegistration {
   /// Off if Android may still ask (the switch asks again), blocked if only
   /// the device or browser settings can change it.
   static PushState _whenRefused(AuthorizationStatus status) =>
-      status == AuthorizationStatus.denied && !kIsWeb ? PushState.off : PushState.blocked;
+      status == AuthorizationStatus.denied &&
+          !kIsWeb &&
+          defaultTargetPlatform == TargetPlatform.android
+      ? PushState.off
+      : PushState.blocked;
 
   String? get _fid => ref.read(sharedPreferencesProvider).getString(_fidKey);
 
   Future<PushState> _register() async {
     final messaging = FirebaseMessaging.instance;
     final status = (await messaging.requestPermission()).authorizationStatus;
-    if (status == AuthorizationStatus.denied || status == AuthorizationStatus.deniedPermanently) {
+    if (status == AuthorizationStatus.denied ||
+        status == AuthorizationStatus.deniedPermanently) {
       return _whenRefused(status);
     }
     if (_subscriptions.isEmpty) {
@@ -90,7 +104,9 @@ class PushRegistration extends _$PushRegistration {
         ..add(messaging.onUnregistered.listen((fid) => _forget(fid).ignore()));
     }
     try {
-      await messaging.register(vapidKey: kIsWeb && Env.webPushKey.isNotEmpty ? Env.webPushKey : null);
+      await messaging.register(
+        vapidKey: kIsWeb && Env.webPushKey.isNotEmpty ? Env.webPushKey : null,
+      );
     } catch (e) {
       debugPrint('push: FCM registration failed: $e');
       rethrow;
@@ -106,13 +122,27 @@ class PushRegistration extends _$PushRegistration {
     if (ref.read(currentUserIdProvider) == null) return;
     await ref
         .read(supabaseProvider)
-        .rpc('register_device_token', params: {'p_token': fid, 'p_platform': kIsWeb ? 'web' : 'android'});
+        .rpc(
+          'register_device_token',
+          params: {
+            'p_token': fid,
+            'p_platform': kIsWeb
+                ? 'web'
+                : defaultTargetPlatform == TargetPlatform.iOS
+                ? 'ios'
+                : 'android',
+          },
+        );
   }
 
   Future<void> _forget(String fid) async {
     await ref.read(sharedPreferencesProvider).remove(_fidKey);
     if (ref.read(currentUserIdProvider) == null) return;
-    await ref.read(supabaseProvider).from('device_tokens').delete().eq('token', fid);
+    await ref
+        .read(supabaseProvider)
+        .from('device_tokens')
+        .delete()
+        .eq('token', fid);
   }
 
   /// Turned on with a click (the web needs one before it may ask).
@@ -120,7 +150,9 @@ class PushRegistration extends _$PushRegistration {
   Future<void> enable() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(_register);
-    if (state case AsyncError(:final error, :final stackTrace)) Error.throwWithStackTrace(error, stackTrace);
+    if (state case AsyncError(:final error, :final stackTrace)) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
   }
 
   /// No more pushes to this device for this user: turned off, or signing
@@ -142,7 +174,9 @@ AppNotification? notificationOf(RemoteMessage message) {
   if (id == null || category is! String) return null;
   Map<String, dynamic> params;
   try {
-    params = Map<String, dynamic>.from(jsonDecode('${data['params'] ?? '{}'}') as Map);
+    params = Map<String, dynamic>.from(
+      jsonDecode('${data['params'] ?? '{}'}') as Map,
+    );
   } catch (_) {
     params = const {};
   }
@@ -175,7 +209,10 @@ class _PushHandlerState extends ConsumerState<PushHandler> {
     _subscriptions
       ..add(FirebaseMessaging.onMessage.listen(_whileOpen))
       ..add(FirebaseMessaging.onMessageOpenedApp.listen(_open));
-    FirebaseMessaging.instance.getInitialMessage().then((m) => m == null ? null : _open(m)).ignore();
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((m) => m == null ? null : _open(m))
+        .ignore();
   }
 
   @override
@@ -196,13 +233,21 @@ class _PushHandlerState extends ConsumerState<PushHandler> {
     // Chat shows new messages and unread counts on its own.
     if (n == null || n.category == 'chat_message' || !mounted) return;
     final l10n = AppLocalizations.of(context);
-    final text = [message.notification?.title, message.notification?.body].whereType<String>().join('\n');
+    final text = [
+      message.notification?.title,
+      message.notification?.body,
+    ].whereType<String>().join('\n');
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
           content: Text(text),
-          action: n.teamId == null ? null : SnackBarAction(label: l10n.open, onPressed: () => _open(message)),
+          action: n.teamId == null
+              ? null
+              : SnackBarAction(
+                  label: l10n.open,
+                  onPressed: () => _open(message),
+                ),
         ),
       );
   }

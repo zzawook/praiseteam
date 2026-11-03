@@ -3,6 +3,7 @@
   "appTitle": "PraiseTeam",
   "loginTagline": "콘티, 악보, 로테이션을 팀이 함께 봐요.",
   "continueWithGoogle": "Google로 계속하기",
+  "continueWithApple": "Apple로 계속하기",
   "devLoginTitle": "개발용 로그인 (로컬 서버 전용)",
   "email": "이메일",
   "password": "비밀번호",

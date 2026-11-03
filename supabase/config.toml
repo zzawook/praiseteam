@@ -454,3 +454,10 @@ verify_enabled = true
 
 [remotes.production.auth.external.google]
 redirect_uri = "https://kkolulligxondlpjkzzn.supabase.co/auth/v1/callback"
+
+# Native Apple enrollment verifies the user's JWT with Auth and then verifies
+# the Apple authorization code. The worker accepts only the private webhook key.
+[functions.apple-auth]
+verify_jwt = false
+[functions.apple-revoke]
+verify_jwt = false

@@ -3,6 +3,7 @@
   "appTitle": "PraiseTeam",
   "loginTagline": "Setlists, sheets and rotations, shared with your team.",
   "continueWithGoogle": "Continue with Google",
+  "continueWithApple": "Continue with Apple",
   "devLoginTitle": "Developer login (local server only)",
   "email": "Email",
   "password": "Password",

@@ -41,3 +41,47 @@ workflows:
       - output/native/ios/*.png
       - output/PraiseTeam-iOS-Simulator.zip
       - /tmp/xcodebuild_logs/*.log
+
+  ios-testflight:
+    name: Signed iOS build for TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    working_directory: app
+    integrations:
+      app_store_connect: praiseteam-app-store
+    environment:
+      flutter: 3.47.9
+      xcode: 27.2
+      cocoapods: default
+      groups:
+        - praiseteam-production
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.kjaehyeok.praiseteam
+    scripts:
+      - name: Validate production configuration
+        script: python3 ../scripts/prepare_ios_release.py
+      - name: Install locked dependencies
+        script: flutter pub get --enforce-lockfile
+      - name: Analyze and test
+        script: |
+          set -e
+          flutter analyze --no-pub
+          flutter test --no-pub
+      - name: Apply App Store signing profiles
+        script: xcode-project use-profiles
+      - name: Build signed IPA
+        script: |
+          flutter build ipa --release --no-pub \
+            --dart-define-from-file=env/store.ios.json \
+            --build-number="$STORE_BUILD_NUMBER" \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - app/build/ios/ipa/*.ipa
+      - app/build/ios/archive/*.xcarchive
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false

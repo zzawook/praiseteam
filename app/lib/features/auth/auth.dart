@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/env.dart';
 import '../../core/errors.dart';
 import '../../core/providers.dart';
+import 'apple_sign_in.dart';
 
 part 'auth.g.dart';
 
@@ -18,13 +19,18 @@ class AuthRepository {
   final SupabaseClient _client;
   bool _googleReady = false;
 
+  Future<void> signInWithApple() => signInWithNativeApple(_client);
+
   Future<void> signInWithGoogle() async {
     if (Env.demo) {
       await _client.auth.setSession('browser-demo-session');
       return;
     }
     if (kIsWeb) {
-      await _client.auth.signInWithOAuth(OAuthProvider.google, redirectTo: Uri.base.origin);
+      await _client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: Uri.base.origin,
+      );
       return;
     }
     if (Env.googleWebClientId.isEmpty) {
@@ -33,7 +39,11 @@ class AuthRepository {
     final google = GoogleSignIn.instance;
     if (!_googleReady) {
       await google.initialize(
-        clientId: Env.googleIosClientId.isEmpty ? null : Env.googleIosClientId,
+        clientId:
+            defaultTargetPlatform == TargetPlatform.iOS &&
+                Env.googleIosClientId.isNotEmpty
+            ? Env.googleIosClientId
+            : null,
         serverClientId: Env.googleWebClientId,
       );
       _googleReady = true;
@@ -43,7 +53,10 @@ class AuthRepository {
     if (idToken == null) {
       throw const AppError(AppErrorKind.other, 'Google returned no ID token');
     }
-    await _client.auth.signInWithIdToken(provider: OAuthProvider.google, idToken: idToken);
+    await _client.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+    );
   }
 
   Future<void> signInWithPassword(String email, String password) =>
@@ -71,7 +84,8 @@ class AuthRepository {
 }
 
 @Riverpod(keepAlive: true)
-AuthRepository authRepository(Ref ref) => AuthRepository(ref.watch(supabaseProvider));
+AuthRepository authRepository(Ref ref) =>
+    AuthRepository(ref.watch(supabaseProvider));
 
 /// The current session; emits on sign-in, sign-out and token refresh.
 @Riverpod(keepAlive: true)

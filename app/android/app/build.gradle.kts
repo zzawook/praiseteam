@@ -10,10 +10,15 @@ plugins {
 }
 
 // Release signing key: android/key.properties (kept out of git; see
-// docs/DEPLOY.md). Without it, release builds fall back to the debug key.
+// docs/DEPLOY.md). A release must never silently use the debug key.
 val releaseKey = Properties().apply {
     val file = rootProject.file("key.properties")
     if (file.exists()) file.inputStream().use { load(it) }
+}
+val releaseSigningConfigured = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+    .all { !releaseKey.getProperty(it).isNullOrBlank() }
+if (gradle.startParameter.taskNames.any { it.contains("release", ignoreCase = true) } && !releaseSigningConfigured) {
+    throw GradleException("Release signing is missing. Configure android/key.properties before building a store release.")
 }
 
 android {
@@ -41,7 +46,7 @@ android {
     }
 
     signingConfigs {
-        if (releaseKey.isNotEmpty()) {
+        if (releaseSigningConfigured) {
             create("release") {
                 storeFile = file(releaseKey.getProperty("storeFile"))
                 storePassword = releaseKey.getProperty("storePassword")
@@ -53,7 +58,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 }
