@@ -18,6 +18,8 @@ def fingerprint(value):
 
 async def main():
     story = json.loads(STORY.read_text())
+    if story.get('narration_source', {}).get('type') == 'import':
+        raise SystemExit('This film uses supplied audio. Run import_narration.py; do not regenerate the voice.')
     story_hash = fingerprint(story)
     total = 0
     for scene in story['scenes']:

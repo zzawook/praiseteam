@@ -1,0 +1,9 @@
+# Python 3.12. Install CUDA wheels separately if using --device cuda:
+# uv pip install torch==2.8.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+# Install whisperx with --no-deps; this workflow uses alignment, not diarization.
+torch==2.8.0
+torchaudio==2.8.0
+transformers==4.57.1
+numpy==2.2.6
+pandas==2.3.3
+nltk==3.9.2

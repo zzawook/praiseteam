@@ -1,0 +1,43 @@
+{
+  "provider": "ElevenLabs",
+  "provided_on": "2026-11-03",
+  "scenes": {
+    "intro": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_찬양팀의 한 주는 로타를 정_2026-11-03T14_41_33.mp3",
+      "sha256": "23216fa3a8869960781d9800e03d51e60590a69e0a5031e2f864a789645f0db1"
+    },
+    "setlist": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_인도자는 예배를 만들어 곡을_2026-11-03T14_41_59.mp3",
+      "sha256": "0f56337d8d0a707f22ec408c44d4a2561de2ab71b575edf2d0201bf951544ebc"
+    },
+    "songs": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_같은 찬양도 팀마다 다르게 _2026-11-03T14_43_58.mp3",
+      "sha256": "0b6476336b61b149a4688f7f30735c68ee96e720f4f445775e20cb9469cb3d77",
+      "selection_note": "Later supplied take (14:43:58), replacing the 14:42:24 take."
+    },
+    "rotation": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_리더는 로테이션에서 예배별 _2026-11-03T14_42_33.mp3",
+      "sha256": "82d5138231acf966fa7e1fd3f9a04e2b65c49c75b1922e93021fd442d73470b3"
+    },
+    "live": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_현장에서는 라이브하기를 누르_2026-11-03T14_44_05.mp3",
+      "sha256": "e2cdd7118fa51bee6ab21bca029740f83a48f0826f0087a56c881416dfb6d892"
+    },
+    "notes": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_악보 위에는 팀이 함께 볼 _2026-11-03T14_45_02.mp3",
+      "sha256": "4d8b3b4c2f5c6f9337f46a64da17628b616768ed8084e3f2a0311ffbbe9a8e1e"
+    },
+    "chat": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_전체 공지와 파트별 대화, _2026-11-03T14_45_46.mp3",
+      "sha256": "91456ef2c127fa713d0d0a385bcb13869491d5e575c438154fefd040e50a4703"
+    },
+    "home": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_홈을 열면 다음 예배와 콘티_2026-11-03T14_46_55.mp3",
+      "sha256": "34e320d171203b90b2354f2c2a3340a43b329a5ed207d4dfd6c02a08264d92c8"
+    },
+    "outro": {
+      "filename": "ElevenLabs_audio_elevenlabs-v4_[warmly] 프레이즈 팀_2026-11-03T14_47_02.mp3",
+      "sha256": "808dc2509da9a574492455fa0614f741a769a73796e575627636116ba3ede81f"
+    }
+  }
+}

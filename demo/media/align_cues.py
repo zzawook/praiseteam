@@ -14,8 +14,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import edge_tts
-
 ROOT = Path(__file__).resolve().parents[2]
 MEDIA = ROOT / 'demo/media'
 WORK = MEDIA / 'work'
@@ -60,6 +58,10 @@ def pcm(path):
 
 async def main():
     story = json.loads((MEDIA / 'storyboard.json').read_text())
+    if story.get('narration_source', {}).get('type') == 'import':
+        raise SystemExit('This film uses supplied audio. Run import_narration.py; do not regenerate the voice.')
+    import edge_tts
+
     result = {'narration_delay': .4, 'scenes': {}}
     for scene in story['scenes']:
         name = scene['id']

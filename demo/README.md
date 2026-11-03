@@ -44,9 +44,12 @@ chat/polls, reset, desktop/mobile layouts, and absence of cloud backend calls.
 ## Narrated product film
 
 `demo/media/storyboard.json` is the Korean script. The output is a 1920×1080,
-roughly three-minute landscape MP4 with synthesized Korean narration, subtitles,
-animated title cards and real UI actions. Only the public, fictional script
-is sent to the speech service. No original group-chat media is used.
+roughly three-minute landscape MP4 with Korean narration, subtitles,
+animated title cards and real UI actions. The current voice uses the supplied
+ElevenLabs MP3s, without changing their speaking speed. No original group-chat
+media is used. `media/narration_sources.json` identifies the nine approved
+files by filename and SHA256; the later of the two song-introduction takes is
+selected. Original audio remains local and ignored.
 
 Tools: FFmpeg with libx264/AAC, Python packages in `media/requirements.txt`,
 Noto CJK fonts, Chrome and `npm ci --prefix e2e`. The film fixture requires the
@@ -60,9 +63,7 @@ dart run tool/export_demo_data.dart
 flutter build web --release --dart-define-from-file=env/local.json --output=build/video
 cd ..
 python3 e2e/spa_server.py app/build/video 3002
-# In another terminal, with media/requirements.txt installed:
-python demo/media/narrate.py
-python demo/media/align_cues.py
+# In another terminal, import/align the supplied narration first (see below):
 node demo/media/record.cjs
 python demo/media/check_notes_stability.py
 python demo/media/render.py
@@ -91,12 +92,47 @@ timings are estimates for review. It leaves the production MP4, audio and
 timing manifest intact and is never copied by the deployment script.
 Normal rendering rejects a stale narration manifest after a script edit.
 
-`align_cues.py` measures word boundaries using the same voice and script, then
-verifies the reference waveform against the approved audio without replacing
-it. The checked-in `timing.json` drives card entrances, callouts and recorded
+For the supplied ElevenLabs narration, use a separate Python 3.12 environment:
+
+```sh
+uv venv --python 3.12 /tmp/praiseteam-align-venv
+uv pip install --python /tmp/praiseteam-align-venv/bin/python --no-deps whisperx==3.8.6
+uv pip install --python /tmp/praiseteam-align-venv/bin/python -r demo/media/requirements-align.txt
+/tmp/praiseteam-align-venv/bin/python demo/media/import_narration.py /path/to/supplied-mp3s
+```
+
+An optional `--device cuda` uses the GPU (install matching Torch/torchaudio
+CUDA wheels first). WhisperX downloads its Korean alignment model once and
+aligns the approved script locally. It does not upload the audio or generate
+new speech. The importer verifies source hashes, copies the MP3 bytes unchanged,
+and writes word-aligned subtitles, chapter durations and visual cue times.
+`narrate.py` and `align_cues.py` are retained for the old Edge TTS workflow but
+refuse to overwrite a storyboard configured for imported audio.
+
+To reuse approved captures after changing the voice, preserve their original
+`timing.json` and `work/timeline.json` before importing, then run:
+
+```sh
+python demo/media/retime_captures.py \
+  --source-timing /path/to/old/timing.json \
+  --source-timeline /path/to/old/timeline.json
+python demo/media/render.py
+```
+
+This continuously retimes the video between spoken anchors, using the same
+mapping for both live panes. Audio keeps its original speed. The generated
+`work/capture_retiming.json` binds each mapping to the capture and voice hashes.
+Remove it before using freshly recorded captures that already follow the new
+timing. The checked-in `timing.json` drives card entrances, callouts and recorded
 UI actions. Recording and rendering reject mismatched audio hashes; rendering
 also checks the script hash. Each capture records its scheduled and actual
 action times in the ignored `work/clips.json` for review.
+
+After rendering, run `demo/media/verify_narration.py` in the alignment Python
+environment. It compares the final decoded audio with each supplied MP3,
+including its ending, and rejects drift of one video frame or more. The merge
+normalizes decoded chapter lengths before crossfading so AAC padding cannot
+accumulate into early narration in later chapters.
 
 After recording annotations, run `python demo/media/check_notes_stability.py`.
 It checks every frame of the fixed sample score title to catch PDF reload

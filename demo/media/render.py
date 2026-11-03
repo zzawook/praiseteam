@@ -21,7 +21,7 @@ STORY = json.loads((MEDIA / 'timeline.json').read_text())
 source_story = json.loads((ROOT / 'demo/media/storyboard.json').read_text())
 source_hash = hashlib.sha256(json.dumps(source_story, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 if STORY.get('story_sha256') != source_hash:
-    raise SystemExit('Storyboard changed. Run demo/media/narrate.py to regenerate narration and timing before rendering.')
+    raise SystemExit('Storyboard changed. Import or generate matching narration and timing before rendering.')
 NAMES = {s['id']: s for s in STORY['scenes']}
 TIMING = json.loads((ROOT / 'demo/media/timing.json').read_text())
 if not PREVIEW:
@@ -30,6 +30,25 @@ if not PREVIEW:
         assert saved['audio_sha256']==hashlib.sha256((WORK/(scene['id']+'.mp3')).read_bytes()).hexdigest(), 'Regenerate timing cues for the new narration'
         assert saved['narration_sha256']==hashlib.sha256(scene['narration'].encode()).hexdigest(), 'Timing cues must match the script'
 def cue(scene,name):return TIMING['scenes'][scene]['cues'][name]
+retiming_file = WORK / 'capture_retiming.json'
+RETIMING = json.loads(retiming_file.read_text())['clips'] if retiming_file.exists() and not PREVIEW else {}
+
+def capture_time_filter(name, clip):
+    if name not in RETIMING:
+        return ''
+    mapping = RETIMING[name]
+    scene = 'live' if name.startswith('live-') else name
+    assert mapping['audio_sha256'] == TIMING['scenes'][scene]['audio_sha256'], 'Regenerate capture retiming for this voice'
+    assert mapping['capture_start'] == clip['start'] and mapping['capture_sha256'] == hashlib.sha256(Path(clip['file']).read_bytes()).hexdigest(), 'Capture changed: regenerate or remove capture_retiming.json'
+    expressions = []
+    points = mapping['points']
+    for (a, x), (b, y) in zip(points, points[1:]):
+        assert b > a and y > x, 'Capture time mapping must be strictly increasing'
+        expressions.append((b, f'({x:.9f}+(T-{a:.9f})*{(y-x)/(b-a):.9f})'))
+    expression = expressions[-1][1]
+    for bound, segment in reversed(expressions[:-1]):
+        expression = f'if(lt(T,{bound:.9f}),{segment},{expression})'
+    return f",setpts='{expression}/TB'"
 NAVY = '#111D35'; BLUE = '#304DC4'; CREAM = '#F4F5F2'; MUTED = '#AAB8D2'; INK = '#1D2433'; GOLD = '#E7BA6E'
 SANS = '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'
 BOLD = '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'
@@ -140,7 +159,8 @@ def scene_video(scene,index,clips):
         # revised chapter explains visibility, so retain only the ink tools
         # and the actual private stroke, then hold the resulting frame.
         trim='trim=duration=5.5,' if name=='notes' and c.get('purpose')!='visibility' else ''
-        chains.append(f'[{n}:v]{trim}setpts=PTS-STARTPTS,fps=30,scale={w}:{h},setsar=1,tpad=stop_mode=clone:stop_duration=30[{layer}]')
+        warp=capture_time_filter(name,c)
+        chains.append(f'[{n}:v]{trim}setpts=PTS-STARTPTS{warp},fps=30,scale={w}:{h},setsar=1,tpad=stop_mode=clone:stop_duration=30[{layer}]')
         chains.append(f'[{last}][{layer}]overlay={x}:{y}:eof_action=pass[{o}]');last=o
     if name=='intro':
         for i,(anchor,title,body) in enumerate([('rota','월간 로타','이번 주에 함께할 사람을 정합니다.'),('setlist','예배 콘티','곡과 순서를 정하고, 변경 내용을 공유해요.'),('sheets','악보 공유','키와 편곡에 맞는 악보를 함께 확인해요.')]):
@@ -173,12 +193,19 @@ def merge():
     scenes=STORY['scenes'];cmd=['ffmpeg','-y','-hide_banner','-filter_complex_threads','2']
     for s in scenes:cmd+=['-i',str(RENDER/(s['id']+'.mp4'))]
     chain=[]
-    for i in range(len(scenes)):chain.append(f'[{i}:v]settb=AVTB,setpts=PTS-STARTPTS[v{i}]')
-    previous='v0';audio='0:a';elapsed=scenes[0]['duration']
+    for i, scene in enumerate(scenes):
+        chain.append(f'[{i}:v]settb=AVTB,setpts=PTS-STARTPTS[v{i}]')
+        if not PREVIEW:
+            # AAC/container durations can differ from the decoded sample count.
+            # Pad/trim every chapter to the exact timeline before crossfading;
+            # otherwise tiny deficits accumulate into visibly early narration.
+            samples=round(scene['duration']*48000)
+            chain.append(f'[{i}:a]aresample=48000,apad,atrim=end_sample={samples},asetpts=N/SR/TB[voice{i}]')
+    previous='v0';audio='voice0';elapsed=scenes[0]['duration']
     for i,s in enumerate(scenes[1:],1):
         chain.append(f'[{previous}][v{i}]xfade=transition=fade:duration=0.6:offset={elapsed-.6}[x{i}]');previous=f'x{i}'
         if not PREVIEW:
-            chain.append(f'[{audio}][{i}:a]acrossfade=d=0.6:c1=tri:c2=tri[a{i}]');audio=f'a{i}'
+            chain.append(f'[{audio}][voice{i}]acrossfade=d=0.6:c1=tri:c2=tri[a{i}]');audio=f'a{i}'
         elapsed+=s['duration']-.6
     cmd+=['-filter_complex',';'.join(chain),'-map',f'[{previous}]']
     if not PREVIEW:cmd+=['-map',f'[{audio}]','-c:a','aac','-b:a','160k']

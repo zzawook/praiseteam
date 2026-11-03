@@ -1,96 +1,100 @@
 {
   "narration_delay": 0.4,
+  "alignment": {
+    "method": "forced",
+    "model": "kresnik/wav2vec2-large-xlsr-korean"
+  },
   "scenes": {
     "intro": {
-      "audio_sha256": "f7c5f0c02b37ef5ea7f9367a956b985b31e7e6996d2d66152cee8a60dae74a88",
+      "audio_sha256": "23216fa3a8869960781d9800e03d51e60590a69e0a5031e2f864a789645f0db1",
       "narration_sha256": "3c3950b267ff778ab1283f28fe30d47885209bd151532e855edba25c83a50088",
-      "waveform_similarity": 0.999564,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "rota": 1.575,
-        "setlist": 2.925,
-        "sheets": 4.1375,
-        "together": 14.875
+        "rota": 1.701,
+        "setlist": 2.963,
+        "sheets": 4.224,
+        "together": 14.976
       }
     },
     "setlist": {
-      "audio_sha256": "145e8684ea9426aaee03852cdf069bfd474f11dbfd97303f3a1e60d019cd4a38",
+      "audio_sha256": "0f56337d8d0a707f22ec408c44d4a2561de2ab71b575edf2d0201bf951544ebc",
       "narration_sha256": "6d24e9483b2f01a425bc8c5d7d3bd58ac4a2024183d5d08e95f2cd5722a09b4c",
-      "waveform_similarity": 0.999247,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "version": 3.9375,
-        "edit": 6.0,
-        "publish": 11.5625
+        "version": 4.084,
+        "edit": 5.686,
+        "publish": 11.352
       }
     },
     "songs": {
-      "audio_sha256": "67d366b4a2ec7e1960a8ed2e4f5e187b84f16c328be3556ddfd9dba819ce7d57",
+      "audio_sha256": "0b6476336b61b149a4688f7f30735c68ee96e720f4f445775e20cb9469cb3d77",
       "narration_sha256": "62441508cbeb02aafd14c27b6a4721a9fe829c78c3182a480443575fdc2a6350",
-      "waveform_similarity": 0.999397,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "versions": 4.2,
-        "details": 6.575,
-        "history": 12.6125
+        "versions": 3.724,
+        "details": 6.067,
+        "history": 11.673
       }
     },
     "rotation": {
-      "audio_sha256": "93d15dd86659e1ef71eb552a1a7447aefc0feb69b6b4b53b4615afb375a49246",
+      "audio_sha256": "82d5138231acf966fa7e1fd3f9a04e2b65c49c75b1922e93021fd442d73470b3",
       "narration_sha256": "9b1f98fa129d0e3bb711ca5a93441dd7e67df7a7bb4c701fb748d3c841c6f0ee",
-      "waveform_similarity": 0.999645,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "status": 3.8875,
-        "auto": 6.7875,
-        "blockouts": 10.95,
-        "answer": 14.075
+        "status": 4.044,
+        "auto": 6.446,
+        "blockouts": 10.17,
+        "answer": 13.694
       }
     },
     "live": {
-      "audio_sha256": "26abf8c56a31f6ea9deb023c747ddcd08a895bdadb3cceb1ac17b50b80850f42",
+      "audio_sha256": "e2cdd7118fa51bee6ab21bca029740f83a48f0826f0087a56c881416dfb6d892",
       "narration_sha256": "6496e91c331dba2cbd56312f9b3a748ae85c867291bee745d8cf8cc04295a87e",
-      "waveform_similarity": 0.99921,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "join": 1.325,
-        "page": 9.7,
-        "cue": 11.4875,
-        "unfollow": 16.6
+        "join": 1.421,
+        "page": 9.849,
+        "cue": 11.711,
+        "unfollow": 17.137
       }
     },
     "notes": {
-      "audio_sha256": "710a1544d4e8809eff061dc37a37d1d3dc1216ca32a7c92bdf9e67f64eea9911",
+      "audio_sha256": "4d8b3b4c2f5c6f9337f46a64da17628b616768ed8084e3f2a0311ffbbe9a8e1e",
       "narration_sha256": "f9a5be8668b24dfb7a96e6f1b8d832421a69b03f4d22a2e201e337cb950dca74",
-      "waveform_similarity": 0.999761,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "private": 3.2,
-        "shared": 6.3
+        "private": 3.545,
+        "shared": 6.07
       }
     },
     "chat": {
-      "audio_sha256": "dea7b84cd256ed3f47f32a4ba38701139e38bd3eba740535484fb5cff5b611ca",
+      "audio_sha256": "91456ef2c127fa713d0d0a385bcb13869491d5e575c438154fefd040e50a4703",
       "narration_sha256": "f16640d31d614de9c13ae3d96a9460a1f2ece11f54ed7f5fa4086d62655cef79",
-      "waveform_similarity": 0.999375,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "channels": 0.5,
-        "poll": 8.8,
-        "notice": 12.6875
+        "channels": 0.44,
+        "poll": 8.75,
+        "notice": 12.434
       }
     },
     "home": {
-      "audio_sha256": "ee2b60e5669e8d0e916a50087facbd2c82d3dc66fde62960e085ec9661386509",
+      "audio_sha256": "34e320d171203b90b2354f2c2a3340a43b329a5ed207d4dfd6c02a08264d92c8",
       "narration_sha256": "9ad6582f2632359f2eb60f4d0ef0988b93258913051f608de1f39729dc8c7d3b",
-      "waveform_similarity": 0.999306,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "overview": 0.5,
-        "accept": 6.8,
-        "rsvp": 7.825,
-        "readiness": 11.775
+        "overview": 0.48,
+        "accept": 6.327,
+        "rsvp": 7.429,
+        "readiness": 11.053
       }
     },
     "outro": {
-      "audio_sha256": "2f4c219db7f9ab9bd4e531dbc1c809018a9637b1bdf12a502d66510ac7fb007e",
+      "audio_sha256": "808dc2509da9a574492455fa0614f741a769a73796e575627636116ba3ede81f",
       "narration_sha256": "ab86db0abd80e8e600c6893b4e5b07bbad44a38e3225cdd54ae64b0928d1b020",
-      "waveform_similarity": 0.999409,
+      "model": "kresnik/wav2vec2-large-xlsr-korean",
       "cues": {
-        "samples": 4.7875,
-        "try": 8.5125
+        "samples": 4.507,
+        "try": 7.452
       }
     }
   }

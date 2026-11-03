@@ -1,6 +1,10 @@
 {
   "title": "PraiseTeam - 찬양팀의 준비를 한곳에",
-  "voice": "ko-KR-SunHiNeural",
+  "voice": "ElevenLabs - user supplied",
+  "narration_source": {
+    "type": "import",
+    "manifest": "narration_sources.json"
+  },
   "scenes": [
     {
       "id": "intro",
