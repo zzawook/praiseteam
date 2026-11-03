@@ -453,7 +453,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get songForm => 'Song form';
 
   @override
-  String get songFormHint => 'e.g. I-V1-C-V2-C-B-C-O';
+  String get songFormHint => 'Write it your way. Line breaks are preserved.';
 
   @override
   String get sheet => 'Sheet';

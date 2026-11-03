@@ -247,7 +247,8 @@ void main() {
       await flow.tapText('Native QA Hymn');
       await flow.see('송폼');
       await flow.enter('BPM', '100');
-      await flow.enter('송폼', 'I V C C O');
+      const rawSongForm = ' intro  → v1, C x2\n후렴 한 번 더 / ending ';
+      await flow.enter('송폼', rawSongForm);
       await flow.enter('메모', '마지막 후렴 두 번');
       await flow.tapText('저장');
       await flow.tapText('콘티 공지하기');
@@ -260,7 +261,7 @@ void main() {
           .single();
       expect(item['version_id'], versionId);
       expect(item['bpm'], 100);
-      expect(item['song_form'], 'I-V-C-C-O');
+      expect(item['song_form'], rawSongForm);
       expect(
         (await db
                 .from('session_templates')

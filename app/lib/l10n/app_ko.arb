@@ -207,7 +207,7 @@
   "setlistEmptyMember": "아직 콘티가 공지되지 않았어요.",
   "key": "키",
   "songForm": "송폼",
-  "songFormHint": "예: I-V1-C-V2-C-B-C-O",
+  "songFormHint": "자유롭게 적어 주세요. 줄바꿈도 그대로 저장돼요.",
   "sheet": "악보",
   "noSheet": "악보 없음",
   "removeFromSetlist": "콘티에서 빼기",

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/music.dart';
 import '../../core/music_widgets.dart';
 import '../../core/widgets.dart';
 import '../../l10n/app_localizations.dart';
@@ -73,7 +72,8 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
       return;
     }
     setState(() => _busy = true);
-    final form = normalizeSongForm(_form.text);
+    // Song forms are the team's own notation, including spacing and newlines.
+    final form = _form.text;
     final ok = await runGuarded(
       context,
       () => ref.read(sessionsRepositoryProvider).updateItem(widget.item.id, {
@@ -175,6 +175,10 @@ class _ItemEditorState extends ConsumerState<_ItemEditor> {
             const SizedBox(height: 12),
             TextField(
               controller: _form,
+              minLines: 2,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
+              autocorrect: false,
               decoration: InputDecoration(labelText: l10n.songForm, hintText: l10n.songFormHint),
             ),
             const SizedBox(height: 12),

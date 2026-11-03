@@ -15,9 +15,16 @@ const out=process.env.DEMO_SHOTS||'/tmp/praiseteam-demo-qa';fs.mkdirSync(out,{re
   await btn(page,'곡 추가').click();await type(page,'곡 이름','데모에서 만든 곡');await btn(page,'저장').click();await waitText(page,'데모에서 만든 곡');
   await page.waitForTimeout(600);await page.reload();await semantics(page);await waitText(page,'데모에서 만든 곡');console.log('PASS local mutation and reload');
   const other=await open(browser,null,{viewport:{width:390,height:844}});await goto(other,base,'/t/1/songs','In Jesus Name');assert.ok(!(await labels(other)).some(x=>x.includes('데모에서 만든 곡')));await other.screenshot({path:out+'/mobile-songs.png'});await other.context().close();console.log('PASS visitor isolation');
-  await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(page,'송폼');await type(page,'BPM','108');await type(page,'메모','데모에서 바꾼 메모');await btn(page,'저장').click();await waitText(page,'데모에서 바꾼 메모');
+  const rawSongForm='  intro  → v1, Chorus x2\n후렴 한 번 더 / ending  ';
+  await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(page,'송폼');await type(page,'BPM','108');await type(page,'송폼',rawSongForm);await type(page,'메모','데모에서 바꾼 메모');await btn(page,'저장').click();await waitText(page,'데모에서 바꾼 메모');
+  assert.ok((await labels(page)).some(x=>x.includes(rawSongForm)),'setlist displays the raw song form');
+  await page.waitForTimeout(600);await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(page,'송폼');
+  await page.locator('textarea[aria-label^="송폼"],input[aria-label^="송폼"]').first().click();await page.waitForTimeout(250);
+  assert.equal(await page.evaluate(()=>document.activeElement.value),rawSongForm,'song form survives save, reload and re-edit without normalization');
+  await btn(page,'저장').click();await waitText(page,'데모에서 바꾼 메모');console.log('PASS raw song form preserves case, separators, whitespace and newlines');
   await btn(page,'바뀐 내용 공지하기').click();await btn(page,'바뀐 내용 공지하기').last().click();await page.waitForTimeout(600);console.log('PASS setlist edit and publish');
   await btn(page,'라이브하기').click();await waitText(page,'1명 함께');await waitText(page,'필기');await page.waitForTimeout(2000);await page.screenshot({path:out+'/stand.png'});console.log('PASS sample PDF and local live preview');
+  assert.ok((await labels(page)).some(x=>x.includes(rawSongForm)),'live stand displays the same raw song form');
   // Drawing, save acknowledgements and toolbar changes must retain the
   // loaded PDF. Reopening it cleared the page image and flashed white.
   const loadedBeforeInk=pdfLoads;assert.ok(loadedBeforeInk>0,'the sample PDF loaded');

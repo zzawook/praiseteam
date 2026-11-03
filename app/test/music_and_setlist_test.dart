@@ -10,13 +10,6 @@ void main() {
   final ko = lookupAppLocalizations(const Locale('ko'));
   final en = lookupAppLocalizations(const Locale('en'));
 
-  group('song form', () {
-    test('normalises separators and case', () {
-      expect(normalizeSongForm(' i v1  c-v2,c → b c '), 'I-V1-C-V2-C-B-C');
-      expect(normalizeSongForm(''), '');
-    });
-  });
-
   group('keys', () {
     test('accepts what the database accepts', () {
       for (final k in allKeys) {

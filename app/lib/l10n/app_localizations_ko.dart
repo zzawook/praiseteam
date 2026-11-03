@@ -432,7 +432,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get songForm => '송폼';
 
   @override
-  String get songFormHint => '예: I-V1-C-V2-C-B-C-O';
+  String get songFormHint => '자유롭게 적어 주세요. 줄바꿈도 그대로 저장돼요.';
 
   @override
   String get sheet => '악보';

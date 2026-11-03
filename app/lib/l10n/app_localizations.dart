@@ -899,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @songFormHint.
   ///
   /// In ko, this message translates to:
-  /// **'예: I-V1-C-V2-C-B-C-O'**
+  /// **'자유롭게 적어 주세요. 줄바꿈도 그대로 저장돼요.'**
   String get songFormHint;
 
   /// No description provided for @sheet.

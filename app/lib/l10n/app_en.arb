@@ -133,7 +133,7 @@
   "setlistEmptyMember": "The setlist hasn't been announced yet.",
   "key": "Key",
   "songForm": "Song form",
-  "songFormHint": "e.g. I-V1-C-V2-C-B-C-O",
+  "songFormHint": "Write it your way. Line breaks are preserved.",
   "sheet": "Sheet",
   "noSheet": "No sheet",
   "removeFromSetlist": "Remove from setlist",

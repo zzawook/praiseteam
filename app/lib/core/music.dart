@@ -7,10 +7,6 @@ const allKeys = [...majorKeys, ...minorKeys];
 final _keyPattern = RegExp(r'^[A-G](#|b)?m?$');
 bool isValidKey(String value) => _keyPattern.hasMatch(value);
 
-/// Normalises a typed song form ("i v1 c  v2-c b c") to "I-V1-C-V2-C-B-C".
-String normalizeSongForm(String raw) =>
-    raw.split(RegExp(r'[\s,\-–>→]+')).where((part) => part.isNotEmpty).map((part) => part.toUpperCase()).join('-');
-
 /// Video id of a YouTube link, for its thumbnail.
 String? youtubeId(String url) {
   final uri = Uri.tryParse(url.trim());
