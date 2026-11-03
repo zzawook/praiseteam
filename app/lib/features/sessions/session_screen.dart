@@ -46,7 +46,7 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
   }
 
   Future<void> _addSong(List<SetlistItem> items) async {
-    final entry = await pickSong(context, teamId: widget.teamId, alreadyIn: {for (final i in items) i.songId});
+    final entry = await pickSong(context, teamId: widget.teamId);
     if (entry == null || !mounted) return;
     if (entry.song.versions.isEmpty) {
       showMessage(context, AppLocalizations.of(context).songHasNoVersion);

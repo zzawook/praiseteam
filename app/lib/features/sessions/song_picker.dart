@@ -12,23 +12,21 @@ import '../songs/songs_screen.dart' show statsLine;
 
 /// Pick a song for the setlist, with how often and how recently the team
 /// sang it, or add a new one on the spot.
-Future<SongEntry?> pickSong(BuildContext context, {required int teamId, Set<int> alreadyIn = const {}}) =>
-    showModalBottomSheet<SongEntry>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (_) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.85,
-        maxChildSize: 0.95,
-        builder: (context, controller) => _SongPicker(teamId: teamId, alreadyIn: alreadyIn, controller: controller),
-      ),
-    );
+Future<SongEntry?> pickSong(BuildContext context, {required int teamId}) => showModalBottomSheet<SongEntry>(
+  context: context,
+  isScrollControlled: true,
+  showDragHandle: true,
+  builder: (_) => DraggableScrollableSheet(
+    expand: false,
+    initialChildSize: 0.85,
+    maxChildSize: 0.95,
+    builder: (context, controller) => _SongPicker(teamId: teamId, controller: controller),
+  ),
+);
 
 class _SongPicker extends ConsumerStatefulWidget {
-  const _SongPicker({required this.teamId, required this.alreadyIn, required this.controller});
+  const _SongPicker({required this.teamId, required this.controller});
   final int teamId;
-  final Set<int> alreadyIn;
   final ScrollController controller;
 
   @override
@@ -86,7 +84,6 @@ class _SongPickerState extends ConsumerState<_SongPicker> {
                   const Divider(),
                   for (final e in shown)
                     ListTile(
-                      enabled: !widget.alreadyIn.contains(e.song.id),
                       onTap: () => Navigator.pop(context, e),
                       leading: SongArtwork(url: songThumbnail(e.song)),
                       title: Text(e.song.title),

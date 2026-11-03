@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
 
+import '../features/sessions/setlist_snapshot_diff.dart';
 import 'demo_seed.dart';
 
 class DemoChange {
@@ -449,6 +449,8 @@ class DemoStore {
           when service['setlist_status'] == 'published')
         {
           'team_id': item['team_id'],
+          'item_id': item['id'],
+          'position': item['position'],
           'song_id': item['song_id'],
           'session_id': service['id'],
           'session_title': service['title'],
@@ -476,7 +478,18 @@ class DemoStore {
                         !DateTime.parse(h['starts_at'] as String).isAfter(now),
                   )
                   .toList()
-                ..sort((a, b) => _compare(b['starts_at'], a['starts_at']));
+                ..sort((a, b) {
+                  for (final field in [
+                    'starts_at',
+                    'session_id',
+                    'position',
+                    'item_id',
+                  ]) {
+                    final comparison = _compare(b[field], a[field]);
+                    if (comparison != 0) return comparison;
+                  }
+                  return 0;
+                });
           final future =
               history
                   .where(
@@ -489,7 +502,7 @@ class DemoStore {
           return <String, dynamic>{
             'team_id': song['team_id'],
             'song_id': song['id'],
-            'times_played': played.length,
+            'times_played': {for (final h in played) h['session_id']}.length,
             'last_played_at': played.firstOrNull?['starts_at'],
             'first_played_at': played.lastOrNull?['starts_at'],
             'usual_key': played.firstOrNull?['key'],
@@ -520,13 +533,13 @@ class DemoStore {
         });
         return song['id'];
       case 'top_songs':
-        final counts = <int, int>{};
+        final counts = <int, Set<int>>{};
         for (final h in _history()) {
           if (h['team_id'] == team &&
               _compare(h['starts_at'], p['p_from']) >= 0 &&
               _compare(h['starts_at'], p['p_to']) < 0 &&
               _compare(h['starts_at'], timestamp) <= 0) {
-            counts.update(h['song_id'] as int, (n) => n + 1, ifAbsent: () => 1);
+            (counts[h['song_id'] as int] ??= {}).add(h['session_id'] as int);
           }
         }
         return [
@@ -534,7 +547,7 @@ class DemoStore {
             {
               'song_id': e.key,
               'title': row('songs', e.key)!['title'],
-              'times': e.value,
+              'times': e.value.length,
             },
         ]..sort((a, b) => (b['times'] as int).compareTo(a['times'] as int));
       case 'reorder_setlist':
@@ -916,6 +929,7 @@ class DemoStore {
     final snapshot = [
       for (final i in items)
         {
+          'item_id': i['id'],
           'song_id': i['song_id'],
           'title': row('songs', i['song_id'])?['title'],
           'version_id': i['version_id'],
@@ -928,40 +942,13 @@ class DemoStore {
     final previous = rows('announcements')
         .where((a) => a['session_id'] == id)
         .firstOrNull;
+    final first = previous?['setlist_snapshot'] == null;
     final old = (previous?['setlist_snapshot'] as List? ?? [])
         .cast<Map<String, dynamic>>();
-    final diff = <String, dynamic>{};
-    if (old.isNotEmpty) {
-      diff['added'] = [
-        for (final i in snapshot)
-          if (!old.any((p) => p['song_id'] == i['song_id'])) i['title'],
-      ];
-      diff['removed'] = [
-        for (final i in old)
-          if (!snapshot.any((p) => p['song_id'] == i['song_id'])) i['title'],
-      ];
-      for (final (field, label) in [
-        ('key', 'key_changed'),
-        ('bpm', 'tempo_changed'),
-        ('version_id', 'version_changed'),
-      ]) {
-        diff[label] = [
-          for (final i in snapshot)
-            for (final before in old.where((p) => p['song_id'] == i['song_id']))
-              if (before[field] != i[field])
-                {
-                  'title': i['title'],
-                  'from': field == 'version_id'
-                      ? before['version']
-                      : before[field],
-                  'to': field == 'version_id' ? i['version'] : i[field],
-                },
-        ];
-      }
-      diff['reordered'] =
-          jsonEncode(old.map((i) => i['song_id']).toList()) !=
-          jsonEncode(snapshot.map((i) => i['song_id']).toList());
-    }
+    final diff = first
+        ? <String, dynamic>{}
+        : diffSetlistSnapshots(old, snapshot);
+    if (!first && diff.isEmpty) return diff;
     update('sessions', session, {
       'setlist_status': 'published',
       'published_at': session['published_at'] ?? timestamp,

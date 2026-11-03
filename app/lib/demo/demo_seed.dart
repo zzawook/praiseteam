@@ -294,6 +294,7 @@ DemoTables seedDemo(Map<String, dynamic> reference, {DateTime? now}) {
             (i) => i['session_id'] == id,
           ))
             {
+              'item_id': item['id'],
               'song_id': item['song_id'],
               'title': songs[(item['song_id'] as int) - 1]['title'],
               'version_id': item['version_id'],

@@ -93,6 +93,55 @@ void main() {
     expect(changes.keyChanged.single, (title: '데모에서 추가한 곡', from: 'G', to: 'A'));
   });
 
+  test('repeated songs preserve occurrence IDs, history and per-service statistics', () async {
+    final songs = SongsRepository(client, reader);
+    final sessions = SessionsRepository(client, reader);
+    final song = await songs.addSong(
+      1,
+      {'title': 'Repeated song QA'},
+      {'name': 'Original', 'default_key': 'G', 'bpm': 80},
+    );
+    await songs.addVersion(1, song, {'name': 'Reprise', 'default_key': 'A', 'bpm': 90});
+    final versions = await songs.versions(song);
+    final service = (await sessions.createSessions(1, [
+      {
+        'title': 'Repeated song service',
+        'starts_at': DateTime.now().subtract(const Duration(days: 1)).toUtc().toIso8601String(),
+      },
+    ])).single;
+    for (final (index, version) in versions.indexed) {
+      await sessions.addItem(
+        teamId: 1,
+        sessionId: service,
+        position: index + 1,
+        songId: song,
+        versionId: version.id,
+        key: version.defaultKey,
+        bpm: version.bpm,
+      );
+    }
+    final items = await sessions.setlist(service);
+    expect(items.map((i) => i.id).toSet().length, 2);
+    await sessions.publish(service);
+    var detail = await songs.detail(song);
+    expect(detail.history.length, 2);
+    expect(detail.stats.timesPlayed, 1);
+    expect(detail.stats.lastVersionId, versions.last.id);
+    final top = await songs.topSongs(1, DateTime.now().subtract(const Duration(days: 2)), DateTime.now());
+    expect(top.singleWhere((s) => s.songId == song).times, 1);
+    expect((await sessions.publish(service)).isEmpty, isTrue);
+    await sessions.reorder(service, items.reversed.map((i) => i.id).toList());
+    final changed = await sessions.publish(service);
+    expect(changed.reordered, isTrue);
+    expect(changed.keyChanged, isEmpty);
+    detail = await songs.detail(song);
+    expect(detail.stats.lastVersionId, versions.first.id);
+    await sessions.deleteItem(items.first.id);
+    final removed = await sessions.publish(service);
+    expect(removed.removed, ['2. Repeated song QA']);
+    expect((await sessions.setlist(service)).single.id, items.last.id);
+  });
+
   test('chat updates are delivered locally and polls retain votes', () async {
     final repo = ChatRepository(client);
     expect(await repo.channels(1), isNotEmpty);

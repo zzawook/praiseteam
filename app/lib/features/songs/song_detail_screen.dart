@@ -299,7 +299,7 @@ class _VersionCard extends ConsumerWidget {
     final past = played.where((h) => !h.startsAt.isAfter(now)).toList();
     final usage = past.isEmpty
         ? l10n.neverPlayed
-        : '${l10n.playedTimes(past.length)}, ${l10n.lastPlayed(DateFormats(context).ago(past.first.startsAt))}';
+        : '${l10n.playedTimes({for (final h in past) h.sessionId}.length)}, ${l10n.lastPlayed(DateFormats(context).ago(past.first.startsAt))}';
 
     return Card(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),

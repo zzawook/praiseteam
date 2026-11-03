@@ -54,6 +54,8 @@ class SongsRepository {
           .select('session_id, session_title, starts_at, key, bpm, version_id, version_name')
           .eq('song_id', songId)
           .order('starts_at', ascending: false)
+          .order('session_id', ascending: false)
+          .order('position')
           .limit(50),
     ).wait;
     return SongDetail(
