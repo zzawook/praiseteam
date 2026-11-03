@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +29,7 @@ import '../songs/songs_providers.dart';
 import '../teams/models.dart';
 import '../teams/teams_providers.dart';
 import 'sheet_pdf_page.dart';
+import 'sheet_viewport.dart';
 
 part 'setlist_viewer_screen.g.dart';
 
@@ -318,10 +320,6 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
     final me = ref.watch(currentUserIdProvider);
     final online = ref.watch(onlineStatusProvider.select((s) => s.online));
     final waiting = ref.watch(strokeOutboxProvider);
-    // While drawing with a finger the pages must not slide; with a stylus,
-    // fingers keep turning pages and only the pen draws.
-    final physics = _ink.drawing && !_ink.stylusOnly ? const NeverScrollableScrollPhysics() : const PageScrollPhysics();
-
     return SafeArea(
       child: Column(
         children: [
@@ -355,17 +353,20 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
                       ),
                       child: PageView.builder(
                         controller: _pages,
-                        physics: physics,
+                        // Each page distinguishes swiping, panning, pinching
+                        // and drawing before asking this controller to turn.
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: pages.length,
                         onPageChanged: (i) => _pageChanged(i, pages),
                         itemBuilder: (context, i) => _PageSlot(
+                          key: ValueKey((pages[i].item.id, pages[i].sheet?.id, pages[i].pageIndex)),
                           page: pages[i],
                           stage: _stage,
-                          tapToTurn: !_ink.drawing,
+                          ink: _ink,
                           onTurn: (delta) => _go(delta, pages.length),
                           annotations: pages[i].sheet == null
                               ? null
-                              : AnnotationLayer(
+                              : (blocked) => AnnotationLayer(
                                   teamId: widget.teamId,
                                   sessionId: widget.sessionId,
                                   itemId: pages[i].item.id,
@@ -374,6 +375,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
                                   settings: _ink,
                                   isLeader: isLeader,
                                   myId: me,
+                                  interactionBlocked: blocked,
                                   onAction: _record,
                                   onStylusSeen: () {
                                     if (!_ink.stylusOnly) setState(() => _ink = _ink.copyWith(stylusOnly: true));
@@ -575,17 +577,18 @@ class _Header extends StatelessWidget {
 /// a song without a sheet.
 class _PageSlot extends ConsumerWidget {
   const _PageSlot({
+    super.key,
     required this.page,
     required this.stage,
-    required this.tapToTurn,
+    required this.ink,
     required this.onTurn,
     required this.annotations,
   });
   final StandPage page;
   final bool stage;
-  final bool tapToTurn;
+  final InkSettings ink;
   final void Function(int delta) onTurn;
-  final Widget? annotations;
+  final Widget Function(ValueListenable<bool>)? annotations;
 
   static const _invert = ColorFilter.matrix([
     -1, 0, 0, 0, 255, //
@@ -598,77 +601,79 @@ class _PageSlot extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final sheet = page.sheet;
-    Widget content;
-    if (sheet == null) {
-      content = Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (setlistThumbnail(page.item) case final url?) ...[
-                SongArtwork(url: url, width: 256, height: 144),
-                const SizedBox(height: 20),
-              ],
-              Text(
-                page.item.song.title,
-                style: Theme.of(context).textTheme.headlineMedium
-                    ?.copyWith(color: Colors.white, fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 12),
-              Text(l10n.noSheetForSong, style: const TextStyle(color: Colors.white70)),
-            ],
-          ),
-        ),
-      );
-    } else {
-      final bytes = ref.watch(sheetBytesProvider(sheet.storagePath));
-      final size = sheet.pageSizes[page.pageIndex];
-      content = AsyncBody(
-        value: bytes,
-        onRetry: () => ref.invalidate(sheetBytesProvider(sheet.storagePath)),
-        data: (data) => Center(
-          child: AspectRatio(
-            aspectRatio: size.width / size.height,
-            child: ColorFiltered(
-              // Stage mode inverts page and notes together, so every mark
-              // stays legible on black.
-              colorFilter: stage ? _invert : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  ColoredBox(
-                    color: Colors.white,
-                    child: SheetPdfPage(
-                      data: data,
-                      sourceName: sheet.storagePath,
-                      pageNumber: page.pageIndex + 1,
-                    ),
-                  ),
-                  ?annotations,
+    final bytes = sheet == null ? null : ref.watch(sheetBytesProvider(sheet.storagePath));
+    Widget content(ValueListenable<bool> blocked, double renderScale) {
+      if (sheet == null) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (setlistThumbnail(page.item) case final url?) ...[
+                  SongArtwork(url: url, width: 256, height: 144),
+                  const SizedBox(height: 20),
                 ],
+                Text(
+                  page.item.song.title,
+                  style: Theme.of(context).textTheme.headlineMedium
+                      ?.copyWith(color: Colors.white, fontFamily: AppType.setlistFamily, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 12),
+                Text(l10n.noSheetForSong, style: const TextStyle(color: Colors.white70)),
+              ],
+            ),
+          ),
+        );
+      } else {
+        final size = sheet.pageSizes[page.pageIndex];
+        return AsyncBody(
+          value: bytes!,
+          onRetry: () => ref.invalidate(sheetBytesProvider(sheet.storagePath)),
+          data: (data) => Center(
+            child: AspectRatio(
+              aspectRatio: size.width / size.height,
+              child: ColorFiltered(
+                // Stage mode inverts page and notes together, so every mark
+                // stays legible on black.
+                colorFilter: stage ? _invert : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+                child: Semantics(
+                  container: true,
+                  image: true,
+                  label: l10n.sheetPage,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ColoredBox(
+                        color: Colors.white,
+                        child: SheetPdfPage(
+                          data: data,
+                          sourceName: sheet.storagePath,
+                          pageNumber: page.pageIndex + 1,
+                          renderScale: renderScale,
+                        ),
+                      ),
+                      ?annotations?.call(blocked),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
 
-    // Keep the wrapper mounted in drawing mode too. Swapping the subtree
-    // here would dispose the PDF every time the annotation toolbar opens.
-    // Tap the left or right third to turn the page (one-handed on stage).
-    return LayoutBuilder(
-      builder: (context, constraints) => GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTapUp: tapToTurn
-            ? (d) {
-                final x = d.localPosition.dx / constraints.maxWidth;
-                if (x > 0.66) onTurn(1);
-                if (x < 0.33) onTurn(-1);
-              }
-            : null,
-        child: content,
-      ),
+    // This wrapper stays mounted when tools, ink or zoom change.
+    return SheetViewport(
+      aspectRatio: sheet == null
+          ? null
+          : sheet.pageSizes[page.pageIndex].width / sheet.pageSizes[page.pageIndex].height,
+      zoomEnabled: sheet != null,
+      drawing: ink.drawing,
+      stylusOnly: ink.stylusOnly,
+      onTurn: onTurn,
+      builder: content,
     );
   }
 }

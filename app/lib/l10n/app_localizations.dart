@@ -1388,6 +1388,30 @@ abstract class AppLocalizations {
   /// **'필기'**
   String get annotate;
 
+  /// No description provided for @zoomIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'확대'**
+  String get zoomIn;
+
+  /// No description provided for @zoomOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'축소'**
+  String get zoomOut;
+
+  /// No description provided for @fitSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'화면 맞춤'**
+  String get fitSheet;
+
+  /// No description provided for @sheetPage.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 페이지'**
+  String get sheetPage;
+
   /// No description provided for @doneAnnotating.
   ///
   /// In ko, this message translates to:

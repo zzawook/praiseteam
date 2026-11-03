@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,15 +42,14 @@ class InkSettings {
     bool? showTeam,
     bool? showMine,
     bool? stylusOnly,
-  }) =>
-      InkSettings(
-        mode: mode ?? this.mode,
-        target: target ?? this.target,
-        color: color ?? this.color,
-        showTeam: showTeam ?? this.showTeam,
-        showMine: showMine ?? this.showMine,
-        stylusOnly: stylusOnly ?? this.stylusOnly,
-      );
+  }) => InkSettings(
+    mode: mode ?? this.mode,
+    target: target ?? this.target,
+    color: color ?? this.color,
+    showTeam: showTeam ?? this.showTeam,
+    showMine: showMine ?? this.showMine,
+    stylusOnly: stylusOnly ?? this.stylusOnly,
+  );
 }
 
 /// Undo/redo entry: a stroke that was drawn, or one that was erased.
@@ -80,6 +80,7 @@ class AnnotationLayer extends ConsumerStatefulWidget {
     required this.myId,
     required this.onAction,
     required this.onStylusSeen,
+    this.interactionBlocked,
   });
 
   final int teamId;
@@ -92,6 +93,7 @@ class AnnotationLayer extends ConsumerStatefulWidget {
   final String? myId;
   final void Function(InkAction) onAction;
   final VoidCallback onStylusSeen;
+  final ValueListenable<bool>? interactionBlocked;
 
   @override
   ConsumerState<AnnotationLayer> createState() => _AnnotationLayerState();
@@ -103,12 +105,54 @@ class _AnnotationLayerState extends ConsumerState<AnnotationLayer> {
   static const _eraserRadius = 0.015;
 
   final _live = <InkPoint>[];
+  final _pendingErases = <String>{};
   int? _pointer;
+  bool _sawStylus = false;
+  bool _erasing = false;
+  InkSettings? _strokeSettings;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.interactionBlocked?.addListener(_navigationChanged);
+  }
+
+  @override
+  void didUpdateWidget(covariant AnnotationLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.interactionBlocked != widget.interactionBlocked) {
+      oldWidget.interactionBlocked?.removeListener(_navigationChanged);
+      widget.interactionBlocked?.addListener(_navigationChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.interactionBlocked?.removeListener(_navigationChanged);
+    super.dispose();
+  }
+
+  void _cancelStroke() {
+    _pointer = null;
+    _strokeSettings = null;
+    if (_live.isNotEmpty || _pendingErases.isNotEmpty) {
+      setState(() {
+        _live.clear();
+        _pendingErases.clear();
+      });
+    }
+  }
+
+  void _navigationChanged() {
+    if (widget.interactionBlocked?.value ?? false) _cancelStroke();
+  }
 
   bool _accepts(PointerEvent e) {
     if (!widget.settings.drawing) return false;
     if (e.kind == PointerDeviceKind.stylus || e.kind == PointerDeviceKind.invertedStylus) return true;
-    return !widget.settings.stylusOnly;
+    if (widget.interactionBlocked?.value ?? false) return false;
+    if (e.kind == PointerDeviceKind.mouse && e.buttons != kPrimaryMouseButton) return false;
+    return !widget.settings.stylusOnly && !_sawStylus;
   }
 
   InkPoint _toPage(PointerEvent e, Size size) {
@@ -122,21 +166,22 @@ class _AnnotationLayerState extends ConsumerState<AnnotationLayer> {
   }
 
   List<InkStroke> _visible(Map<String, InkStroke> all) => [
-        for (final s in all.values)
-          if (!s.isDeleted &&
-              s.itemId == widget.itemId &&
-              s.sheetId == widget.sheetId &&
-              s.pageIndex == widget.pageIndex &&
-              (s.ownerId == widget.myId ? widget.settings.showMine : widget.settings.showTeam))
-            s,
-      ]..sort((a, b) => a.id.compareTo(b.id)); // UUIDv7: creation order
+    for (final s in all.values)
+      if (!s.isDeleted &&
+          s.itemId == widget.itemId &&
+          s.sheetId == widget.sheetId &&
+          s.pageIndex == widget.pageIndex &&
+          (s.ownerId == widget.myId ? widget.settings.showMine : widget.settings.showTeam))
+        s,
+  ]..sort((a, b) => a.id.compareTo(b.id)); // UUIDv7: creation order
 
   void _erase(InkPoint at, List<InkStroke> visible) {
     final controller = ref.read(sessionInkProvider(widget.sessionId).notifier);
     for (final s in visible) {
       if (controller.canErase(s, isLeader: widget.isLeader) && distanceToStroke(at, s.points) < _eraserRadius) {
-        controller.setDeleted(s.id, deleted: true);
-        widget.onAction(Erased(s.id));
+        // Preview locally, commit on release. A second finger may turn this
+        // gesture into a pinch; in that case nothing must actually be erased.
+        if (_pendingErases.add(s.id)) setState(() {});
       }
     }
   }
@@ -154,24 +199,32 @@ class _AnnotationLayerState extends ConsumerState<AnnotationLayer> {
           behavior: settings.drawing ? HitTestBehavior.opaque : HitTestBehavior.translucent,
           onPointerDown: (e) {
             if (e.kind == PointerDeviceKind.stylus || e.kind == PointerDeviceKind.invertedStylus) {
+              // A palm may land before the pen. Replace its provisional mark,
+              // rather than letting it keep ownership of the pen's gesture.
+              if (_pointer != null && _pointer != e.pointer) _cancelStroke();
+              _sawStylus = true;
               widget.onStylusSeen();
             }
             if (!_accepts(e) || _pointer != null) return;
             _pointer = e.pointer;
+            _strokeSettings = settings;
+            _erasing = settings.mode == InkMode.eraser || e.kind == PointerDeviceKind.invertedStylus;
             final point = _toPage(e, size);
             // The back end of a stylus erases, whatever tool is selected.
-            if (settings.mode == InkMode.eraser || e.kind == PointerDeviceKind.invertedStylus) {
+            if (_erasing) {
               _erase(point, visible);
             } else {
-              setState(() => _live
-                ..clear()
-                ..add(point));
+              setState(
+                () => _live
+                  ..clear()
+                  ..add(point),
+              );
             }
           },
           onPointerMove: (e) {
             if (e.pointer != _pointer) return;
             final point = _toPage(e, size);
-            if (settings.mode == InkMode.eraser || e.kind == PointerDeviceKind.invertedStylus) {
+            if (_erasing) {
               _erase(point, visible);
             } else {
               setState(() => _live.add(point));
@@ -180,16 +233,29 @@ class _AnnotationLayerState extends ConsumerState<AnnotationLayer> {
           onPointerUp: (e) {
             if (e.pointer != _pointer) return;
             _pointer = null;
+            final strokeSettings = _strokeSettings ?? settings;
+            _strokeSettings = null;
+            if (_erasing) {
+              final controller = ref.read(sessionInkProvider(widget.sessionId).notifier);
+              for (final id in _pendingErases) {
+                controller.setDeleted(id, deleted: true);
+                widget.onAction(Erased(id));
+              }
+              setState(_pendingErases.clear);
+              return;
+            }
             if (_live.isEmpty) return;
-            final highlighter = settings.mode == InkMode.highlighter;
-            final stroke = ref.read(sessionInkProvider(widget.sessionId).notifier).add(
+            final highlighter = strokeSettings.mode == InkMode.highlighter;
+            final stroke = ref
+                .read(sessionInkProvider(widget.sessionId).notifier)
+                .add(
                   teamId: widget.teamId,
                   itemId: widget.itemId,
                   sheetId: widget.sheetId,
                   pageIndex: widget.pageIndex,
-                  visibility: settings.target,
+                  visibility: strokeSettings.target,
                   tool: highlighter ? InkTool.highlighter : InkTool.pen,
-                  color: highlighter ? AppColors.stageAmber.toARGB32() : settings.color,
+                  color: highlighter ? AppColors.stageAmber.toARGB32() : strokeSettings.color,
                   width: highlighter ? _highlighterWidth : _penWidth,
                   points: List.of(_live),
                 );
@@ -198,21 +264,27 @@ class _AnnotationLayerState extends ConsumerState<AnnotationLayer> {
           },
           onPointerCancel: (e) {
             if (e.pointer != _pointer) return;
-            _pointer = null;
-            setState(_live.clear);
+            _cancelStroke();
           },
           child: CustomPaint(
             size: size,
             painter: InkPainter(
-              strokes: visible,
-              revision: Object.hashAll([for (final s in visible) s.id]),
+              strokes: [
+                for (final s in visible)
+                  if (!_pendingErases.contains(s.id)) s,
+              ],
+              revision: Object.hash(Object.hashAll([for (final s in visible) s.id]), Object.hashAll(_pendingErases)),
               live: _live.isEmpty
                   ? null
                   : LiveInk(
                       points: List.of(_live),
-                      tool: settings.mode == InkMode.highlighter ? InkTool.highlighter : InkTool.pen,
-                      color: settings.mode == InkMode.highlighter ? AppColors.stageAmber.toARGB32() : settings.color,
-                      width: settings.mode == InkMode.highlighter ? _highlighterWidth : _penWidth,
+                      tool: (_strokeSettings ?? settings).mode == InkMode.highlighter
+                          ? InkTool.highlighter
+                          : InkTool.pen,
+                      color: (_strokeSettings ?? settings).mode == InkMode.highlighter
+                          ? AppColors.stageAmber.toARGB32()
+                          : (_strokeSettings ?? settings).color,
+                      width: (_strokeSettings ?? settings).mode == InkMode.highlighter ? _highlighterWidth : _penWidth,
                     ),
             ),
           ),

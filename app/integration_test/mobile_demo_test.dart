@@ -12,6 +12,7 @@ import 'package:praiseteam/main.dart' as app;
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'flow_helpers.dart';
+import 'zoom_checks.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -78,6 +79,7 @@ void main() {
             .any((page) => page.document != null),
         reason: 'native PDF is rendered',
       );
+      await checkNativeZoom(flow, container);
       final center = tester.getRect(find.byType(AnnotationLayer).first).center;
       Future<void> circle(Offset origin) async {
         final gesture = await tester.startGesture(origin + const Offset(25, 0));

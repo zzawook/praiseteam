@@ -780,6 +780,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get annotate => 'Annotate';
 
   @override
+  String get zoomIn => 'Zoom in';
+
+  @override
+  String get zoomOut => 'Zoom out';
+
+  @override
+  String get fitSheet => 'Fit to screen';
+
+  @override
+  String get sheetPage => 'Sheet page';
+
+  @override
   String get doneAnnotating => 'Done';
 
   @override

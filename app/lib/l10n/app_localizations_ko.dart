@@ -720,6 +720,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get annotate => '필기';
 
   @override
+  String get zoomIn => '확대';
+
+  @override
+  String get zoomOut => '축소';
+
+  @override
+  String get fitSheet => '화면 맞춤';
+
+  @override
+  String get sheetPage => '악보 페이지';
+
+  @override
   String get doneAnnotating => '완료';
 
   @override
