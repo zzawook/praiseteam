@@ -17,12 +17,14 @@
 
     <article id="ko" lang="ko">
       <h1>개인정보처리방침</h1>
-      <p class="updated">시행일 2026년 11월 1일</p>
+      <p class="updated">시행일 2026년 11월 3일</p>
 
       <p>PraiseTeam은 교회 찬양팀이 콘티, 악보, 로테이션, 공지와 대화를 함께 보려고 쓰는 앱이에요. 이 문서는 앱이 어떤 정보를 왜 저장하고, 누구에게 보이며, 어떻게 지울 수 있는지 설명해요. 광고를 붙이거나 정보를 팔지 않고, 사용 분석 도구도 쓰지 않아요.</p>
 
       <h2>로그인할 때 받는 정보</h2>
       <p>Google로 로그인하면 Google 계정의 이름, 이메일 주소, 프로필 사진 주소를 받아요. 이름은 팀원에게 보이는 표시 이름의 처음 값으로 쓰고, 설정에서 바꿀 수 있어요. 이메일 주소는 로그인에만 쓰고 다른 팀원에게 보이지 않아요. Google에서 받은 정보는 <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API 서비스 사용자 데이터 정책</a>의 제한적 사용 요건을 지켜서 다뤄요.</p>
+
+      <p>iOS에서 Apple 로그인이 제공되는 경우 Apple 계정 식별자와 제공에 동의한 이름·이메일(비공개 릴레이 주소 포함)을 받아요. 나중에 계정을 삭제할 때 Apple 연결도 해지하도록, Apple 갱신 토큰을 서버의 비공개 영역에 암호화해 저장해요. 해지가 일시 실패하면 완료할 때까지 암호화된 요청을 보관하고 다시 시도하며, 완료된 요청은 삭제해요.</p>
 
       <h2>앱을 쓰면서 저장되는 정보</h2>
       <ul>
@@ -43,6 +45,7 @@
         <li>데이터와 악보 파일: Supabase(싱가포르 리전)</li>
         <li>푸시 알림 전달: Google Firebase Cloud Messaging</li>
         <li>웹 앱 배포: Google Firebase Hosting</li>
+        <li>YouTube 링크의 썸네일: Google의 이미지 서버에서 불러오며, 이 요청에 기기 IP 주소가 전달돼요.</li>
         <li>내 기기: 7일 안의 예배와 내가 섬기는 예배의 콘티, 악보, 필기를 인터넷 없이 보려고 기기에 저장해요. 로그아웃하면 지워져요.</li>
       </ul>
 
@@ -58,12 +61,14 @@
 
     <article id="en" lang="en">
       <h1>Privacy policy</h1>
-      <p class="updated">Effective 1 November 2026</p>
+      <p class="updated">Effective 3 November 2026</p>
 
       <p>PraiseTeam is an app church worship teams use to share setlists, sheet music, rotations, announcements and chat. This page explains what the app stores and why, who can see it, and how to have it deleted. There are no ads, nothing is sold, and no analytics tools are used.</p>
 
       <h2>When you sign in</h2>
       <p>Signing in with Google gives the app your Google account name, email address and profile picture URL. The name becomes your display name, which you can change in settings. Your email address is used only to sign you in and is not shown to teammates. Information received from Google APIs is handled in line with the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including its Limited Use requirements.</p>
+
+      <p>Where Apple sign-in is offered on iOS, we receive your Apple account identifier and the name and email you choose to share, including a private relay email. An Apple refresh token is encrypted in private server storage so deleting your account can also revoke the Apple connection. If revocation temporarily fails, the encrypted request is retained and retried until complete, then deleted.</p>
 
       <h2>What the app stores as you use it</h2>
       <ul>
@@ -84,6 +89,7 @@
         <li>Data and sheet files: Supabase (Singapore region)</li>
         <li>Push delivery: Google Firebase Cloud Messaging</li>
         <li>The web app: Google Firebase Hosting</li>
+        <li>YouTube thumbnails: loaded from Google image servers, which receive the device IP address for those requests.</li>
         <li>Your device: setlists, sheets and notes for services in the next 7 days and services you serve at, so they open without internet. Signing out removes them.</li>
       </ul>
 
@@ -97,7 +103,7 @@
       <p class="contact"><a href="mailto:kjaehyeok21@gmail.com">kjaehyeok21@gmail.com</a></p>
     </article>
 
-    <footer class="footer"><a href="about.html">PraiseTeam 소개</a><a href="/">앱 열기</a></footer>
+    <footer class="footer"><a href="about.html">PraiseTeam 소개</a><a href="delete-account.html">계정 삭제</a><a href="support.html">문의</a><a href="/">앱 열기</a></footer>
   </main>
 </body>
 </html>

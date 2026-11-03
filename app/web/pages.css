@@ -64,7 +64,7 @@ li { margin-bottom: 0.4rem; }
 .updated { color: var(--muted); font-size: 0.875rem; margin-bottom: 1.75rem; }
 article + article { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--rule); }
 
-.footer { display: flex; gap: 1.5rem; margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: 0.875rem; }
+.footer { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: 0.875rem; }
 
 /* about: the setlist card is the page's one picture */
 .hero h1 { font-size: clamp(2.25rem, 7vw, 3.25rem); margin-bottom: 0.75rem; letter-spacing: -0.01em; }

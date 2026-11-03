@@ -8,6 +8,8 @@ version code live in `app/pubspec.yaml`. The iOS target supports iOS 15+.
 - `flutter analyze --no-pub` and `flutter test --no-pub` from `app/`.
 - `node e2e/run_native.cjs` on a disposable Android emulator and the existing
   local Supabase stack. No database reset is performed. See `e2e/README.md`.
+- `node e2e/run_native.cjs --device-extras` checks the Android file picker,
+  image-to-PDF upload, thumbnails and offline cache/ink reconnection.
 - The Codemagic `ios-simulator` workflow runs native UI/PDF tests with the sample
   team. This verifies native libraries and layouts, not live Apple/Google OAuth
   or APNs delivery. Those need a signed build and real accounts/devices.
@@ -19,6 +21,8 @@ version code live in `app/pubspec.yaml`. The iOS target supports iOS 15+.
 Run `python3 scripts/build_store.py`. It rejects development/demo configuration
 and privileged backend keys, then produces signed AAB/APK files and checksums
 under `output/store/android/`. Gradle fails if release signing is missing.
+Run `python3 scripts/verify_android_release.py` to verify APK/AAB signatures,
+APK ZIP alignment and every 64-bit native library's 16 KB ELF alignment.
 
 Keep the existing `.secrets/praiseteam-release.jks` and its passwords. In Play
 Console, upload the AAB to internal testing first. Once Play App Signing is
@@ -108,6 +112,10 @@ mode and early UIScene notification delegate setup. The app uses Firebase
 Installation IDs consistently on Android, iOS and web.
 
 ## Store listing and review inputs
+
+Prepared Korean/English copy and console URLs are in [STORE_LISTING.md](STORE_LISTING.md).
+The existing 512/1024 px icons and rendered feature graphic are exported by
+`scripts/store_assets.py` to `output/store/listing/`.
 
 Use the actual app's capabilities and the published privacy/deletion/support
 pages. Declare account identifiers, contact data, uploaded files/images,
