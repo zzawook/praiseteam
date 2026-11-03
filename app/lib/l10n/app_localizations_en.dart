@@ -453,6 +453,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get songForm => 'Song form';
 
   @override
+  String get selectedVersion => 'Selected arrangement';
+
+  @override
+  String get referenceLinks => 'Reference links';
+
+  @override
+  String get noVersionLinks =>
+      'This arrangement has no reference links. Open full song details to check other arrangements.';
+
+  @override
+  String get fullSongDetails => 'Full song details';
+
+  @override
+  String get editSetlistItem => 'Edit setlist entry';
+
+  @override
+  String get watchOnYouTube => 'Watch on YouTube';
+
+  @override
+  String get linkOpenFailed => 'Could not open the link. Please try again.';
+
+  @override
   String get songFormHint => 'Write it your way. Line breaks are preserved.';
 
   @override

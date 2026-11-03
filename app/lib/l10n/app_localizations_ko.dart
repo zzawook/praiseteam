@@ -432,6 +432,27 @@ class AppLocalizationsKo extends AppLocalizations {
   String get songForm => '송폼';
 
   @override
+  String get selectedVersion => '선택한 버전';
+
+  @override
+  String get referenceLinks => '참고 링크';
+
+  @override
+  String get noVersionLinks => '이 버전에는 참고 링크가 없어요. 곡 전체 정보에서 다른 버전도 확인할 수 있어요.';
+
+  @override
+  String get fullSongDetails => '곡 전체 정보';
+
+  @override
+  String get editSetlistItem => '콘티 수정';
+
+  @override
+  String get watchOnYouTube => 'YouTube에서 보기';
+
+  @override
+  String get linkOpenFailed => '링크를 열지 못했어요. 다시 시도해 주세요.';
+
+  @override
   String get songFormHint => '자유롭게 적어 주세요. 줄바꿈도 그대로 저장돼요.';
 
   @override

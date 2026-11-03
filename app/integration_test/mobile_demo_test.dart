@@ -36,6 +36,8 @@ void main() {
       await flow.see('라이브하기');
       await flow.shot('02-service-setlist');
       await flow.tapText('In Jesus Name');
+      await flow.see('참고 링크');
+      await flow.tapText('콘티 수정');
       await flow.see('송폼');
       await flow.enter('BPM', '108');
       await flow.enter('메모', '마지막 후렴 두 번');

@@ -51,6 +51,8 @@ jobs:
           demo_server_pid=$!
           trap 'kill "$demo_server_pid"' EXIT
           node e2e/flow_demo.js
+          BROWSER=chromium node e2e/flow_setlist_details.js
+          BROWSER=webkit node e2e/flow_setlist_details.js
           BROWSER=chromium node e2e/flow_sheet_upload.js
           BROWSER=webkit node e2e/flow_sheet_upload.js
 

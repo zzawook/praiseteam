@@ -53,7 +53,7 @@ for(const [name,value]of Object.entries(timing.scenes)){
  }
  try{
   await chapter('setlist',route('sessions/'+f.service),'라이브하기',async(p,at)=>{
-   await at('version editor',cue('setlist','version')-.6,async()=>{await p.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(p,'송폼')});
+   await at('version editor',cue('setlist','version')-.6,async()=>{await p.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await btn(p,'콘티 수정').click();await waitText(p,'송폼')});
    await at('tempo',cue('setlist','edit')+1,()=>type(p,'BPM','108'));
    await at('notes',cue('setlist','edit')+2,()=>type(p,'메모','마지막 후렴 두 번, 다 함께 마무리'));
    await at('save',cue('setlist','publish')-.9,()=>btn(p,'저장').click());

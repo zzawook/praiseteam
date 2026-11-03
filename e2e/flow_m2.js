@@ -136,6 +136,7 @@ let pages = [];
   await a.waitForTimeout(1500);
   // this service plays the song at its own tempo
   await a.getByRole('button', { name: /주의 집에 거하는 자/ }).last().click();
+  await btn(a, '콘티 수정').click();
   const bpm = a.locator('input[aria-label^="BPM"]').last();
   await bpm.click();
   await a.waitForFunction(() => document.activeElement?.tagName === 'INPUT', null, { timeout: 5000 });

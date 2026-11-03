@@ -896,6 +896,48 @@ abstract class AppLocalizations {
   /// **'송폼'**
   String get songForm;
 
+  /// No description provided for @selectedVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'선택한 버전'**
+  String get selectedVersion;
+
+  /// No description provided for @referenceLinks.
+  ///
+  /// In ko, this message translates to:
+  /// **'참고 링크'**
+  String get referenceLinks;
+
+  /// No description provided for @noVersionLinks.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 버전에는 참고 링크가 없어요. 곡 전체 정보에서 다른 버전도 확인할 수 있어요.'**
+  String get noVersionLinks;
+
+  /// No description provided for @fullSongDetails.
+  ///
+  /// In ko, this message translates to:
+  /// **'곡 전체 정보'**
+  String get fullSongDetails;
+
+  /// No description provided for @editSetlistItem.
+  ///
+  /// In ko, this message translates to:
+  /// **'콘티 수정'**
+  String get editSetlistItem;
+
+  /// No description provided for @watchOnYouTube.
+  ///
+  /// In ko, this message translates to:
+  /// **'YouTube에서 보기'**
+  String get watchOnYouTube;
+
+  /// No description provided for @linkOpenFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'링크를 열지 못했어요. 다시 시도해 주세요.'**
+  String get linkOpenFailed;
+
   /// No description provided for @songFormHint.
   ///
   /// In ko, this message translates to:

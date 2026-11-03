@@ -16,9 +16,9 @@ const out=process.env.DEMO_SHOTS||'/tmp/praiseteam-demo-qa';fs.mkdirSync(out,{re
   await page.waitForTimeout(600);await page.reload();await semantics(page);await waitText(page,'데모에서 만든 곡');console.log('PASS local mutation and reload');
   const other=await open(browser,null,{viewport:{width:390,height:844}});await goto(other,base,'/t/1/songs','In Jesus Name');assert.ok(!(await labels(other)).some(x=>x.includes('데모에서 만든 곡')));await other.screenshot({path:out+'/mobile-songs.png'});await other.context().close();console.log('PASS visitor isolation');
   const rawSongForm='  intro  → v1, Chorus x2\n후렴 한 번 더 / ending  ';
-  await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(page,'송폼');await type(page,'BPM','108');await type(page,'송폼',rawSongForm);await type(page,'메모','데모에서 바꾼 메모');await btn(page,'저장').click();await waitText(page,'데모에서 바꾼 메모');
+  await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(page,'참고 링크');await btn(page,'콘티 수정').click();await waitText(page,'송폼');await type(page,'BPM','108');await type(page,'송폼',rawSongForm);await type(page,'메모','데모에서 바꾼 메모');await btn(page,'저장').click();await waitText(page,'데모에서 바꾼 메모');
   assert.ok((await labels(page)).some(x=>x.includes(rawSongForm)),'setlist displays the raw song form');
-  await page.waitForTimeout(600);await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await waitText(page,'송폼');
+  await page.waitForTimeout(600);await goto(page,base,'/t/1/sessions/107','라이브하기');await page.getByRole('button',{name:/^1\s+In Jesus Name/}).click();await btn(page,'콘티 수정').click();await waitText(page,'송폼');
   await page.locator('textarea[aria-label^="송폼"],input[aria-label^="송폼"]').first().click();await page.waitForTimeout(250);
   assert.equal(await page.evaluate(()=>document.activeElement.value),rawSongForm,'song form survives save, reload and re-edit without normalization');
   await btn(page,'저장').click();await waitText(page,'데모에서 바꾼 메모');console.log('PASS raw song form preserves case, separators, whitespace and newlines');

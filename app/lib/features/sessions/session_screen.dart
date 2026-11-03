@@ -17,6 +17,7 @@ import '../teams/teams_providers.dart';
 import 'models.dart';
 import 'session_editor.dart';
 import 'sessions_providers.dart';
+import 'setlist_item_details.dart';
 import 'setlist_item_editor.dart';
 import 'song_picker.dart';
 
@@ -126,6 +127,23 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
     if (saved != null && mounted) _refresh();
   }
 
+  Future<void> _openItem(SetlistItem item, {required bool canEdit}) async {
+    final action = await showSetlistItemDetails(context, item: item, canEdit: canEdit);
+    if (!mounted) return;
+    switch (action) {
+      case SetlistItemAction.edit:
+        if (canEdit) await showSetlistItemEditor(context, item: item);
+      case SetlistItemAction.viewSheet:
+        await context.push('/t/${widget.teamId}/stand/${widget.sessionId}?item=${item.id}');
+      case SetlistItemAction.songDetails:
+        await context.push('/t/${widget.teamId}/songs/${item.songId}');
+        // Song links may have changed while visiting the library.
+        if (mounted) ref.invalidate(setlistProvider(widget.sessionId));
+      case null:
+        break;
+    }
+  }
+
   Future<void> _delete(Session session) async {
     final l10n = AppLocalizations.of(context);
     final ok = await confirm(
@@ -214,9 +232,7 @@ class _SessionScreenState extends ConsumerState<SessionScreen> {
                     onViewSheets: () => context.push('/t/${widget.teamId}/stand/${widget.sessionId}'),
                     onPublish: isLeader ? () => _publish(s) : null,
                     publishing: _publishing,
-                    onTapItem: (item) => isLeader
-                        ? showSetlistItemEditor(context, item: item)
-                        : context.push('/t/${widget.teamId}/stand/${widget.sessionId}?item=${item.id}'),
+                    onTapItem: (item) => _openItem(item, canEdit: isLeader),
                     onReorder: (from, to) => _reorder(_pendingOrder ?? items, from, to),
                     onAdd: () => _addSong(items),
                   ),

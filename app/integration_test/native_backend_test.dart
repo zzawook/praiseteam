@@ -245,6 +245,8 @@ void main() {
       await flow.tap(find.textContaining('Native acoustic'));
       await flow.contains('92 BPM');
       await flow.tapText('Native QA Hymn');
+      await flow.see('참고 링크');
+      await flow.tapText('콘티 수정');
       await flow.see('송폼');
       await flow.enter('BPM', '100');
       const rawSongForm = ' intro  → v1, C x2\n후렴 한 번 더 / ending ';

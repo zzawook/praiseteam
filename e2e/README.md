@@ -15,6 +15,7 @@ local Supabase stack and assert what each user can see.
 | `flow_versions.js` | song versions: a song added with its first version, a second version on the song's page, the version chosen when adding the song to a setlist (bringing its tempo), and switched in the entry's editor |
 | `flow_handoff.js` | team time from a Los Angeles browser; desktop/mobile rotation and song artwork screenshots; last-owner protection, account deletion and Storage API cleanup. Uses isolated fixtures and removes them afterwards; no DB reset needed. Requires `supabase functions serve` with `PUSH_WEBHOOK_SECRET=local-dev-push-secret`. |
 | `flow_sheet_upload.js` | browser-only demo, in Chromium and WebKit: delayed file delivery after window focus, visible preparation, PDF save and preview after reload, cancellation/retry, invalid PDFs and photo uploads. No backend or real user files. |
+| `flow_setlist_details.js` | browser-only demo, in Chromium and WebKit: leaders and members open song details from the service, selected-arrangement reference opens in a new tab, leader-only editing, full song details, and view-only sheets. YouTube navigation is intercepted locally. |
 | `showcase.js` | not a test: fills a believable team (members, services, setlists, rotation, chat) and screenshots the main screens on a phone in light and dark, for design reviews (`node e2e/showcase.js <dir> <label>`) |
 
 ```sh

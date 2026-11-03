@@ -96,6 +96,7 @@ let pages = [];
 
   // switch the version for this service in the entry's editor
   await a.getByRole('button', { name: /주의 집에 거하는 자/ }).last().click();
+  await btn(a, '콘티 수정').click();
   await waitText(a, '콘티에서 빼기');
   await a.getByRole('button', { name: /^버전/ }).last().click();
   await a.getByRole('menuitem', { name: /마커스워십/ }).or(a.getByRole('option', { name: /마커스워십/ })).or(a.getByRole('button', { name: /^마커스워십/ })).last().click();
