@@ -7,6 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdfrx/pdfrx.dart';
 
 import 'models.dart';
+import 'sheet_picker_options.dart' if (dart.library.js_interop) 'sheet_picker_options_web.dart';
 
 /// A sheet ready to upload: one PDF plus its page sizes.
 class PreparedSheet {
@@ -24,17 +25,20 @@ Future<PreparedSheet?> pickSheet() async {
   final files = await FilePicker.pickFiles(
     type: FileType.custom,
     allowedExtensions: const ['pdf', 'jpg', 'jpeg', 'png', 'webp'],
+    webOptions: sheetPickerWebOptions,
   );
   if (files.isEmpty) return null;
 
   final pdfs = files.where((f) => (f.extension ?? '').toLowerCase() == 'pdf').toList();
   final Uint8List pdf;
   if (pdfs.isNotEmpty) {
-    pdf = await pdfs.first.readAsBytes();
+    pdf = await pdfs.first.readAsBytes().timeout(const Duration(seconds: 60));
   } else {
-    pdf = await imagesToPdf([for (final f in files) await f.readAsBytes()]);
+    pdf = await imagesToPdf([for (final f in files) await f.readAsBytes().timeout(const Duration(seconds: 60))]);
   }
-  return PreparedSheet(pdf, await readPageSizes(pdf));
+  // Bound processing, not the user's time in the system file picker. The
+  // underlying read still disposes its document if it finishes after timeout.
+  return PreparedSheet(pdf, await readPageSizes(pdf).timeout(const Duration(seconds: 60)));
 }
 
 /// Longest side of an embedded photo; enough for reading a chart on a

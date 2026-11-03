@@ -1184,6 +1184,18 @@ abstract class AppLocalizations {
   /// **'PDF나 사진을 고르면 악보 한 개로 저장돼요.'**
   String get uploadSheetHint;
 
+  /// No description provided for @preparingSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 준비 중…'**
+  String get preparingSheet;
+
+  /// No description provided for @sheetPreparationTimeout.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보를 읽는 데 시간이 오래 걸려요. 파일을 기기에 저장한 뒤 다시 골라 주세요.'**
+  String get sheetPreparationTimeout;
+
   /// No description provided for @sheetLabel.
   ///
   /// In ko, this message translates to:

@@ -12,7 +12,7 @@ import '../auth/auth.dart';
 import '../teams/teams_providers.dart';
 import 'models.dart';
 import 'song_artwork.dart';
-import 'sheet_upload.dart';
+import 'sheet_upload_button.dart';
 import 'song_form.dart';
 import 'songs_providers.dart';
 
@@ -286,64 +286,6 @@ class _VersionCard extends ConsumerWidget {
     if (done) onChanged();
   }
 
-  Future<void> _upload(BuildContext context, WidgetRef ref) async {
-    final l10n = AppLocalizations.of(context);
-    PreparedSheet? prepared;
-    final picked = await runGuarded(context, () async => prepared = await pickSheet());
-    final sheet = prepared;
-    if (!picked || sheet == null || !context.mounted) return;
-    if (sheet.pageSizes.isEmpty) {
-      showMessage(context, l10n.uploadSheetHint);
-      return;
-    }
-
-    String? key = version.defaultKey;
-    final label = TextEditingController();
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(l10n.uploadSheet),
-          scrollable: true,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(l10n.pages(sheet.pageSizes.length)),
-              const SizedBox(height: 12),
-              KeyField(value: key, onChanged: (k) => setState(() => key = k)),
-              const SizedBox(height: 12),
-              TextField(
-                controller: label,
-                decoration: InputDecoration(labelText: l10n.sheetLabel),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.cancel)),
-            FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(l10n.uploadSheet)),
-          ],
-        ),
-      ),
-    );
-    if (ok != true || !context.mounted) return;
-    showMessage(context, l10n.uploading);
-    final done = await runGuarded(
-      context,
-      () => ref
-          .read(songsRepositoryProvider)
-          .uploadSheet(
-            teamId: teamId,
-            versionId: version.id,
-            pdf: sheet.pdf,
-            pageSizes: sheet.pageSizes,
-            key: key,
-            label: label.text,
-          ),
-    );
-    if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    if (done) onChanged();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -411,11 +353,7 @@ class _VersionCard extends ConsumerWidget {
             child: Wrap(
               spacing: 4,
               children: [
-                TextButton.icon(
-                  icon: const Icon(Icons.upload_file),
-                  label: Text(l10n.uploadSheet),
-                  onPressed: () => _upload(context, ref),
-                ),
+                SheetUploadButton(teamId: teamId, version: version, onChanged: onChanged),
                 TextButton.icon(
                   icon: const Icon(Icons.add_link),
                   label: Text(l10n.addLink),

@@ -39,11 +39,11 @@ jobs:
         run: flutter build web --release --no-pub --dart-define-from-file=env/example.json
       - name: Build the isolated browser demo
         run: flutter build web --release --no-pub --dart-define=DEMO_MODE=true --output=build/demo
-      - name: Install the browser for demo checks
+      - name: Install Chromium and WebKit for browser checks
         working-directory: e2e
         run: |
           npm ci
-          npx playwright-core install --with-deps chromium
+          npx playwright-core install --with-deps chromium webkit
       - name: Exercise the demo without a backend
         working-directory: .
         run: |
@@ -51,6 +51,8 @@ jobs:
           demo_server_pid=$!
           trap 'kill "$demo_server_pid"' EXIT
           node e2e/flow_demo.js
+          BROWSER=chromium node e2e/flow_sheet_upload.js
+          BROWSER=webkit node e2e/flow_sheet_upload.js
 
   database:
     name: Fresh database migrations and pgTAP

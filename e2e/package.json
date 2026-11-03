@@ -3,6 +3,6 @@
   "private": true,
   "description": "Browser end-to-end flows against the local Supabase stack",
   "dependencies": {
-    "playwright-core": "1.49.1"
+    "playwright-core": "1.62.1"
   }
 }

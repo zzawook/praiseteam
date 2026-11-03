@@ -14,6 +14,7 @@ local Supabase stack and assert what each user can see.
 | `flow_templates.js` | service templates on a phone: save one while adding a service, add the next service from it (the following free week, same time and place), edit, delete and add templates |
 | `flow_versions.js` | song versions: a song added with its first version, a second version on the song's page, the version chosen when adding the song to a setlist (bringing its tempo), and switched in the entry's editor |
 | `flow_handoff.js` | team time from a Los Angeles browser; desktop/mobile rotation and song artwork screenshots; last-owner protection, account deletion and Storage API cleanup. Uses isolated fixtures and removes them afterwards; no DB reset needed. Requires `supabase functions serve` with `PUSH_WEBHOOK_SECRET=local-dev-push-secret`. |
+| `flow_sheet_upload.js` | browser-only demo, in Chromium and WebKit: delayed file delivery after window focus, visible preparation, PDF save and preview after reload, cancellation/retry, invalid PDFs and photo uploads. No backend or real user files. |
 | `showcase.js` | not a test: fills a believable team (members, services, setlists, rotation, chat) and screenshots the main screens on a phone in light and dark, for design reviews (`node e2e/showcase.js <dir> <label>`) |
 
 ```sh
@@ -27,6 +28,16 @@ node e2e/flow_m3.js /tmp/shots                                         # screens
 ```
 
 Uses the system Chrome (`/usr/bin/google-chrome`) through playwright-core.
+
+The sheet upload regression also runs with Playwright WebKit and an iPhone
+viewport. This verifies the browser engine and simulated picker event ordering,
+not the real iOS Files/iCloud UI. After building/serving the demo on port 3001:
+
+```sh
+(cd e2e && npm ci && npx playwright-core install --with-deps webkit)
+BROWSER=webkit node e2e/flow_sheet_upload.js
+BROWSER=chromium node e2e/flow_sheet_upload.js
+```
 
 ## Native mobile smoke test
 

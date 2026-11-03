@@ -181,6 +181,8 @@
   "sheets": "Sheets",
   "uploadSheet": "Upload sheet",
   "uploadSheetHint": "Pick a PDF or photos; they're saved as one sheet.",
+  "preparingSheet": "Preparing sheet…",
+  "sheetPreparationTimeout": "The sheet is taking too long to read. Save the file to your device, then select it again.",
   "sheetLabel": "Label (e.g. chords, drums)",
   "uploading": "Uploading",
   "pages": "{count, plural, =1{1 page} other{{count} pages}}",

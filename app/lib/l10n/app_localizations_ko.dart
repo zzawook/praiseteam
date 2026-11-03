@@ -595,6 +595,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get uploadSheetHint => 'PDF나 사진을 고르면 악보 한 개로 저장돼요.';
 
   @override
+  String get preparingSheet => '악보 준비 중…';
+
+  @override
+  String get sheetPreparationTimeout =>
+      '악보를 읽는 데 시간이 오래 걸려요. 파일을 기기에 저장한 뒤 다시 골라 주세요.';
+
+  @override
   String get sheetLabel => '악보 이름 (예: 코드, 드럼)';
 
   @override

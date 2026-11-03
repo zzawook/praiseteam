@@ -618,6 +618,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick a PDF or photos; they\'re saved as one sheet.';
 
   @override
+  String get preparingSheet => 'Preparing sheet…';
+
+  @override
+  String get sheetPreparationTimeout =>
+      'The sheet is taking too long to read. Save the file to your device, then select it again.';
+
+  @override
   String get sheetLabel => 'Label (e.g. chords, drums)';
 
   @override
