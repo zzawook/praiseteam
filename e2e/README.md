@@ -62,6 +62,13 @@ proxy on port 3940 interrupts this test app's backend connection; the actual
 Supabase services and the host's network remain running. Port 3939 controls the
 disposable fixture/proxy. Run one native suite at a time.
 
+`node e2e/run_native.cjs --listing` captures seven native store screenshots with
+the fictional fixture team, without the sample-build banner. For a 9:16 phone
+set, set the disposable emulator to 1080×1920 at density 420 first. Captures go
+to `output/store/listing/android/`; reset any display overrides when finished.
+The runner refreshes locked dependencies before driving the app so the native
+integration-test plugin is registered even after a production build.
+
 That suite exercises signup, team creation, approval, last-owner protection,
 account deletion, song versions and links, native PDF decoding/Storage, service
 templates and publication, rota assignment/response, live page/cue exchange

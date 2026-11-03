@@ -7,6 +7,7 @@ const root=path.resolve(__dirname,'..');
 const args=process.argv.slice(2);
 const demo=args.includes('--demo');
 const extras=args.includes('--device-extras');
+const listing=args.includes('--listing');
 const at=args.indexOf('--device');
 const device=at<0?'emulator-5554':args[at+1];
 const adb=path.join(process.env.ANDROID_SDK_ROOT||path.join(os.homedir(),'Android/Sdk'),'platform-tools/adb');
@@ -15,6 +16,9 @@ let fixture,run;
 const completion=child=>new Promise(resolve=>child.once('exit',resolve));
 (async()=>{
  try{
+  // Restore dev-plugin registration after a production build, which excludes
+  // integration_test from GeneratedPluginRegistrant.
+  execFileSync('flutter',['pub','get','--enforce-lockfile'],{cwd:path.join(root,'app'),stdio:'inherit'});
   if(!demo){
    try{await fetch('http://127.0.0.1:3939/fixture');throw new Error('Another native fixture server is already running. Stop it first.')}catch(e){if(e.message.startsWith('Another'))throw e}
    fixture=spawn(process.execPath,[path.join(__dirname,'native_fixture.cjs')],{cwd:root,stdio:['ignore','inherit','inherit']});
@@ -24,8 +28,8 @@ const completion=child=>new Promise(resolve=>child.once('exit',resolve));
     if(n>=90)throw new Error('Native fixture setup timed out');await delay(500);
    }
   }
-  const output=path.join(root,'output/native',demo?'android-demo':extras?'android-device':'android-backend');fs.mkdirSync(output,{recursive:true});
-  const target=demo?'mobile_demo_test.dart':extras?'native_device_test.dart':'native_backend_test.dart';
+  const output=listing?path.join(root,'output/store/listing/android'):path.join(root,'output/native',demo?'android-demo':extras?'android-device':'android-backend');fs.mkdirSync(output,{recursive:true});
+  const target=demo?'mobile_demo_test.dart':extras?'native_device_test.dart':listing?'store_screenshots_test.dart':'native_backend_test.dart';
   const command=['drive','--no-pub','-d',device,'--driver=test_driver/mobile_driver.dart','--target=integration_test/'+target,
    demo?'--dart-define=DEMO_MODE=true':'--dart-define-from-file=env/local.android.json'];
   if(extras){
