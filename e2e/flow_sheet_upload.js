@@ -30,20 +30,38 @@ const photo = path.resolve(__dirname, 'sheet.png');
     page.on('pageerror', e => errors.push(e.message));
     page.on('console', message => {
       if (message.text().startsWith('PdfDocument initial load:')) loadedPdfs++;
+      if (message.type() === 'error' || message.type() === 'warning') console.log(message.type(), message.text());
     });
     // Hold the cold PDF engine download so the progress UI is observable.
     await page.route('**/pdfium.wasm', async route => {
       await pdfReady;
       await route.continue();
     });
+    let songUrl;
+    async function demoRow(table, field, value) {
+      return page.evaluate(({table, field, value}) => {
+        let saved = JSON.parse(localStorage.getItem('flutter.praiseteam_demo_data')
+          || localStorage.getItem('praiseteam_demo_data'));
+        if (typeof saved === 'string') saved = JSON.parse(saved);
+        return saved.tables[table].find(row => row[field] === value);
+      }, {table, field, value});
+    }
     async function song() {
-      await page.goto(`${base}/t/1/songs/1`, {waitUntil: 'load'});
+      await page.goto(songUrl, {waitUntil: 'load'});
       await semantics(page);
       await btn(page, '악보 올리기').first().waitFor();
     }
     async function picker() {
-      const choice = page.waitForEvent('filechooser');
-      await btn(page, '악보 올리기').first().click();
+      const button = btn(page, '악보 올리기').first();
+      // Flutter canvas scrolling is separate from DOM auto-scroll. Keep this
+      // focused fixture short enough to tap above the phone's bottom bar.
+      const box = await button.boundingBox();
+      assert.ok(box && box.y > 100 && box.y + box.height < page.viewportSize().height - 90,
+        'the upload button must be visible in the Flutter viewport');
+      const [choice] = await Promise.all([
+        page.waitForEvent('filechooser'),
+        button.tap(),
+      ]);
       return choice;
     }
     async function save(name) {
@@ -51,12 +69,25 @@ const photo = path.resolve(__dirname, 'sheet.png');
       await type(page, '악보 이름', name);
       await btn(page, '악보 올리기').last().click();
       await btn(page, '취소').waitFor({state: 'hidden'});
-      await page.waitForFunction(name => [...document.querySelectorAll('flt-semantics')]
-        .some(e => e.getAttribute('aria-label')?.startsWith(`${name}\n`)), name);
+      await waitText(page, name);
       // Demo metadata is persisted with a 250 ms debounce after the mutation.
       await page.waitForTimeout(600);
     }
 
+    // Use a new song with one empty arrangement. The existing demo song has
+    // several sheets/links that can push the upload control behind navigation
+    // when a mobile browser restores its viewport after closing a dialog.
+    await page.goto(`${base}/t/1/songs`, {waitUntil: 'load'});
+    await semantics(page);
+    await btn(page, '곡 추가').click();
+    await type(page, '곡 이름', 'Safari upload regression');
+    await btn(page, '저장').last().click();
+    await btn(page, '악보 올리기').waitFor();
+    await page.waitForTimeout(600);
+    // Imperative GoRouter pushes do not necessarily update the browser URL.
+    // Read only our newly created demo fixture's ID from its persisted data.
+    const songId = (await demoRow('songs', 'title', 'Safari upload regression')).id;
+    songUrl = `${base}/t/1/songs/${songId}`;
     await song();
     const delayedChoice = await picker();
     // This exact ordering discarded the input and silently returned [] before
@@ -75,8 +106,11 @@ const photo = path.resolve(__dirname, 'sheet.png');
 
     // Reopening the page verifies the bytes and metadata survived a reload.
     await song();
+    const sheet = await demoRow('sheets', 'label', 'Safari PDF check');
+    assert.equal(sheet.page_count, 2);
     const loadedBefore = loadedPdfs;
-    await page.locator('flt-semantics[aria-label^="Safari PDF check"]').click();
+    await page.goto(`${base}/t/1/sheets/${sheet.id}`, {waitUntil: 'load'});
+    await semantics(page);
     const deadline = Date.now() + 20000;
     while (loadedPdfs === loadedBefore && Date.now() < deadline) await page.waitForTimeout(100);
     assert.ok(loadedPdfs > loadedBefore, 'the uploaded PDF opens after reload');
