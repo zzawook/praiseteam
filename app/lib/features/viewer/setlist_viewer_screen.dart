@@ -109,7 +109,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   void dispose() {
     _pages?.dispose();
     _focus.dispose();
-    if (_stage || _live != null) WakelockPlus.disable();
+    if (_stage || _live != null) _keepAwake(false);
     _live?.leave();
     _live?.dispose();
     super.dispose();
@@ -141,7 +141,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
           });
       live.join();
       setState(() => _live = live);
-      WakelockPlus.enable();
+      _keepAwake(true);
       if (Env.demo) showMessage(context, AppLocalizations.of(context).demoLiveHint);
     } catch (error) {
       if (mounted) showError(context, error);
@@ -163,7 +163,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   Future<void> _leaveLive() async {
     final live = _live;
     setState(() => _live = null);
-    if (!_stage) WakelockPlus.disable();
+    if (!_stage) _keepAwake(false);
     await live?.leave();
     live?.dispose();
   }
@@ -214,7 +214,17 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
 
   void _setStage(bool on) {
     setState(() => _stage = on);
-    WakelockPlus.toggle(enable: on || _live != null);
+    _keepAwake(on || _live != null);
+  }
+
+  Future<void> _keepAwake(bool on) async {
+    try {
+      await WakelockPlus.toggle(enable: on);
+    } catch (error) {
+      // Browsers can refuse this optional request, for example when the
+      // document is hidden or battery saving is enabled. The stand still works.
+      debugPrint('Screen wake lock unavailable: $error');
+    }
   }
 
   void _record(InkAction action) => setState(() {
