@@ -62,7 +62,9 @@ cd ..
 python3 e2e/spa_server.py app/build/video 3002
 # In another terminal, with media/requirements.txt installed:
 python demo/media/narrate.py
+python demo/media/align_cues.py
 node demo/media/record.cjs
+python demo/media/check_notes_stability.py
 python demo/media/render.py
 ```
 
@@ -88,6 +90,13 @@ This writes `output/demo/review/praiseteam-tour-ko-preview.mp4`. Its subtitle
 timings are estimates for review. It leaves the production MP4, audio and
 timing manifest intact and is never copied by the deployment script.
 Normal rendering rejects a stale narration manifest after a script edit.
+
+`align_cues.py` measures word boundaries using the same voice and script, then
+verifies the reference waveform against the approved audio without replacing
+it. The checked-in `timing.json` drives card entrances, callouts and recorded
+UI actions. Recording and rendering reject mismatched audio hashes; rendering
+also checks the script hash. Each capture records its scheduled and actual
+action times in the ignored `work/clips.json` for review.
 
 After recording annotations, run `python demo/media/check_notes_stability.py`.
 It checks every frame of the fixed sample score title to catch PDF reload

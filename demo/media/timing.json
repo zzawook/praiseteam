@@ -1,0 +1,97 @@
+{
+  "narration_delay": 0.4,
+  "scenes": {
+    "intro": {
+      "audio_sha256": "f7c5f0c02b37ef5ea7f9367a956b985b31e7e6996d2d66152cee8a60dae74a88",
+      "narration_sha256": "3c3950b267ff778ab1283f28fe30d47885209bd151532e855edba25c83a50088",
+      "waveform_similarity": 0.999564,
+      "cues": {
+        "rota": 1.575,
+        "setlist": 2.925,
+        "sheets": 4.1375,
+        "together": 14.875
+      }
+    },
+    "setlist": {
+      "audio_sha256": "145e8684ea9426aaee03852cdf069bfd474f11dbfd97303f3a1e60d019cd4a38",
+      "narration_sha256": "6d24e9483b2f01a425bc8c5d7d3bd58ac4a2024183d5d08e95f2cd5722a09b4c",
+      "waveform_similarity": 0.999247,
+      "cues": {
+        "version": 3.9375,
+        "edit": 6.0,
+        "publish": 11.5625
+      }
+    },
+    "songs": {
+      "audio_sha256": "67d366b4a2ec7e1960a8ed2e4f5e187b84f16c328be3556ddfd9dba819ce7d57",
+      "narration_sha256": "62441508cbeb02aafd14c27b6a4721a9fe829c78c3182a480443575fdc2a6350",
+      "waveform_similarity": 0.999397,
+      "cues": {
+        "versions": 4.2,
+        "details": 6.575,
+        "history": 12.6125
+      }
+    },
+    "rotation": {
+      "audio_sha256": "93d15dd86659e1ef71eb552a1a7447aefc0feb69b6b4b53b4615afb375a49246",
+      "narration_sha256": "9b1f98fa129d0e3bb711ca5a93441dd7e67df7a7bb4c701fb748d3c841c6f0ee",
+      "waveform_similarity": 0.999645,
+      "cues": {
+        "status": 3.8875,
+        "auto": 6.7875,
+        "blockouts": 10.95,
+        "answer": 14.075
+      }
+    },
+    "live": {
+      "audio_sha256": "26abf8c56a31f6ea9deb023c747ddcd08a895bdadb3cceb1ac17b50b80850f42",
+      "narration_sha256": "6496e91c331dba2cbd56312f9b3a748ae85c867291bee745d8cf8cc04295a87e",
+      "waveform_similarity": 0.99921,
+      "cues": {
+        "join": 1.325,
+        "page": 9.7,
+        "cue": 11.4875,
+        "unfollow": 16.6
+      }
+    },
+    "notes": {
+      "audio_sha256": "710a1544d4e8809eff061dc37a37d1d3dc1216ca32a7c92bdf9e67f64eea9911",
+      "narration_sha256": "f9a5be8668b24dfb7a96e6f1b8d832421a69b03f4d22a2e201e337cb950dca74",
+      "waveform_similarity": 0.999761,
+      "cues": {
+        "private": 3.2,
+        "shared": 6.3
+      }
+    },
+    "chat": {
+      "audio_sha256": "dea7b84cd256ed3f47f32a4ba38701139e38bd3eba740535484fb5cff5b611ca",
+      "narration_sha256": "f16640d31d614de9c13ae3d96a9460a1f2ece11f54ed7f5fa4086d62655cef79",
+      "waveform_similarity": 0.999375,
+      "cues": {
+        "channels": 0.5,
+        "poll": 8.8,
+        "notice": 12.6875
+      }
+    },
+    "home": {
+      "audio_sha256": "ee2b60e5669e8d0e916a50087facbd2c82d3dc66fde62960e085ec9661386509",
+      "narration_sha256": "9ad6582f2632359f2eb60f4d0ef0988b93258913051f608de1f39729dc8c7d3b",
+      "waveform_similarity": 0.999306,
+      "cues": {
+        "overview": 0.5,
+        "accept": 6.8,
+        "rsvp": 7.825,
+        "readiness": 11.775
+      }
+    },
+    "outro": {
+      "audio_sha256": "2f4c219db7f9ab9bd4e531dbc1c809018a9637b1bdf12a502d66510ac7fb007e",
+      "narration_sha256": "ab86db0abd80e8e600c6893b4e5b07bbad44a38e3225cdd54ae64b0928d1b020",
+      "waveform_similarity": 0.999409,
+      "cues": {
+        "samples": 4.7875,
+        "try": 8.5125
+      }
+    }
+  }
+}

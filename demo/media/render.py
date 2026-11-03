@@ -23,6 +23,13 @@ source_hash = hashlib.sha256(json.dumps(source_story, ensure_ascii=False, sort_k
 if STORY.get('story_sha256') != source_hash:
     raise SystemExit('Storyboard changed. Run demo/media/narrate.py to regenerate narration and timing before rendering.')
 NAMES = {s['id']: s for s in STORY['scenes']}
+TIMING = json.loads((ROOT / 'demo/media/timing.json').read_text())
+if not PREVIEW:
+    for scene in STORY['scenes']:
+        saved=TIMING['scenes'][scene['id']]
+        assert saved['audio_sha256']==hashlib.sha256((WORK/(scene['id']+'.mp3')).read_bytes()).hexdigest(), 'Regenerate timing cues for the new narration'
+        assert saved['narration_sha256']==hashlib.sha256(scene['narration'].encode()).hexdigest(), 'Timing cues must match the script'
+def cue(scene,name):return TIMING['scenes'][scene]['cues'][name]
 NAVY = '#111D35'; BLUE = '#304DC4'; CREAM = '#F4F5F2'; MUTED = '#AAB8D2'; INK = '#1D2433'; GOLD = '#E7BA6E'
 SANS = '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'
 BOLD = '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'
@@ -118,11 +125,11 @@ def scene_video(scene,index,clips):
     name=scene['id'];duration=scene['duration'];bg=background(scene,index)
     cmd=['ffmpeg','-y','-hide_banner','-filter_complex_threads','2','-loop','1','-framerate','30','-i',str(bg)]
     chains=['[0:v]format=rgba,setsar=1[bg]'];last='bg';inputs=1
-    def overlay_png(p,x,y,begin=0,end=None,fade=True):
+    def overlay_png(p,x,y,begin=0,end=None,fade=True,fade_duration=.45):
         nonlocal inputs,last
         num=inputs;inputs+=1;cmd.extend(['-loop','1','-framerate','30','-i',str(p)])
         layer=f'l{num}';n=f'o{num}'
-        fadefilter=f',fade=t=in:st={begin}:d=0.45:alpha=1' if fade else ''
+        fadefilter=f',fade=t=in:st={begin}:d={fade_duration}:alpha=1' if fade else ''
         chains.append(f'[{num}:v]format=rgba{fadefilter}[{layer}]')
         enable=f"between(t,{begin},{end if end is not None else duration})"
         chains.append(f"[{last}][{layer}]overlay=x='{x}':y='{y}':enable='{enable}':eof_action=pass[{n}]");last=n
@@ -136,17 +143,21 @@ def scene_video(scene,index,clips):
         chains.append(f'[{n}:v]{trim}setpts=PTS-STARTPTS,fps=30,scale={w}:{h},setsar=1,tpad=stop_mode=clone:stop_duration=30[{layer}]')
         chains.append(f'[{last}][{layer}]overlay={x}:{y}:eof_action=pass[{o}]');last=o
     if name=='intro':
-        for i,(title,body) in enumerate([('월간 로타','이번 주에 함께할 사람을 정합니다.'),('예배 콘티','곡과 순서를 정하고, 변경 내용을 공유해요.'),('악보 공유','키와 편곡에 맞는 악보를 함께 확인해요.')]):
-            begin=1.5+i*3.4;overlay_png(card(title,body,'intro-card'+str(i)),f'1100+160*pow(max(0,1-(t-{begin})/0.65),3)',220+i*210,begin)
-        overlay_png(pill('흩어진 준비를, 한곳에.','intro-tag',590),110,723,11.4)
+        for i,(anchor,title,body) in enumerate([('rota','월간 로타','이번 주에 함께할 사람을 정합니다.'),('setlist','예배 콘티','곡과 순서를 정하고, 변경 내용을 공유해요.'),('sheets','악보 공유','키와 편곡에 맞는 악보를 함께 확인해요.')]):
+            begin=cue('intro',anchor)-1/30
+            overlay_png(card(title,body,'intro-card'+str(i)),f'1100+160*pow(max(0,1-(t-{begin})/0.25),3)',220+i*210,begin,fade_duration=.15)
+        overlay_png(pill('흩어진 준비를, 한곳에.','intro-tag',590),110,723,cue('intro','together')-1/30,fade_duration=.15)
     elif name=='outro':
-        overlay_png(pill('샘플 팀으로 직접 체험하기 →','outro-tag',595),112,'625+35*pow(max(0,1-(t-3)/0.55),3)',3)
+        begin=cue('outro','try')-1/30
+        overlay_png(pill('샘플 팀으로 직접 체험하기 →','outro-tag',595),112,f'625+35*pow(max(0,1-(t-{begin})/0.25),3)',begin,fade_duration=.15)
     elif name=='live':
         video('live-a',64,172,860,800);video('live-b',996,172,860,800)
     else:
         video(name,576,138,1280,800)
         label={'home':'준비한 내용을 한눈에','songs':'키 · BPM · 악보 · 영상','setlist':'콘티 준비 → 팀원에게 공지','rotation':'수락 / 대기 / 거절','chat':'공지 · 채널 · 투표','notes':'나만 보기 / 팀 공용'}[name]
-        overlay_png(pill(label,name+'-tag',438),64,'742+40*pow(max(0,1-(t-4)/0.55),3)',4)
+        anchor={'home':'overview','songs':'details','setlist':'publish','rotation':'status','chat':'poll','notes':'private'}[name]
+        begin=cue(name,anchor)-1/30
+        overlay_png(pill(label,name+'-tag',438),64,f'742+40*pow(max(0,1-(t-{begin})/0.25),3)',begin,fade_duration=.15)
     for i,(start,end,value) in enumerate(subtitles(name)):
         overlay_png(subtitle(value,f'{name}-sub{i}'),0,946,start,end,False)
     chains.append(f'[{last}]format=yuv420p,trim=duration={duration},setpts=PTS-STARTPTS[outv]')
