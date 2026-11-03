@@ -1,9 +1,13 @@
+import 'dart:math' as math;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:pdfrx/pdfrx.dart';
 import 'package:praiseteam/app/app.dart';
 import 'package:praiseteam/app/router.dart';
 import 'package:praiseteam/core/env.dart';
+import 'package:praiseteam/features/annotations/annotation_layer.dart';
 import 'package:praiseteam/main.dart' as app;
 
 import 'flow_helpers.dart';
@@ -44,7 +48,8 @@ void main() {
       await flow.see('In Jesus Name');
       await flow.shot('04-song-library');
       await flow.tapText('In Jesus Name');
-      await flow.see('팀 편곡');
+      await flow.see('공유 영상 편곡');
+      await flow.reveal(find.text('팀 편곡'));
       await flow.shot('05-song-versions');
 
       router.go('/t/1/rotation');
@@ -63,12 +68,32 @@ void main() {
       await flow.shot('08-live-stand');
       await flow.tapText('필기');
       await flow.see('나만 보기');
-      final size = tester.view.physicalSize / tester.view.devicePixelRatio;
-      final start = Offset(size.width * .45, size.height * .38);
-      await tester.dragFrom(start, const Offset(32, 12));
-      await flow.settle(500);
+      await flow.until(
+        () => tester
+            .widgetList<PdfPageView>(find.byType(PdfPageView))
+            .any((page) => page.document != null),
+        reason: 'native PDF is rendered',
+      );
+      final center = tester.getRect(find.byType(AnnotationLayer).first).center;
+      Future<void> circle(Offset origin) async {
+        final gesture = await tester.startGesture(origin + const Offset(25, 0));
+        for (var i = 1; i <= 32; i++) {
+          await gesture.moveTo(
+            origin +
+                Offset(
+                  25 * math.cos(i * math.pi / 16),
+                  13 * math.sin(i * math.pi / 16),
+                ),
+          );
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        await gesture.up();
+        await flow.settle();
+      }
+
+      await circle(center);
       await flow.tapText('팀 공용');
-      await tester.dragFrom(start + const Offset(0, 40), const Offset(42, 0));
+      await circle(center + const Offset(0, 40));
       await flow.shot('09-score-annotations');
       await flow.tapText('완료');
 
