@@ -250,6 +250,9 @@ class DemoChannel extends RealtimeChannel {
   DemoChannel(super.topic, super.socket, this.store);
   final DemoStore store;
   bool active = false;
+
+  @override
+  bool get canPush => active;
   StreamSubscription<DemoChange>? _subscription;
   final _database =
       <

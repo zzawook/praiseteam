@@ -171,8 +171,9 @@ class _CueBannerState extends State<CueBanner> {
 /// when it lies sideways, in the margin a portrait page leaves. Neither
 /// covers music, and anyone can hide it to give the pages the room.
 class CueBar extends StatelessWidget {
-  const CueBar({super.key, required this.vertical, required this.onCue, required this.onMore});
+  const CueBar({super.key, required this.vertical, this.enabled = true, required this.onCue, required this.onMore});
   final bool vertical;
+  final bool enabled;
   final ValueChanged<String> onCue;
   final VoidCallback onMore;
 
@@ -202,12 +203,12 @@ class CueBar extends StatelessWidget {
       for (final text in quick)
         OutlinedButton(
           style: style,
-          onPressed: () => onCue(text),
+          onPressed: enabled ? () => onCue(text) : null,
           child: Text(text, maxLines: 1, softWrap: false, overflow: TextOverflow.fade),
         ),
       Tooltip(
         message: l10n.moreCues,
-        child: OutlinedButton(style: style, onPressed: onMore, child: const Icon(Icons.more_horiz)),
+        child: OutlinedButton(style: style, onPressed: enabled ? onMore : null, child: const Icon(Icons.more_horiz)),
       ),
     ];
 

@@ -733,6 +733,9 @@
       }
     }
   },
+  "liveConnecting": "연결 중…",
+  "liveSyncing": "현재 페이지 불러오는 중…",
+  "liveReconnecting": "다시 연결 중…",
   "liveFollow": "따라가기",
   "liveFollowHint": "끄면 다른 사람이 넘겨도 내 화면은 그대로예요.",
   "sendCue": "큐 보내기",

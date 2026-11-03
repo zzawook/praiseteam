@@ -41,6 +41,31 @@ BROWSER=webkit node e2e/flow_sheet_upload.js
 BROWSER=chromium node e2e/flow_sheet_upload.js
 ```
 
+## Live synchronization regression checks
+
+`(cd app && flutter test test/live_clock_test.dart test/live_session_test.dart)`
+exercises the production live protocol with a controllable in-memory transport:
+100 turns without any additional Presence writes, immediate first sends,
+ACK-bound coalescing, 30 simultaneous joiners, concurrent ordering, same-account
+viewers, late joins after the controller leaves, stale snapshot correction,
+terminal close / SDK rejoin, Presence cooldown, bounded ACK retries and stale
+callback rejection. The normal CI Flutter test step runs these checks.
+
+Presence contains only participant identity and is tracked once per subscription.
+`turn` and `cue` use private Broadcast; `state_request` / `state_snapshot` recover
+confirmed state from peers. A turn is sent from navigation intent, never from
+PageView animation progress. There is no fixed two-turns-per-second limit.
+An outstanding ACK retains only the newest waiting target; snapshots never
+advertise an unsent or unacknowledged local target. Server project message
+limits still apply, including fan-out to every listener.
+
+While reconnecting, local sheet navigation remains available but is not queued
+for publication. Rejoining first restores shared state. Follow off still caches
+shared updates; turning it on catches up. Zoom is personal and ink coordinates
+remain unchanged. Live state is ephemeral when everyone leaves. Everyone in an
+existing live session should reload when upgrading from the old Presence-based
+page recovery protocol.
+
 ## Native mobile smoke test
 
 The Flutter integration test runs the real native screens, SQLite storage and

@@ -9,7 +9,8 @@ class StandPosition {
   final int pageIndex;
 
   Map<String, Object> toJson() => {'item': itemId, 'page': pageIndex};
-  static StandPosition? fromJson(Object? json) => json is Map && json['item'] is int && json['page'] is int
+  static StandPosition? fromJson(Object? json) =>
+      json is Map && json['item'] is int && json['page'] is int && (json['page'] as int) >= 0
       ? StandPosition(itemId: json['item'] as int, pageIndex: json['page'] as int)
       : null;
 
@@ -35,6 +36,7 @@ class LiveTurn {
   static LiveTurn? fromJson(Object? json) {
     final position = StandPosition.fromJson(json);
     if (position == null || json is! Map || json['seq'] is! int || json['by'] is! String) return null;
+    if ((json['seq'] as int) < 1 || (json['by'] as String).isEmpty) return null;
     return LiveTurn(position: position, seq: json['seq'] as int, by: json['by'] as String);
   }
 }
@@ -50,14 +52,20 @@ class LiveClock {
 
   LiveTurn? get current => _current;
 
-  /// A turn made here: stamped one past anything seen so far.
+  /// Reserve a version immediately, but only commit it with [receive] once
+  /// the server acknowledges it. Unsent/failed local navigation must never
+  /// appear in a snapshot offered to a joining peer.
   LiveTurn turn(StandPosition position) {
     _seen += 1;
-    return _current = LiveTurn(position: position, seq: _seen, by: me);
+    return LiveTurn(position: position, seq: _seen, by: me);
   }
 
-  /// A turn from someone else (or a late joiner's view of the presence
-  /// state). Returns true if it becomes the current page.
+  /// Forget the room's position when joining an empty room. Keep the logical
+  /// counter monotonic for this client instance, including across reconnects.
+  void clearPosition() => _current = null;
+
+  /// A received turn/snapshot or an acknowledged local turn.
+  /// Returns true if it becomes the current page.
   bool receive(LiveTurn turn) {
     _seen = math.max(_seen, turn.seq);
     final current = _current;

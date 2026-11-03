@@ -102,9 +102,9 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
     ref.read(sharedPreferencesProvider).setBool(_cuesHiddenKey, hidden);
   }
 
-  /// True while the stand moves because someone else turned; such moves
-  /// are not announced again.
-  bool _followingMove = false;
+  int? _navigationTarget;
+  int _moveGeneration = 0;
+  bool _moving = false;
   List<StandPage> _lastPages = const [];
 
   @override
@@ -156,7 +156,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
     if (!widget.startLive || _autoLiveRequested) return;
     _autoLiveRequested = true;
     // Join only after the pages and controller are attached, so a late
-    // joiner's first presence update can move straight to the current page.
+    // joiner's state snapshot can move straight to the current page.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _startLive();
     });
@@ -181,18 +181,34 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   void _onFollow(StandPosition position) {
     if (!_follow || !mounted) return;
     final index = _lastPages.indexWhere((p) => p.item.id == position.itemId && p.pageIndex == position.pageIndex);
-    if (index < 0 || index == _current) return;
-    _followingMove = true;
-    _pages
-        ?.animateToPage(index, duration: const Duration(milliseconds: 220), curve: Curves.easeOut)
-        .whenComplete(() => _followingMove = false);
+    if (index < 0 || index == (_navigationTarget ?? _current)) return;
+    _moveTo(index);
   }
 
-  void _pageChanged(int index, List<StandPage> pages) {
-    setState(() => _current = index);
-    final live = _live;
-    if (live != null && live.joined && _follow && !_followingMove) {
-      live.turned(StandPosition(itemId: pages[index].item.id, pageIndex: pages[index].pageIndex));
+  // PageView reports animation progress, not user intent. Never transmit here:
+  // remote moves, intermediate pages and stale animation completions are local.
+  void _pageChanged(int index) => setState(() => _current = index);
+
+  void _moveTo(int index) {
+    final controller = _pages;
+    if (controller == null || !controller.hasClients) return;
+    final generation = ++_moveGeneration;
+    final skipAnimation = _moving || (index - _current).abs() > 1;
+    _navigationTarget = index;
+    _moving = true;
+    void done() {
+      if (!mounted || generation != _moveGeneration) return;
+      _moving = false;
+      _navigationTarget = null;
+    }
+
+    if (skipAnimation) {
+      controller.jumpToPage(index);
+      done();
+    } else {
+      controller
+          .animateToPage(index, duration: const Duration(milliseconds: 120), curve: Curves.easeOut)
+          .whenComplete(done);
     }
   }
 
@@ -209,9 +225,14 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   }
 
   void _go(int delta, int count) {
-    final target = (_current + delta).clamp(0, count - 1);
-    if (target == _current) return;
-    _pages?.animateToPage(target, duration: const Duration(milliseconds: 180), curve: Curves.easeOut);
+    final from = _navigationTarget ?? _current;
+    final target = (from + delta).clamp(0, count - 1);
+    if (target == from) return;
+    if (_follow && _live?.joined == true) {
+      final page = _lastPages[target];
+      _live!.turned(StandPosition(itemId: page.item.id, pageIndex: page.pageIndex));
+    }
+    _moveTo(target);
   }
 
   void _setStage(bool on) {
@@ -357,7 +378,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
                         // and drawing before asking this controller to turn.
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: pages.length,
-                        onPageChanged: (i) => _pageChanged(i, pages),
+                        onPageChanged: _pageChanged,
                         itemBuilder: (context, i) => _PageSlot(
                           key: ValueKey((pages[i].item.id, pages[i].sheet?.id, pages[i].pageIndex)),
                           page: pages[i],
@@ -412,7 +433,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
                   children: [
                     Expanded(child: pagesArea),
                     if (live != null && !_cuesHidden)
-                      CueBar(vertical: rail, onCue: (text) => live.sendCue(text), onMore: _cue),
+                      CueBar(vertical: rail, enabled: live.joined, onCue: (text) => live.sendCue(text), onMore: _cue),
                   ],
                 );
               },
@@ -546,12 +567,14 @@ class _Header extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.circle, size: 10, color: AppColors.stageAmber),
+                        Icon(live.joined ? Icons.circle : Icons.sync, size: 12, color: AppColors.stageAmber),
                         const SizedBox(width: 6),
-                        Text(
-                          l10n.liveWatching(live.participants),
-                          style: theme.textTheme.labelLarge?.copyWith(color: fg),
-                        ),
+                        Text(switch (live.state) {
+                          LiveConnection.connecting => l10n.liveConnecting,
+                          LiveConnection.syncing => l10n.liveSyncing,
+                          LiveConnection.reconnecting || LiveConnection.closed => l10n.liveReconnecting,
+                          LiveConnection.connected => l10n.liveWatching(live.participants),
+                        }, style: theme.textTheme.labelLarge?.copyWith(color: fg)),
                         const SizedBox(width: 8),
                         Text(l10n.liveFollow, style: theme.textTheme.labelMedium?.copyWith(color: fg)),
                         Switch(value: follow, onChanged: onFollow, activeThumbColor: AppColors.stageAmber),

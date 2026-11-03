@@ -2150,6 +2150,24 @@ abstract class AppLocalizations {
   /// **'{count}명 함께'**
   String liveWatching(int count);
 
+  /// No description provided for @liveConnecting.
+  ///
+  /// In ko, this message translates to:
+  /// **'연결 중…'**
+  String get liveConnecting;
+
+  /// No description provided for @liveSyncing.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 페이지 불러오는 중…'**
+  String get liveSyncing;
+
+  /// No description provided for @liveReconnecting.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 연결 중…'**
+  String get liveReconnecting;
+
   /// No description provided for @liveFollow.
   ///
   /// In ko, this message translates to:

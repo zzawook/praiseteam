@@ -7,8 +7,10 @@ void main() {
   test('anyone can turn; everyone follows the latest turn', () {
     final a = LiveClock('a'), b = LiveClock('b');
     final t1 = a.turn(at(1, 1));
+    a.receive(t1);
     expect(b.receive(t1), isTrue);
     final t2 = b.turn(at(2, 0));
+    b.receive(t2);
     expect(t2.seq, greaterThan(t1.seq), reason: 'b saw t1, so its turn is later');
     expect(a.receive(t2), isTrue);
     expect(a.current!.position, at(2, 0));
@@ -20,14 +22,19 @@ void main() {
     final fromB = b.turn(at(1, 2)); // concurrent: same sequence number
     expect(fromA.seq, fromB.seq);
 
+    a.receive(fromA);
+    b.receive(fromB);
     // Messages arrive in different orders on different devices.
     a.receive(fromB);
     b.receive(fromA);
     c
       ..receive(fromB)
       ..receive(fromA);
-    expect({a.current!.position, b.current!.position, c.current!.position}, {at(1, 2)},
-        reason: 'tie broken by sender id: "b" > "a"');
+    expect(
+      {a.current!.position, b.current!.position, c.current!.position},
+      {at(1, 2)},
+      reason: 'tie broken by sender id: "b" > "a"',
+    );
   });
 
   test('an old turn arriving late does not move anyone back', () {

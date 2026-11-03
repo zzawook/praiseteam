@@ -1244,6 +1244,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get liveConnecting => 'Connecting…';
+
+  @override
+  String get liveSyncing => 'Syncing current page…';
+
+  @override
+  String get liveReconnecting => 'Reconnecting…';
+
+  @override
   String get liveFollow => 'Follow';
 
   @override

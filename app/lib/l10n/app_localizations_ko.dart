@@ -1150,6 +1150,15 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get liveConnecting => '연결 중…';
+
+  @override
+  String get liveSyncing => '현재 페이지 불러오는 중…';
+
+  @override
+  String get liveReconnecting => '다시 연결 중…';
+
+  @override
   String get liveFollow => '따라가기';
 
   @override
