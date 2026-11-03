@@ -13,6 +13,7 @@ import '../teams/teams_providers.dart';
 import 'models.dart';
 import 'song_artwork.dart';
 import 'sheet_upload_button.dart';
+import 'sheet_download_button.dart';
 import 'song_form.dart';
 import 'songs_providers.dart';
 
@@ -95,6 +96,7 @@ class SongDetailScreen extends ConsumerWidget {
               for (final v in d.song.versions)
                 _VersionCard(
                   teamId: teamId,
+                  songTitle: d.song.title,
                   version: v,
                   played: [
                     for (final h in d.history)
@@ -199,6 +201,7 @@ class _Header extends StatelessWidget {
 class _VersionCard extends ConsumerWidget {
   const _VersionCard({
     required this.teamId,
+    required this.songTitle,
     required this.version,
     required this.played,
     required this.canDelete,
@@ -206,6 +209,7 @@ class _VersionCard extends ConsumerWidget {
     required this.onChanged,
   });
   final int teamId;
+  final String songTitle;
   final SongVersion version;
 
   /// The announced services that played this version, newest first.
@@ -335,7 +339,15 @@ class _VersionCard extends ConsumerWidget {
             ),
           ),
           for (final sheet in version.sheets)
-            _SheetRow(teamId: teamId, sheet: sheet, canDelete: canDeleteSheet(sheet), onChanged: onChanged),
+            _SheetRow(
+              key: ValueKey(sheet.id),
+              teamId: teamId,
+              songTitle: songTitle,
+              versionTitle: title,
+              sheet: sheet,
+              canDelete: canDeleteSheet(sheet),
+              onChanged: onChanged,
+            ),
           for (final link in version.links)
             _LinkRow(
               link: link,
@@ -369,8 +381,18 @@ class _VersionCard extends ConsumerWidget {
 }
 
 class _SheetRow extends ConsumerWidget {
-  const _SheetRow({required this.teamId, required this.sheet, required this.canDelete, required this.onChanged});
+  const _SheetRow({
+    super.key,
+    required this.teamId,
+    required this.songTitle,
+    required this.versionTitle,
+    required this.sheet,
+    required this.canDelete,
+    required this.onChanged,
+  });
   final int teamId;
+  final String songTitle;
+  final String versionTitle;
   final Sheet sheet;
   final bool canDelete;
   final VoidCallback onChanged;
@@ -380,13 +402,14 @@ class _SheetRow extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return ListTile(
       leading: const Icon(Icons.description_outlined),
-      title: Text(sheet.label ?? l10n.sheet),
+      title: Text(sheet.label ?? l10n.sheet, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text(l10n.pages(sheet.pageCount)),
       onTap: () => context.push('/t/$teamId/sheets/${sheet.id}', extra: sheet),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           KeyBadge(sheet.key),
+          SheetDownloadButton(sheet: sheet, songTitle: songTitle, versionTitle: versionTitle),
           if (canDelete)
             IconButton(
               tooltip: l10n.delete,

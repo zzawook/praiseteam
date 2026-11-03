@@ -613,6 +613,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get uploadSheet => '악보 올리기';
 
   @override
+  String get downloadSheet => '악보 다운로드';
+
+  @override
+  String get downloadingSheet => '악보 다운로드 준비 중…';
+
+  @override
   String get uploadSheetHint => 'PDF나 사진을 고르면 악보 한 개로 저장돼요.';
 
   @override

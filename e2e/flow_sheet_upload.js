@@ -108,6 +108,22 @@ const photo = path.resolve(__dirname, 'sheet.png');
     await song();
     const sheet = await demoRow('sheets', 'label', 'Safari PDF check');
     assert.equal(sheet.page_count, 2);
+    async function downloadOriginal(suffix) {
+      const [download] = await Promise.all([
+        page.waitForEvent('download'),
+        btn(page, '악보 다운로드').first().tap(),
+      ]);
+      assert.equal(await download.failure(), null);
+      assert.equal(download.suggestedFilename(), 'Safari upload regression - 기본 버전 - Safari PDF check.pdf');
+      const savedPath = `${out}/download-${suffix}.pdf`;
+      await download.saveAs(savedPath);
+      assert.deepEqual(fs.readFileSync(savedPath), fs.readFileSync(pdf), 'download preserves original PDF bytes');
+      assert.equal(page.url(), songUrl, 'download keeps the song detail screen open');
+      await btn(page, '악보 다운로드').first().waitFor();
+    }
+    await downloadOriginal('owner');
+    console.log('PASS owner downloads the original PDF with a readable filename');
+
     const loadedBefore = loadedPdfs;
     await page.goto(`${base}/t/1/sheets/${sheet.id}`, {waitUntil: 'load'});
     await semantics(page);
@@ -143,6 +159,20 @@ const photo = path.resolve(__dirname, 'sheet.png');
     await save('Safari photo check');
     await page.screenshot({path: `${out}/uploaded-sheets.png`});
     console.log('PASS invalid PDF reports error; next photo upload succeeds');
+    // All approved team members who can view a sheet can download it, even
+    // when they did not upload it and have no delete action.
+    await page.evaluate(id => {
+      const key = localStorage.getItem('flutter.praiseteam_demo_data') ? 'flutter.praiseteam_demo_data' : 'praiseteam_demo_data';
+      const stored = JSON.parse(localStorage.getItem(key));
+      const data = typeof stored === 'string' ? JSON.parse(stored) : stored;
+      data.tables.team_members.find(row => row.user_id === '00000000-0000-4000-8000-000000000001').role = 'member';
+      data.tables.sheets.filter(row => row.id === id).forEach(row => row.uploaded_by = '00000000-0000-4000-8000-000000000002');
+      localStorage.setItem(key, JSON.stringify(typeof stored === 'string' ? JSON.stringify(data) : data));
+    }, sheet.id);
+    await song();
+    await downloadOriginal('member');
+    await page.screenshot({path: `${out}/member-download.png`});
+    console.log("PASS a member can download another member's sheet");
     assert.deepEqual(errors, []);
     console.log(`SHEET UPLOAD FLOW OK (${engine})`);
   } catch (error) {

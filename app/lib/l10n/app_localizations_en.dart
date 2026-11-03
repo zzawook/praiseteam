@@ -636,6 +636,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get uploadSheet => 'Upload sheet';
 
   @override
+  String get downloadSheet => 'Download sheet';
+
+  @override
+  String get downloadingSheet => 'Preparing sheet download…';
+
+  @override
   String get uploadSheetHint =>
       'Pick a PDF or photos; they\'re saved as one sheet.';
 

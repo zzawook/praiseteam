@@ -1220,6 +1220,18 @@ abstract class AppLocalizations {
   /// **'악보 올리기'**
   String get uploadSheet;
 
+  /// No description provided for @downloadSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 다운로드'**
+  String get downloadSheet;
+
+  /// No description provided for @downloadingSheet.
+  ///
+  /// In ko, this message translates to:
+  /// **'악보 다운로드 준비 중…'**
+  String get downloadingSheet;
+
   /// No description provided for @uploadSheetHint.
   ///
   /// In ko, this message translates to:

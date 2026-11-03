@@ -14,7 +14,7 @@ local Supabase stack and assert what each user can see.
 | `flow_templates.js` | service templates on a phone: save one while adding a service, add the next service from it (the following free week, same time and place), edit, delete and add templates |
 | `flow_versions.js` | song versions: a song added with its first version, a second version on the song's page, the version chosen when adding the song to a setlist (bringing its tempo), and switched in the entry's editor |
 | `flow_handoff.js` | team time from a Los Angeles browser; desktop/mobile rotation and song artwork screenshots; last-owner protection, account deletion and Storage API cleanup. Uses isolated fixtures and removes them afterwards; no DB reset needed. Requires `supabase functions serve` with `PUSH_WEBHOOK_SECRET=local-dev-push-secret`. |
-| `flow_sheet_upload.js` | browser-only demo, in Chromium and WebKit: delayed file delivery after window focus, visible preparation, PDF save and preview after reload, cancellation/retry, invalid PDFs and photo uploads. No backend or real user files. |
+| `flow_sheet_upload.js` | browser-only demo, in Chromium and WebKit: delayed file delivery after window focus, visible preparation, PDF save and preview after reload, cancellation/retry, invalid PDFs and photo uploads; original PDF downloads by owners and members, with filename and byte-for-byte checks. No backend or real user files. |
 | `flow_setlist_details.js` | browser-only demo, in Chromium and WebKit: leaders and members open song details from the service, selected-arrangement reference opens in a new tab, leader-only editing, full song details, and view-only sheets. YouTube navigation is intercepted locally. |
 | `flow_zoom.js` | browser-only demo: zoom the real PDF, draw and persist normalized ink, fit back, pan without page turns, and reopen saved notes without PDF reloads during interaction. Native sample checks also exercise two-finger pinch/eraser cancellation. |
 | `showcase.js` | not a test: fills a believable team (members, services, setlists, rotation, chat) and screenshots the main screens on a phone in light and dark, for design reviews (`node e2e/showcase.js <dir> <label>`) |
@@ -40,6 +40,31 @@ not the real iOS Files/iCloud UI. After building/serving the demo on port 3001:
 BROWSER=webkit node e2e/flow_sheet_upload.js
 BROWSER=chromium node e2e/flow_sheet_upload.js
 ```
+
+## Sheet download checks
+
+The browser upload flow above also downloads the uploaded PDF and checks the
+filename, exact bytes, and access as a non-owner member. Widget tests in
+`app/test/sheet_download_test.dart` cover fetch failures, repeat taps, leaving
+while fetching, native save cancellation and retry.
+
+To exercise Android's real Save dialog on `PraiseTeam_QA_API36`, run these in
+separate terminals after installing the disposable test build's prerequisites:
+
+```sh
+(cd app && NATIVE_OUTPUT=../output/sheet-download/android flutter drive --no-pub \
+  -d emulator-5554 --driver=test_driver/mobile_driver.dart \
+  --target=integration_test/android_sheet_download_test.dart \
+  --dart-define=DEMO_MODE=true) > /tmp/praiseteam-download-native.log 2>&1
+python3 e2e/android_download.py "$ANDROID_SDK_ROOT/platform-tools/adb" \
+  emulator-5554 /tmp/praiseteam-download-native.log output/sheet-download/android
+```
+
+The helper saves only the demo sheet, compares its SHA-256 with the original,
+cancels two subsequent save dialogs to verify retry, and removes its test file.
+It refuses to overwrite an existing file or operate on another AVD. Restore the
+normal signed app on that disposable emulator after the test, as with the other
+native integration suites.
 
 ## Live synchronization regression checks
 

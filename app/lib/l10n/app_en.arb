@@ -187,6 +187,8 @@
   "changeVersion": "Version: {changes}",
   "sheets": "Sheets",
   "uploadSheet": "Upload sheet",
+  "downloadSheet": "Download sheet",
+  "downloadingSheet": "Preparing sheet download…",
   "uploadSheetHint": "Pick a PDF or photos; they're saved as one sheet.",
   "preparingSheet": "Preparing sheet…",
   "sheetPreparationTimeout": "The sheet is taking too long to read. Save the file to your device, then select it again.",
