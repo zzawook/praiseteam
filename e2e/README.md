@@ -48,6 +48,20 @@ on an installed iPhone simulator, then packages the normal sample app (without
 the test entry point). It requires no Apple signing credentials and never
 publishes to a store. Test screenshots and the Simulator ZIP are build artifacts.
 
+For the real local backend on Android, start the existing Supabase stack and
+the disposable emulator, then run `node e2e/run_native.cjs`. It creates its own
+test accounts/team and removes them and their uploaded files on completion or
+failure. It never resets the database. `app/env/local.android.json` must target
+`http://10.0.2.2:54321` with `DEV_LOGIN=true`.
+
+That suite exercises signup, team creation, approval, last-owner protection,
+account deletion, song versions and links, native PDF decoding/Storage, service
+templates and publication, rota assignment/response, live page/cue exchange
+with a second authenticated client, private/shared ink permissions, realtime
+chat, polls, pinned announcements and calendar subscription. The fixture server
+depends on the ignored `demo/media/work/seed.json`, produced by
+`dart run app/tool/export_demo_data.dart` from the repository root.
+
 Pages are awaited with `load`, then the text each step expects: the app's local
 database runs in a web worker, and Playwright never reports that worker's script
 request as finished, so `networkidle` would not come.

@@ -26,7 +26,10 @@ async function prepare({cleanAnnotations=false,rotationVacancies=false}={}) {
     return response;
   };
   async function cleanup() {
-    if(files.length)await request('/storage/v1/object/sheets',{method:'DELETE',headers:{Authorization:`Bearer ${env.SERVICE_ROLE_KEY}`},body:JSON.stringify({prefixes:files})});
+    // Native workflows can upload additional PDFs within this fixture's team.
+    // Remove that team's objects through Storage, including those new uploads.
+    const ownedFiles=team?JSON.parse(sql(`select coalesce(json_agg(name),'[]'::json) from storage.objects where bucket_id='sheets' and split_part(name,'/',1)=${literal(team)}`)):files;
+    if(ownedFiles.length)await request('/storage/v1/object/sheets',{method:'DELETE',headers:{Authorization:`Bearer ${env.SERVICE_ROLE_KEY}`},body:JSON.stringify({prefixes:ownedFiles})});
     const queries=['begin;'];
     if(team)queries.push(`delete from public.sessions where team_id=${team}; delete from public.songs where team_id=${team}; delete from public.teams where id=${team};`);
     if(users.length)queries.push(`delete from auth.users where id in (${users.map(literal).join(',')});`);
