@@ -54,6 +54,14 @@ test accounts/team and removes them and their uploaded files on completion or
 failure. It never resets the database. `app/env/local.android.json` must target
 `http://10.0.2.2:54321` with `DEV_LOGIN=true`.
 
+`node e2e/run_native.cjs --device-extras` also drives the real Android system
+file picker using the SDK's UI Automator dump and selects only `e2e/sheet.png`.
+It verifies network thumbnails, the image-to-PDF upload/preview, native SQLite
+offline caching and durable ink upload after reconnecting. A localhost-only TCP
+proxy on port 3940 interrupts this test app's backend connection; the actual
+Supabase services and the host's network remain running. Port 3939 controls the
+disposable fixture/proxy. Run one native suite at a time.
+
 That suite exercises signup, team creation, approval, last-owner protection,
 account deletion, song versions and links, native PDF decoding/Storage, service
 templates and publication, rota assignment/response, live page/cue exchange

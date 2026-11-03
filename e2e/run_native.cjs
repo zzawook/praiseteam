@@ -6,6 +6,7 @@ const fs=require('node:fs');
 const root=path.resolve(__dirname,'..');
 const args=process.argv.slice(2);
 const demo=args.includes('--demo');
+const extras=args.includes('--device-extras');
 const at=args.indexOf('--device');
 const device=at<0?'emulator-5554':args[at+1];
 const adb=path.join(process.env.ANDROID_SDK_ROOT||path.join(os.homedir(),'Android/Sdk'),'platform-tools/adb');
@@ -23,11 +24,26 @@ const completion=child=>new Promise(resolve=>child.once('exit',resolve));
     if(n>=90)throw new Error('Native fixture setup timed out');await delay(500);
    }
   }
-  const output=path.join(root,'output/native',demo?'android-demo':'android-backend');fs.mkdirSync(output,{recursive:true});
-  const target=demo?'mobile_demo_test.dart':'native_backend_test.dart';
+  const output=path.join(root,'output/native',demo?'android-demo':extras?'android-device':'android-backend');fs.mkdirSync(output,{recursive:true});
+  const target=demo?'mobile_demo_test.dart':extras?'native_device_test.dart':'native_backend_test.dart';
   const command=['drive','--no-pub','-d',device,'--driver=test_driver/mobile_driver.dart','--target=integration_test/'+target,
    demo?'--dart-define=DEMO_MODE=true':'--dart-define-from-file=env/local.android.json'];
-  run=spawn('flutter',command,{cwd:path.join(root,'app'),stdio:'inherit',env:{...process.env,NATIVE_OUTPUT:output}});
+  if(extras){
+   command.push('--dart-define=SUPABASE_URL=http://10.0.2.2:3940');
+   execFileSync(adb,['-s',device,'push',path.join(__dirname,'sheet.png'),'/sdcard/Download/PraiseTeam-QA.png'],{stdio:'inherit'});
+  }
+  run=spawn('flutter',command,{cwd:path.join(root,'app'),stdio:extras?['ignore','pipe','inherit']:'inherit',env:{...process.env,NATIVE_OUTPUT:output}});
+  let picker;
+  if(extras){
+   let buffered='';
+   run.stdout.on('data',chunk=>{
+    process.stdout.write(chunk);buffered+=chunk;
+    if(buffered.includes('NATIVE_PICKER_READY')&&!picker){
+     picker=spawn('python3',[path.join(__dirname,'android_picker.py'),adb,device,output],{stdio:'inherit'});
+    }
+    buffered=buffered.slice(-1000);
+   });
+  }
   const finished=completion(run);
   if(!demo){
    for(let n=0;n<180&&run.exitCode===null;n++){
@@ -42,6 +58,7 @@ const completion=child=>new Promise(resolve=>child.once('exit',resolve));
    }
   }
   process.exitCode=(await finished)??1;
+  if(picker&&picker.exitCode===null)picker.kill('SIGTERM');
  }finally{
   if(fixture&&fixture.exitCode===null){const stopped=completion(fixture);fixture.kill('SIGTERM');await stopped}
  }

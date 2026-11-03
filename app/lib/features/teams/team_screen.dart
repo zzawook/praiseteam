@@ -117,59 +117,61 @@ class TeamScreen extends ConsumerWidget {
       context: context,
       showDragHandle: true,
       builder: (sheet) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(title: Text(member.profile.displayName, style: Theme.of(sheet).textTheme.titleLarge)),
-            if (canEditParts)
-              ListTile(
-                leading: const Icon(Icons.piano_outlined),
-                title: Text(l10n.editParts),
-                onTap: () {
-                  Navigator.pop(sheet);
-                  showPartsPicker(
-                    context,
-                    teamId: teamId,
-                    userId: member.userId,
-                    selected: member.partIds,
-                    title: isMe ? null : member.profile.displayName,
-                  );
-                },
-              ),
-            if (canChangeRole)
-              RadioGroup<TeamRole>(
-                groupValue: member.role,
-                onChanged: (role) async {
-                  Navigator.pop(sheet);
-                  if (role == null || role == member.role) return;
-                  if (await runGuarded(context, () => repo.setRole(teamId, member.userId, role))) refresh();
-                },
-                child: Column(
-                  children: [
-                    for (final role in TeamRole.values)
-                      RadioListTile<TeamRole>(value: role, title: Text(roleLabel(l10n, role))),
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(title: Text(member.profile.displayName, style: Theme.of(sheet).textTheme.titleLarge)),
+              if (canEditParts)
+                ListTile(
+                  leading: const Icon(Icons.piano_outlined),
+                  title: Text(l10n.editParts),
+                  onTap: () {
+                    Navigator.pop(sheet);
+                    showPartsPicker(
+                      context,
+                      teamId: teamId,
+                      userId: member.userId,
+                      selected: member.partIds,
+                      title: isMe ? null : member.profile.displayName,
+                    );
+                  },
                 ),
-              ),
-            if (canRemove)
-              ListTile(
-                leading: Icon(Icons.person_remove_outlined, color: Theme.of(sheet).colorScheme.error),
-                title: Text(l10n.removeFromTeam, style: TextStyle(color: Theme.of(sheet).colorScheme.error)),
-                onTap: () async {
-                  Navigator.pop(sheet);
-                  final ok = await confirm(
-                    context,
-                    message: l10n.removeConfirm(member.profile.displayName),
-                    confirmLabel: l10n.removeFromTeam,
-                    destructive: true,
-                  );
-                  if (ok && context.mounted && await runGuarded(context, () => repo.remove(teamId, member.userId))) {
-                    refresh();
-                  }
-                },
-              ),
-            const SizedBox(height: 8),
-          ],
+              if (canChangeRole)
+                RadioGroup<TeamRole>(
+                  groupValue: member.role,
+                  onChanged: (role) async {
+                    Navigator.pop(sheet);
+                    if (role == null || role == member.role) return;
+                    if (await runGuarded(context, () => repo.setRole(teamId, member.userId, role))) refresh();
+                  },
+                  child: Column(
+                    children: [
+                      for (final role in TeamRole.values)
+                        RadioListTile<TeamRole>(value: role, title: Text(roleLabel(l10n, role))),
+                    ],
+                  ),
+                ),
+              if (canRemove)
+                ListTile(
+                  leading: Icon(Icons.person_remove_outlined, color: Theme.of(sheet).colorScheme.error),
+                  title: Text(l10n.removeFromTeam, style: TextStyle(color: Theme.of(sheet).colorScheme.error)),
+                  onTap: () async {
+                    Navigator.pop(sheet);
+                    final ok = await confirm(
+                      context,
+                      message: l10n.removeConfirm(member.profile.displayName),
+                      confirmLabel: l10n.removeFromTeam,
+                      destructive: true,
+                    );
+                    if (ok && context.mounted && await runGuarded(context, () => repo.remove(teamId, member.userId))) {
+                      refresh();
+                    }
+                  },
+                ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );

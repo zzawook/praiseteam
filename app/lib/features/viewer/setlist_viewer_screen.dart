@@ -109,7 +109,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   void dispose() {
     _pages?.dispose();
     _focus.dispose();
-    if (_stage) WakelockPlus.disable();
+    if (_stage || _live != null) WakelockPlus.disable();
     _live?.leave();
     _live?.dispose();
     super.dispose();
@@ -141,6 +141,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
           });
       live.join();
       setState(() => _live = live);
+      WakelockPlus.enable();
       if (Env.demo) showMessage(context, AppLocalizations.of(context).demoLiveHint);
     } catch (error) {
       if (mounted) showError(context, error);
@@ -162,6 +163,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
   Future<void> _leaveLive() async {
     final live = _live;
     setState(() => _live = null);
+    if (!_stage) WakelockPlus.disable();
     await live?.leave();
     live?.dispose();
   }
@@ -212,7 +214,7 @@ class _SetlistViewerScreenState extends ConsumerState<SetlistViewerScreen> {
 
   void _setStage(bool on) {
     setState(() => _stage = on);
-    on ? WakelockPlus.enable() : WakelockPlus.disable();
+    WakelockPlus.toggle(enable: on || _live != null);
   }
 
   void _record(InkAction action) => setState(() {

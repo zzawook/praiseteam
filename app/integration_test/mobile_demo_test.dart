@@ -9,6 +9,7 @@ import 'package:praiseteam/app/router.dart';
 import 'package:praiseteam/core/env.dart';
 import 'package:praiseteam/features/annotations/annotation_layer.dart';
 import 'package:praiseteam/main.dart' as app;
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'flow_helpers.dart';
 
@@ -65,6 +66,7 @@ void main() {
       await flow.tapText('라이브하기');
       await flow.see('필기');
       await flow.contains('1 / 5');
+      expect(await WakelockPlus.enabled, isTrue);
       await flow.shot('08-live-stand');
       await flow.tapText('필기');
       await flow.see('나만 보기');
@@ -99,6 +101,7 @@ void main() {
 
       router.go('/t/1/chat');
       await flow.see('전체');
+      expect(await WakelockPlus.enabled, isFalse);
       await flow.shot('10-channels');
       await flow.tapText('전체');
       await flow.contains('다음 팀 모임');

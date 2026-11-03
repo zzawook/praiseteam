@@ -25,21 +25,23 @@ workflows:
       - name: Exercise native screens and PDF plugins
         script: |
           set -e
-          export NATIVE_OUTPUT="$CM_BUILD_DIR/output/native/ios"
+          export NATIVE_OUTPUT="$CM_EXPORT_DIR/native-ios"
           mkdir -p "$NATIVE_OUTPUT"
           flutter drive --no-pub -d "$NATIVE_IOS_DEVICE" \
             --driver=test_driver/mobile_driver.dart \
             --target=integration_test/mobile_demo_test.dart \
             --dart-define=DEMO_MODE=true
+          test -s "$NATIVE_OUTPUT/12-settings.png"
       - name: Build the normal sample app for Simulator
         script: |
           set -e
           flutter build ios --simulator --debug --no-pub --dart-define=DEMO_MODE=true
           ditto -c -k --sequesterRsrc --keepParent build/ios/iphonesimulator/Runner.app \
-            "$CM_BUILD_DIR/output/PraiseTeam-iOS-Simulator.zip"
+            "$CM_EXPORT_DIR/PraiseTeam-iOS-Simulator.zip"
+          test -s "$CM_EXPORT_DIR/PraiseTeam-iOS-Simulator.zip"
     artifacts:
-      - output/native/ios/*.png
-      - output/PraiseTeam-iOS-Simulator.zip
+      - $CM_EXPORT_DIR/native-ios/*.png
+      - $CM_EXPORT_DIR/PraiseTeam-iOS-Simulator.zip
       - /tmp/xcodebuild_logs/*.log
 
   ios-testflight:
@@ -77,8 +79,8 @@ workflows:
             --build-number="$STORE_BUILD_NUMBER" \
             --export-options-plist=/Users/builder/export_options.plist
     artifacts:
-      - app/build/ios/ipa/*.ipa
-      - app/build/ios/archive/*.xcarchive
+      - $CM_BUILD_DIR/app/build/ios/ipa/*.ipa
+      - $CM_BUILD_DIR/app/build/ios/archive/*.xcarchive
       - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:

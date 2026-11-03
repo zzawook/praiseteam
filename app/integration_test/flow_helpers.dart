@@ -58,7 +58,7 @@ class MobileFlow {
     description: 'text field $label',
   );
 
-  Future<void> reveal(Finder target) async {
+  Future<void> reveal(Finder target, {int retries = 2}) async {
     final notice = find.byType(SnackBar);
     if (notice.evaluate().isNotEmpty) {
       await tester.drag(notice.last, const Offset(0, 160));
@@ -100,6 +100,10 @@ class MobileFlow {
     }
     await Scrollable.ensureVisible(tester.element(target.last), alignment: .5);
     await settle(150);
+    // A lazy list can rebuild during that scroll as a card finishes loading.
+    if (target.evaluate().isEmpty && retries > 0) {
+      await reveal(target, retries: retries - 1);
+    }
   }
 
   Future<void> tap(Finder target) async {

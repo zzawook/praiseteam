@@ -251,6 +251,7 @@ class _VersionCard extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.addLink),
+        scrollable: true,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -303,6 +304,7 @@ class _VersionCard extends ConsumerWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           title: Text(l10n.uploadSheet),
+          scrollable: true,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
