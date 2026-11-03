@@ -9,10 +9,11 @@ const root = path.resolve(__dirname, '../..');
 const sql = (query) => execFileSync('docker',['exec','-i','supabase_db_praiseteam','psql','-U','postgres','-d','postgres','-Atq','-v','ON_ERROR_STOP=1'],{input:query,encoding:'utf8'}).trim();
 const literal = (value) => `'${String(value).replace(/'/g,"''")}'`;
 
-async function prepare() {
+async function prepare({cleanAnnotations=false}={}) {
   const env=Object.fromEntries(execFileSync('supabase',['status','-o','env'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore']}).split('\n').filter(s=>s.includes('=')).map(s=>[s.slice(0,s.indexOf('=')),s.slice(s.indexOf('=')+1).replace(/^"|"$/g,'')]));
   assert.equal(env.API_URL,'http://127.0.0.1:54321');
   const tables=JSON.parse(fs.readFileSync(path.join(__dirname,'work/seed.json'),'utf8'));
+  if(cleanAnnotations)tables.strokes=[];
   const stamp=Date.now();
   const users=[], sessions=[];
   let team;

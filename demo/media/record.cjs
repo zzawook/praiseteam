@@ -1,13 +1,13 @@
 // Records the real app against an isolated, local Supabase fixture.
 // The live chapter asserts two-user page following; notes assert visibility.
 const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
-const {launch,open,goto,btn,waitText,type,draw,labels,work}=require('./browser.cjs');
+const {launch,open,goto,btn,waitText,type,drawPath,drawEllipse,labels,work}=require('./browser.cjs');
 const base='http://127.0.0.1:3002';const raw=path.join(work,'raw');fs.mkdirSync(raw,{recursive:true});
 const metaPath=path.join(work,'clips.json');const clips=fs.existsSync(metaPath)?JSON.parse(fs.readFileSync(metaPath)):{};
 const only=process.argv.slice(2);const wanted=n=>!only.length||only.includes(n);
 const sleep=(p,s)=>p.waitForTimeout(s*1000);
 (async()=>{
- const f=await require('./backend.cjs').prepare();const browser=await launch();let current;
+ const f=await require('./backend.cjs').prepare({cleanAnnotations:true});const browser=await launch();let current;
  const route=s=>`/t/${f.team}/${s}`;
  async function camera(session=f.sessions[0],width=1280,height=800){const started=Date.now();const p=await open(browser,session,{viewport:{width,height},recordVideo:{dir:raw,size:{width,height}}});return {p,started,width,height};}
  async function finish(name,c,start){await c.p.context().close();const file=await c.p.video().path();clips[name]={file,start:(start-c.started)/1000,width:c.width,height:c.height,...(name==='notes'?{purpose:'visibility'}:{})};fs.writeFileSync(metaPath,JSON.stringify(clips,null,2));console.log('RECORDED',name);}
@@ -32,24 +32,33 @@ const sleep=(p,s)=>p.waitForTimeout(s*1000);
    await finish('live-a',a,start);await finish('live-b',b,start);
   }
   await chapter('notes',route(`stand/${f.service}`),'필기',async p=>{
-   async function saved(visibility){
+   async function saved(visibility,count=1){
     for(let i=0;i<30;i++){
-     const row=(await f.strokesFor(0)).find(r=>r.owner_id===f.sessions[0].user.id&&r.visibility===visibility);
-     if(row)return row;
+     const rows=(await f.strokesFor(0)).filter(r=>r.owner_id===f.sessions[0].user.id&&r.visibility===visibility);
+     if(rows.length>=count)return rows;
      await sleep(p,.15);
     }
     throw new Error(`${visibility} stroke did not reach the local backend`);
    }
-   await btn(p,'필기').click();await waitText(p,'나만 보기');await sleep(p,1);
-   await draw(p,510,365,740,365);
-   const privateStroke=await saved('private');
+   await btn(p,'필기').click();await waitText(p,'나만 보기');await sleep(p,.6);
+   // The 1280x800 stand shows this chart's D/F# at (594,265).
+   // Red: a personal reminder to practise the slash chord.
+   await p.mouse.click(727,770);
+   await drawEllipse(p,594,265,38,19);
+   const [privateStroke]=await saved('private');
    assert.ok(!(await f.strokesFor(1)).some(r=>r.id===privateStroke.id));
    console.log('VERIFIED private ink is hidden from the other participant');
-   await sleep(p,1.5);await btn(p,'팀 공용').click();await sleep(p,.5);
-   await draw(p,510,470,740,470);
-   const teamStroke=await saved('team');
-   assert.ok((await f.strokesFor(1)).some(r=>r.id===teamStroke.id));
-   console.log('VERIFIED shared ink is visible to the other participant');
+   await sleep(p,1.8);await btn(p,'팀 공용').click();await sleep(p,.3);
+   // Blue: circle CHORUS and write ×2 to tell the team to repeat it.
+   await p.mouse.click(695,770);
+   await drawEllipse(p,459,400,34,13);
+   await drawPath(p,[[505,390],[512,400],[519,410]]);
+   await drawPath(p,[[519,390],[512,400],[505,410]]);
+   await drawPath(p,[[527,394],[528,391],[531,389],[536,389],[539,391],[540,394],[539,397],[536,400],[533,403],[529,406],[526,410],[541,410]]);
+   const teamStrokes=await saved('team',4);
+   const visible=await f.strokesFor(1);
+   assert.ok(teamStrokes.every(stroke=>visible.some(r=>r.id===stroke.id)));
+   console.log('VERIFIED shared chorus repeat marks are visible to the other participant');
    await p.mouse.move(80,150);await sleep(p,3);
   });
  }catch(e){if(current&&!current.isClosed()){await current.screenshot({path:path.join(work,'record-failure.png')});fs.writeFileSync(path.join(work,'record-failure-labels.json'),JSON.stringify(await labels(current),null,2));}throw e;}finally{await browser.close();await f.cleanup();console.log('Local video fixture removed');}
