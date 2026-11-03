@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pdfrx/pdfrx.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -28,6 +27,7 @@ import '../songs/song_artwork.dart';
 import '../songs/songs_providers.dart';
 import '../teams/models.dart';
 import '../teams/teams_providers.dart';
+import 'sheet_pdf_page.dart';
 
 part 'setlist_viewer_screen.g.dart';
 
@@ -627,13 +627,10 @@ class _PageSlot extends ConsumerWidget {
                 children: [
                   ColoredBox(
                     color: Colors.white,
-                    child: PdfDocumentViewBuilder(
-                      documentRef: PdfDocumentRefData(data, sourceName: sheet.storagePath),
-                      builder: (context, document) => PdfPageView(
-                        document: document,
-                        pageNumber: page.pageIndex + 1,
-                        backgroundColor: Colors.white,
-                      ),
+                    child: SheetPdfPage(
+                      data: data,
+                      sourceName: sheet.storagePath,
+                      pageNumber: page.pageIndex + 1,
                     ),
                   ),
                   ?annotations,
@@ -645,16 +642,19 @@ class _PageSlot extends ConsumerWidget {
       );
     }
 
-    if (!tapToTurn) return content;
+    // Keep the wrapper mounted in drawing mode too. Swapping the subtree
+    // here would dispose the PDF every time the annotation toolbar opens.
     // Tap the left or right third to turn the page (one-handed on stage).
     return LayoutBuilder(
       builder: (context, constraints) => GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTapUp: (d) {
-          final x = d.localPosition.dx / constraints.maxWidth;
-          if (x > 0.66) onTurn(1);
-          if (x < 0.33) onTurn(-1);
-        },
+        onTapUp: tapToTurn
+            ? (d) {
+                final x = d.localPosition.dx / constraints.maxWidth;
+                if (x > 0.66) onTurn(1);
+                if (x < 0.33) onTurn(-1);
+              }
+            : null,
         child: content,
       ),
     );

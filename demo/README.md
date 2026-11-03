@@ -88,3 +88,8 @@ This writes `output/demo/review/praiseteam-tour-ko-preview.mp4`. Its subtitle
 timings are estimates for review. It leaves the production MP4, audio and
 timing manifest intact and is never copied by the deployment script.
 Normal rendering rejects a stale narration manifest after a script edit.
+
+After recording annotations, run `python demo/media/check_notes_stability.py`.
+It checks every frame of the fixed sample score title to catch PDF reload
+flashes before editing. The browser flow also checks that drawing, changing
+tools and toggling the annotation toolbar never reload the PDF.

@@ -15,7 +15,7 @@ async function launch(){return chromium.launch({executablePath:process.env.CI?un
 async function open(browser,session,options={}){
  const context=await browser.newContext({viewport:{width:1280,height:800},locale:'ko-KR',colorScheme:'light',...options});
  if(session)await context.addInitScript(s=>{if(!localStorage.getItem('film-auth-initialized')){localStorage.setItem('sb-127-auth-token',JSON.stringify(s));localStorage.setItem('film-auth-initialized','1');}},session);
- const page=await context.newPage();page.on('pageerror',e=>console.error('UI ERROR:',e.message));return page;
+ const page=await context.newPage();page.on('pageerror',e=>console.error('UI ERROR:',e.stack||e.message));return page;
 }
 async function probe(){
  const fixture=await require('./backend.cjs').prepare();const browser=await launch();
