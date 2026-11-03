@@ -28,6 +28,26 @@ node e2e/flow_m3.js /tmp/shots                                         # screens
 
 Uses the system Chrome (`/usr/bin/google-chrome`) through playwright-core.
 
+## Native mobile smoke test
+
+The Flutter integration test runs the real native screens, SQLite storage and
+PDF plugin with the isolated sample team. It covers setlist edits/publication,
+song versions, the rota table, unavailable dates, the live stand, annotations,
+chat/polls and settings. It does not claim to verify Google/Apple OAuth or push
+delivery. Android screenshots are written to `output/native/`.
+
+```sh
+cd app
+flutter pub get --enforce-lockfile
+flutter drive -d emulator-5554 --driver=test_driver/mobile_driver.dart \
+  --target=integration_test/mobile_demo_test.dart --dart-define=DEMO_MODE=true
+```
+
+The manual `ios-simulator` workflow in root `codemagic.yaml` runs the same suite
+on an installed iPhone simulator, then packages the normal sample app (without
+the test entry point). It requires no Apple signing credentials and never
+publishes to a store. Test screenshots and the Simulator ZIP are build artifacts.
+
 Pages are awaited with `load`, then the text each step expects: the app's local
 database runs in a web worker, and Playwright never reports that worker's script
 request as finished, so `networkidle` would not come.
