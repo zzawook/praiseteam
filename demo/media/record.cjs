@@ -1,17 +1,16 @@
 // Records the real app against an isolated, local Supabase fixture.
-// The live chapter asserts two-user page following; notes assert offline replay.
-const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');const {execFileSync}=require('node:child_process');
+// The live chapter asserts two-user page following; notes assert visibility.
+const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
 const {launch,open,goto,btn,waitText,type,draw,labels,work}=require('./browser.cjs');
 const base='http://127.0.0.1:3002';const raw=path.join(work,'raw');fs.mkdirSync(raw,{recursive:true});
 const metaPath=path.join(work,'clips.json');const clips=fs.existsSync(metaPath)?JSON.parse(fs.readFileSync(metaPath)):{};
 const only=process.argv.slice(2);const wanted=n=>!only.length||only.includes(n);
 const sleep=(p,s)=>p.waitForTimeout(s*1000);
-const sql=q=>execFileSync('docker',['exec','-i','supabase_db_praiseteam','psql','-U','postgres','-d','postgres','-Atq','-v','ON_ERROR_STOP=1'],{input:q,encoding:'utf8'}).trim();
 (async()=>{
  const f=await require('./backend.cjs').prepare();const browser=await launch();let current;
  const route=s=>`/t/${f.team}/${s}`;
  async function camera(session=f.sessions[0],width=1280,height=800){const started=Date.now();const p=await open(browser,session,{viewport:{width,height},recordVideo:{dir:raw,size:{width,height}}});return {p,started,width,height};}
- async function finish(name,c,start){await c.p.context().close();const file=await c.p.video().path();clips[name]={file,start:(start-c.started)/1000,width:c.width,height:c.height};fs.writeFileSync(metaPath,JSON.stringify(clips,null,2));console.log('RECORDED',name);}
+ async function finish(name,c,start){await c.p.context().close();const file=await c.p.video().path();clips[name]={file,start:(start-c.started)/1000,width:c.width,height:c.height,...(name==='notes'?{purpose:'visibility'}:{})};fs.writeFileSync(metaPath,JSON.stringify(clips,null,2));console.log('RECORDED',name);}
  async function chapter(name,url,ready,action){if(!wanted(name))return;const c=await camera();current=c.p;await goto(c.p,base,url,ready);await sleep(c.p,1);const start=Date.now();await action(c.p);await sleep(c.p,Math.max(0,(start+23000-Date.now())/1000));await c.p.screenshot({path:path.join(work,`${name}-end.png`)});await finish(name,c,start);}
  try{
   await chapter('home',route('home'),'할 일',async p=>{await sleep(p,3);await btn(p,'수락').click();await sleep(p,2);await btn(p,'참석').first().click();await sleep(p,3);await p.mouse.move(1090,665);await p.mouse.wheel(0,460);await sleep(p,4);await p.mouse.wheel(0,-220);});
@@ -33,13 +32,25 @@ const sql=q=>execFileSync('docker',['exec','-i','supabase_db_praiseteam','psql',
    await finish('live-a',a,start);await finish('live-b',b,start);
   }
   await chapter('notes',route(`stand/${f.service}`),'필기',async p=>{
-   await btn(p,'필기').click();await waitText(p,'나만 보기');await sleep(p,3);
-   await draw(p,520,342,730,355);await sleep(p,2);
-   const uid=f.sessions[0].user.id;const count=()=>Number(sql(`select count(*) from public.strokes where owner_id='${uid}' and session_id=${f.service}`));const before=count();
-   await p.context().setOffline(true);await draw(p,530,465,760,470);await waitText(p,'필기 1개 대기');assert.equal(count(),before);console.log('VERIFIED offline ink remains local');
-   await sleep(p,3);await p.context().setOffline(false);
-   await p.waitForFunction(()=>![...document.querySelectorAll('flt-semantics')].some(e=>(e.getAttribute('aria-label')||e.textContent||'').includes('필기 1개 대기')),null,{timeout:40000});
-   assert.equal(count(),before+1);console.log('VERIFIED offline ink replayed on reconnect');await sleep(p,3);
+   async function saved(visibility){
+    for(let i=0;i<30;i++){
+     const row=(await f.strokesFor(0)).find(r=>r.owner_id===f.sessions[0].user.id&&r.visibility===visibility);
+     if(row)return row;
+     await sleep(p,.15);
+    }
+    throw new Error(`${visibility} stroke did not reach the local backend`);
+   }
+   await btn(p,'필기').click();await waitText(p,'나만 보기');await sleep(p,1);
+   await draw(p,510,365,740,365);
+   const privateStroke=await saved('private');
+   assert.ok(!(await f.strokesFor(1)).some(r=>r.id===privateStroke.id));
+   console.log('VERIFIED private ink is hidden from the other participant');
+   await sleep(p,1.5);await btn(p,'팀 공용').click();await sleep(p,.5);
+   await draw(p,510,470,740,470);
+   const teamStroke=await saved('team');
+   assert.ok((await f.strokesFor(1)).some(r=>r.id===teamStroke.id));
+   console.log('VERIFIED shared ink is visible to the other participant');
+   await p.mouse.move(80,150);await sleep(p,3);
   });
  }catch(e){if(current&&!current.isClosed()){await current.screenshot({path:path.join(work,'record-failure.png')});fs.writeFileSync(path.join(work,'record-failure-labels.json'),JSON.stringify(await labels(current),null,2));}throw e;}finally{await browser.close();await f.cleanup();console.log('Local video fixture removed');}
 })().catch(e=>{console.error(e);process.exitCode=1});

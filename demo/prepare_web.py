@@ -1,5 +1,7 @@
 """Name the separately built PWA and remove unused push-worker configuration."""
+import hashlib
 import json
+import subprocess
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 web = root / 'app/build/demo'
@@ -11,3 +13,16 @@ index = web / 'index.html'
 index.write_text(index.read_text().replace('<title>PraiseTeam</title>', '<title>PraiseTeam Demo</title>').replace('content="PraiseTeam"', 'content="PraiseTeam Demo"'))
 # Demo main never initializes Firebase. The copied production worker is unused.
 (web / 'firebase-messaging-sw.js').unlink(missing_ok=True)
+
+# A versioned media URL prevents returning visitors from playing a previously
+# cached film after the script or voice has changed.
+movie = web / 'praiseteam-tour-ko.mp4'
+watch = web / 'watch.html'
+if movie.exists() and watch.exists():
+    version = hashlib.sha256(movie.read_bytes()).hexdigest()[:12]
+    seconds = round(float(subprocess.check_output([
+        'ffprobe', '-v', 'error', '-show_entries', 'format=duration',
+        '-of', 'default=noprint_wrappers=1:nokey=1', str(movie),
+    ])))
+    watch.write_text(watch.read_text().replace('{{TOUR_VERSION}}', version)
+                     .replace('{{TOUR_DURATION}}', f'{seconds // 60}분 {seconds % 60}초'))

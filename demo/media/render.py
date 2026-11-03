@@ -4,17 +4,24 @@ All lettering and motion graphics are authored here. No private chat media,
 commercial music, or copied scores are used. Requires ffmpeg, Pillow and the
 Noto CJK / bundled Gowun fonts. Inputs are under ignored media/work/.
 """
-import json, subprocess
+import hashlib, json, subprocess, sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / 'demo/media/work'
-LAYERS = WORK / 'layers'
-RENDER = WORK / 'render'
-OUT = ROOT / 'output/demo'
+PREVIEW = '--preview' in sys.argv
+MEDIA = WORK / 'preview' if PREVIEW else WORK
+LAYERS = MEDIA / 'layers'
+RENDER = MEDIA / 'render'
+OUT = ROOT / ('output/demo/review' if PREVIEW else 'output/demo')
+FILM = 'praiseteam-tour-ko-preview' if PREVIEW else 'praiseteam-tour-ko'
 for d in [LAYERS, RENDER, OUT]: d.mkdir(parents=True, exist_ok=True)
-STORY = json.loads((WORK / 'timeline.json').read_text())
+STORY = json.loads((MEDIA / 'timeline.json').read_text())
+source_story = json.loads((ROOT / 'demo/media/storyboard.json').read_text())
+source_hash = hashlib.sha256(json.dumps(source_story, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+if STORY.get('story_sha256') != source_hash:
+    raise SystemExit('Storyboard changed. Run demo/media/narrate.py to regenerate narration and timing before rendering.')
 NAMES = {s['id']: s for s in STORY['scenes']}
 NAVY = '#111D35'; BLUE = '#304DC4'; CREAM = '#F4F5F2'; MUTED = '#AAB8D2'; INK = '#1D2433'; GOLD = '#E7BA6E'
 SANS = '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'
@@ -46,9 +53,9 @@ def background(scene,index):
             d.rectangle((0,0,1920,1080),fill=CREAM)
             text(d,(108,82),'PRAISETEAM  /  PRODUCT TOUR',23,BLUE,'bold')
             text(d,(108,211),'준비를 함께,\n찬양에 더 집중하도록',86,INK,'serif',spacing=28)
-            text(d,(112,496),'콘티에서 악보로, 편성에서 연습과 예배로.',31,'#5A6579')
+            text(d,(112,496),'프레이즈 팀에서 찬양팀의 한 주를 함께 준비해 보세요.',31,'#5A6579')
             text(d,(112,750),'praiseteam-sg-demo.web.app',36,BLUE,'bold')
-            text(d,(112,823),'로그인 없이 바로 체험 · 가상 팀 샘플 제공',24,'#5A6579')
+            text(d,(112,823),'샘플 데이터가 준비되어 있습니다.',24,'#5A6579')
             for i,label in enumerate(['콘티 · 악보','팀 편성 · 대화','라이브 · 필기']):
                 y=254+i*145;d.rounded_rectangle((1350,y,1790,y+103),20,fill='#E4E8F6');text(d,(1390,y+29),label,31,BLUE,'bold')
         else:
@@ -58,7 +65,7 @@ def background(scene,index):
             text(d,(114,560),'찬양팀의 한 주를 함께 준비합니다.',32,MUTED)
         text(d,(110,1010),'가상 팀과 시연용 악보로 촬영한 제품 소개',18,'#7584A0')
     elif name=='live':
-        text(d,(64,40),'07  /  LIVE',20,GOLD,'bold')
+        text(d,(64,40),f'{index+1:02}  /  LIVE',20,GOLD,'bold')
         text(d,(64,80),'라이브하기, 한 번이면 시작',44,'white','serif')
         text(d,(1410,63),'실제 연결 · 두 기기 시연',24,GOLD,'bold')
         for x,label in [(64,'인도 · 서지훈'),(996,'싱어 · 김하늘')]:
@@ -73,6 +80,9 @@ def background(scene,index):
         for x,c in [(594,'#F08783'),(612,'#E9C36E'),(630,'#8CB9A4')]: d.ellipse((x,110,x+8,118),fill=c)
         text(d,(668,102),'PraiseTeam  /  한빛 찬양팀',15,'#C7D2E8')
         text(d,(64,875),'찬양팀의 준비를 한곳에',22,'#7F92B6')
+    if PREVIEW:
+        d.rounded_rectangle((1440,8,1890,46),12,fill='#E7BA6E')
+        text(d,(1460,12),'무음 검토본 · 자막 타이밍 임시',19,INK,'bold')
     return save(im,name+'-bg')
 
 def pill(label,name,width=440):
@@ -96,7 +106,7 @@ def seconds(s):
     h,m,sec=s.replace(',','.').split(':');return int(h)*3600+int(m)*60+float(sec)
 def subtitles(name):
     chunks=[]
-    for b in (WORK/(name+'.srt')).read_text().strip().split('\n\n'):
+    for b in (MEDIA/(name+'.srt')).read_text().strip().split('\n\n'):
         lines=b.splitlines();start,end=lines[1].split(' --> ');chunks.append([seconds(start)+.4,seconds(end)+.4,' '.join(lines[2:])])
     for i in range(len(chunks)-1):chunks[i][1]=min(chunks[i][1],chunks[i+1][0])
     return chunks
@@ -119,14 +129,14 @@ def scene_video(scene,index,clips):
     def video(name,x,y,w,h):
         nonlocal inputs,last
         c=clips[name];n=inputs;inputs+=1;cmd.extend(['-ss',str(c['start']),'-i',c['file']]);layer=f'v{n}';o=f'o{n}'
-        rate=1
-        if name=='notes':
-            length=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',c['file']]))-c['start']-.15
-            rate=min(1,duration/length)
-        chains.append(f'[{n}:v]setpts=(PTS-STARTPTS)*{rate},fps=30,scale={w}:{h},setsar=1,tpad=stop_mode=clone:stop_duration=25[{layer}]')
+        # The old notes capture switches offline after six seconds. This
+        # revised chapter explains visibility, so retain only the ink tools
+        # and the actual private stroke, then hold the resulting frame.
+        trim='trim=duration=5.5,' if name=='notes' and c.get('purpose')!='visibility' else ''
+        chains.append(f'[{n}:v]{trim}setpts=PTS-STARTPTS,fps=30,scale={w}:{h},setsar=1,tpad=stop_mode=clone:stop_duration=30[{layer}]')
         chains.append(f'[{last}][{layer}]overlay={x}:{y}:eof_action=pass[{o}]');last=o
     if name=='intro':
-        for i,(title,body) in enumerate([('콘티 수정','이번 주는 G키로, 마지막 후렴 두 번.'),('연습 일정','토요일 오후 2시, 본당에서 만나요.'),('월간 로테이션','누가 함께하고, 어디가 비어 있나요?')]):
+        for i,(title,body) in enumerate([('월간 로타','이번 주에 함께할 사람을 정합니다.'),('예배 콘티','곡과 순서를 정하고, 변경 내용을 공유해요.'),('악보 공유','키와 편곡에 맞는 악보를 함께 확인해요.')]):
             begin=1.5+i*3.4;overlay_png(card(title,body,'intro-card'+str(i)),f'1100+160*pow(max(0,1-(t-{begin})/0.65),3)',220+i*210,begin)
         overlay_png(pill('흩어진 준비를, 한곳에.','intro-tag',590),110,723,11.4)
     elif name=='outro':
@@ -135,14 +145,17 @@ def scene_video(scene,index,clips):
         video('live-a',64,172,860,800);video('live-b',996,172,860,800)
     else:
         video(name,576,138,1280,800)
-        label={'home':'다음 예배 → 연습 → 응답','songs':'키 · BPM · 악보 · 영상','setlist':'바뀐 내용 함께 공지하기','rotation':'수락 / 대기 / 거절','chat':'공지 · 채널 · 투표','notes':'연결 후 필기 자동 전송'}[name]
+        label={'home':'준비한 내용을 한눈에','songs':'키 · BPM · 악보 · 영상','setlist':'콘티 준비 → 팀원에게 공지','rotation':'수락 / 대기 / 거절','chat':'공지 · 채널 · 투표','notes':'나만 보기 / 팀 공용'}[name]
         overlay_png(pill(label,name+'-tag',438),64,'742+40*pow(max(0,1-(t-4)/0.55),3)',4)
     for i,(start,end,value) in enumerate(subtitles(name)):
         overlay_png(subtitle(value,f'{name}-sub{i}'),0,946,start,end,False)
-    audio=inputs;cmd.extend(['-i',str(WORK/(name+'.mp3'))])
     chains.append(f'[{last}]format=yuv420p,trim=duration={duration},setpts=PTS-STARTPTS[outv]')
-    chains.append(f'[{audio}:a]adelay=400:all=1,apad,atrim=duration={duration},aresample=48000,loudnorm=I=-16:TP=-1.5:LRA=9[outa]')
-    cmd.extend(['-filter_complex',';'.join(chains),'-map','[outv]','-map','[outa]','-t',str(duration),'-c:v','libx264','-preset','fast','-crf','20','-threads','4','-c:a','aac','-b:a','160k','-ar','48000','-movflags','+faststart',str(RENDER/(name+'.mp4'))])
+    if not PREVIEW:
+        audio=inputs;cmd.extend(['-i',str(WORK/(name+'.mp3'))])
+        chains.append(f'[{audio}:a]adelay=400:all=1,apad,atrim=duration={duration},aresample=48000,loudnorm=I=-16:TP=-1.5:LRA=9[outa]')
+    cmd.extend(['-filter_complex',';'.join(chains),'-map','[outv]'])
+    if not PREVIEW:cmd.extend(['-map','[outa]','-c:a','aac','-b:a','160k','-ar','48000'])
+    cmd.extend(['-t',str(duration),'-c:v','libx264','-preset','fast','-crf','20','-threads','4','-movflags','+faststart',str(RENDER/(name+'.mp4'))])
     run(cmd,RENDER/(name+'.log'));print('Rendered',name,flush=True)
 
 def merge():
@@ -153,20 +166,23 @@ def merge():
     previous='v0';audio='0:a';elapsed=scenes[0]['duration']
     for i,s in enumerate(scenes[1:],1):
         chain.append(f'[{previous}][v{i}]xfade=transition=fade:duration=0.6:offset={elapsed-.6}[x{i}]');previous=f'x{i}'
-        chain.append(f'[{audio}][{i}:a]acrossfade=d=0.6:c1=tri:c2=tri[a{i}]');audio=f'a{i}';elapsed+=s['duration']-.6
-    cmd+=['-filter_complex',';'.join(chain),'-map',f'[{previous}]','-map',f'[{audio}]','-c:v','libx264','-preset','fast','-crf','21','-threads','4','-pix_fmt','yuv420p','-c:a','aac','-b:a','160k','-movflags','+faststart',str(OUT/'praiseteam-tour-ko.mp4')]
+        if not PREVIEW:
+            chain.append(f'[{audio}][{i}:a]acrossfade=d=0.6:c1=tri:c2=tri[a{i}]');audio=f'a{i}'
+        elapsed+=s['duration']-.6
+    cmd+=['-filter_complex',';'.join(chain),'-map',f'[{previous}]']
+    if not PREVIEW:cmd+=['-map',f'[{audio}]','-c:a','aac','-b:a','160k']
+    cmd+=['-c:v','libx264','-preset','fast','-crf','21','-threads','4','-pix_fmt','yuv420p','-movflags','+faststart',str(OUT/(FILM+'.mp4'))]
     run(cmd,RENDER/'merge.log')
     vtt=['WEBVTT\n']
     def ts(t):return f'{int(t//3600):02}:{int(t//60)%60:02}:{t%60:06.3f}'
     for s in scenes:
         for a,b,value in subtitles(s['id']):vtt.append(f"{ts(s['starts_at']+a)} --> {ts(s['starts_at']+b)}\n{value}\n")
-    (OUT/'praiseteam-tour-ko.vtt').write_text('\n'.join(vtt))
-    print('Final film:',OUT/'praiseteam-tour-ko.mp4',flush=True)
+    (OUT/(FILM+'.vtt')).write_text('\n'.join(vtt))
+    print('Silent review:' if PREVIEW else 'Final film:',OUT/(FILM+'.mp4'),flush=True)
 
 if __name__=='__main__':
-    import sys
     clips=json.loads((WORK/'clips.json').read_text()) if (WORK/'clips.json').exists() else {}
-    choices=sys.argv[1:]
+    choices=[arg for arg in sys.argv[1:] if arg!='--preview']
     for i,s in enumerate(STORY['scenes']):
         if not choices or s['id'] in choices:scene_video(s,i,clips)
     if not choices or 'merge' in choices:merge()

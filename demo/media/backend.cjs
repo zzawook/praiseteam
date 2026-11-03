@@ -80,7 +80,13 @@ async function prepare() {
     const response=await fetch(`${env.API_URL}/storage/v1/object/sheets/${sheet.storage_path}`,{method:'POST',headers:{Authorization:`Bearer ${env.SERVICE_ROLE_KEY}`,'Content-Type':'application/pdf'},body:bytes});
     assert.ok(response.ok,'sample PDF uploaded');files.push(sheet.storage_path);
   }
-  return {team,service:ids.sessions[107],song:ids.songs[1],channel:ids.channels[1],sessions,cleanup};
+  async function strokesFor(actor) {
+    const response=await request(`/rest/v1/strokes?select=id,owner_id,visibility&session_id=eq.${ids.sessions[107]}`,{
+      headers:{Authorization:`Bearer ${sessions[actor].access_token}`},
+    });
+    return response.json();
+  }
+  return {team,service:ids.sessions[107],song:ids.songs[1],channel:ids.channels[1],sessions,strokesFor,cleanup};
   } catch(error) {
     await cleanup();
     throw error;

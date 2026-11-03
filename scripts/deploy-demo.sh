@@ -11,7 +11,6 @@ done
 if [[ "${1:-}" != "--skip-build" ]]; then
   (cd app && flutter build web --release --dart-define=DEMO_MODE=true --output=build/demo)
 fi
-python3 demo/prepare_web.py
 cp demo/web/*.html app/build/demo/
 if [[ -f output/demo/praiseteam-tour-ko.mp4 ]]; then
   cp output/demo/praiseteam-tour-ko.mp4 app/build/demo/
@@ -22,4 +21,5 @@ fi
 if [[ -f output/demo/praiseteam-tour-poster.jpg ]]; then
   cp output/demo/praiseteam-tour-poster.jpg app/build/demo/
 fi
+python3 demo/prepare_web.py
 firebase deploy --only hosting --project praiseteam-sg-demo --config firebase.demo.json --non-interactive

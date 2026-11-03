@@ -44,7 +44,7 @@ chat/polls, reset, desktop/mobile layouts, and absence of cloud backend calls.
 ## Narrated product film
 
 `demo/media/storyboard.json` is the Korean script. The output is a 1920×1080,
-roughly 2:48 landscape MP4 with synthesized Korean narration, subtitles,
+roughly three-minute landscape MP4 with synthesized Korean narration, subtitles,
 animated title cards and real UI actions. Only the public, fictional script
 is sent to the speech service. No original group-chat media is used.
 
@@ -68,10 +68,23 @@ python demo/media/render.py
 
 The live recording asserts two actual authenticated participants, remote page
 following, a received cue and independent navigation after disabling follow.
-The notes recording asserts that offline ink is absent from the database until
-reconnection, then arrives. Captures and generated audio remain ignored under
+The notes recording checks with a second authenticated account that private
+ink is hidden and shared ink is visible. Captures and generated audio remain ignored under
 `demo/media/work/`; finished MP4/VTT files go under ignored `output/demo/`.
 The deployment script copies them to the separate demo's `/watch.html` tour.
 Deployment requires the finished MP4, VTT and poster (render them or restore
 the demo release assets into `output/demo/`). Generate the poster from any
 finished frame with FFmpeg; its filename is `praiseteam-tour-poster.jpg`.
+
+If the speech service is unavailable, a separate, explicitly marked silent
+review can still be produced from existing captures:
+
+```sh
+python demo/media/preview.py
+python demo/media/render.py --preview
+```
+
+This writes `output/demo/review/praiseteam-tour-ko-preview.mp4`. Its subtitle
+timings are estimates for review. It leaves the production MP4, audio and
+timing manifest intact and is never copied by the deployment script.
+Normal rendering rejects a stale narration manifest after a script edit.
