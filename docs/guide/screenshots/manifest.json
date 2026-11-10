@@ -1,0 +1,1072 @@
+[
+  {
+    "file": "page-01-1.png",
+    "source": "01-login",
+    "source_sha256": "dff0bec553d43d4316802b405ff857d84a8b5e6bd4a1ef7ae04a37151d14cb46",
+    "marks": [
+      {
+        "number": 1,
+        "label": "Google로 계속하기",
+        "box": {
+          "x": 24,
+          "y": 459,
+          "width": 364,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-01-2.png",
+    "source": "02-join",
+    "source_sha256": "24e5e5226c035130418ff2522b459e78a77d810173b731b1af960bc5d788f55b",
+    "marks": [
+      {
+        "number": 2,
+        "label": "초대 코드",
+        "box": {
+          "x": 24,
+          "y": 228,
+          "width": 372,
+          "height": 68
+        }
+      },
+      {
+        "number": 3,
+        "label": "가입하기",
+        "box": {
+          "x": 24,
+          "y": 302,
+          "width": 364,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-02-1.png",
+    "source": "04-name-edit",
+    "source_sha256": "21f696d7cd3aa774ab65d291a96d7c733ed364ed07bd78c45b0926ff58211dab",
+    "marks": [
+      {
+        "number": 1,
+        "label": "이름 입력",
+        "box": {
+          "x": 90,
+          "y": 332,
+          "width": 240,
+          "height": 82
+        }
+      },
+      {
+        "number": 2,
+        "label": "저장",
+        "box": {
+          "x": 248.0401153564453,
+          "y": 432,
+          "width": 73.95310974121094,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-02-2.png",
+    "source": "04-parts",
+    "source_sha256": "5494b3c9ff61f3d1dd0974bcc620e644143c76f746d4ca6481148678c6e0c48a",
+    "marks": [
+      {
+        "number": 3,
+        "label": "내 파트",
+        "box": {
+          "x": 20,
+          "y": 387,
+          "width": 79.953125,
+          "height": 38
+        }
+      },
+      {
+        "number": 4,
+        "label": "저장",
+        "box": {
+          "x": 20,
+          "y": 672,
+          "width": 372,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-03-1.png",
+    "source": "03-home",
+    "source_sha256": "d151d4d9333fdcb143a92104d8a2263ef9bc55e623c0d66672484c2670b91c66",
+    "marks": [
+      {
+        "number": 1,
+        "label": "예배",
+        "box": {
+          "x": 82.4000015258789,
+          "y": 740,
+          "width": 82.39061737060547,
+          "height": 80
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-03-2.png",
+    "source": "03-setlist",
+    "source_sha256": "af9272438cea7924abaa03e96dde336abb4a10659e1cadeadc050f0c655f1928",
+    "marks": [
+      {
+        "number": 2,
+        "label": "악보 보기",
+        "box": {
+          "x": 32,
+          "y": 274,
+          "width": 123.484375,
+          "height": 48
+        }
+      },
+      {
+        "number": 3,
+        "label": "라이브하기",
+        "box": {
+          "x": 20,
+          "y": 680,
+          "width": 372,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-04-1.png",
+    "source": "05-reference-links",
+    "source_sha256": "1cdaeb0a164ff49d7cdaf7b8e9050c2b472d9a6e943ac476bbf141a911120013",
+    "marks": [
+      {
+        "number": 1,
+        "label": "참고 영상",
+        "box": {
+          "x": 20,
+          "y": 458,
+          "width": 372,
+          "height": 80
+        }
+      },
+      {
+        "number": 2,
+        "label": "곡 전체 정보",
+        "box": {
+          "x": 151.485595703125,
+          "y": 704,
+          "width": 140.03125,
+          "height": 48
+        }
+      },
+      {
+        "number": 3,
+        "label": "악보 보기",
+        "box": {
+          "x": 20,
+          "y": 704,
+          "width": 123.484375,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-04-2.png",
+    "source": "05-song-sheets",
+    "source_sha256": "c0c8acf72879ea4b763e0b871382d80287f9fa76aedadef467d441efb3fb9f89",
+    "marks": [
+      {
+        "number": 4,
+        "label": "악보 다운로드",
+        "box": {
+          "x": 296,
+          "y": 389,
+          "width": 40,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-05-1.png",
+    "source": "06-new-song",
+    "source_sha256": "364f50add70b3d7f6240b1b893eea7045f330f2ac75673ed1913ef87a4dab684",
+    "marks": [
+      {
+        "number": 1,
+        "label": "곡 이름",
+        "box": {
+          "x": 64,
+          "y": 170.5,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 2,
+        "label": "가수·버전",
+        "box": {
+          "x": 64,
+          "y": 501.5,
+          "width": 292,
+          "height": 64
+        }
+      },
+      {
+        "number": 3,
+        "label": "저장",
+        "box": {
+          "x": 274.04010009765625,
+          "y": 651.5,
+          "width": 73.953125,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-05-2.png",
+    "source": "06-version",
+    "source_sha256": "b5604d82d71b8c0a5e4ca4b5cb524c5e25d42b30faf6c75754a9b8fff87038c4",
+    "marks": [
+      {
+        "number": 4,
+        "label": "버전 이름",
+        "box": {
+          "x": 64,
+          "y": 336,
+          "width": 292,
+          "height": 64
+        }
+      },
+      {
+        "number": 5,
+        "label": "저장",
+        "box": {
+          "x": 274.04010009765625,
+          "y": 486,
+          "width": 73.953125,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-06-1.png",
+    "source": "08-upload",
+    "source_sha256": "7db10174c8cb89bd26e9737146fd94eb0143dd7a311e9f42480c159caefeff17",
+    "marks": [
+      {
+        "number": 1,
+        "label": "악보 이름",
+        "box": {
+          "x": 90,
+          "y": 421.5,
+          "width": 240,
+          "height": 62
+        }
+      },
+      {
+        "number": 2,
+        "label": "악보 올리기",
+        "box": {
+          "x": 205.53445434570312,
+          "y": 501.5,
+          "width": 116.453125,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-06-2.png",
+    "source": "08-link",
+    "source_sha256": "c635cee67f847cab97fa6be5a1322c3813d36b9e3427a3337f4c903aafbf9879",
+    "marks": [
+      {
+        "number": 3,
+        "label": "영상 주소",
+        "box": {
+          "x": 64,
+          "y": 337,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 4,
+        "label": "링크 이름",
+        "box": {
+          "x": 64,
+          "y": 405,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 5,
+        "label": "저장",
+        "box": {
+          "x": 274.04010009765625,
+          "y": 485,
+          "width": 73.953125,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-07-1.png",
+    "source": "07-sessions",
+    "source_sha256": "4a4c3706b6111e89b8f150f3e530ad8d7228bad69a6ebf5d8a4d9e13cff00ef2",
+    "marks": [
+      {
+        "number": 1,
+        "label": "예배 추가",
+        "box": {
+          "x": 290.514404296875,
+          "y": 539.5,
+          "width": 109.484375,
+          "height": 32
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-07-2.png",
+    "source": "07-create-service",
+    "source_sha256": "1ec351e247ef0b65b5f7e685a4f312fd4db2684adf81c2847901d1fdaa2e6b5c",
+    "marks": [
+      {
+        "number": 2,
+        "label": "예배 이름",
+        "box": {
+          "x": 64,
+          "y": 234,
+          "width": 292,
+          "height": 64
+        }
+      },
+      {
+        "number": 3,
+        "label": "장소",
+        "box": {
+          "x": 64,
+          "y": 513,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 4,
+        "label": "저장",
+        "box": {
+          "x": 274.04010009765625,
+          "y": 724,
+          "width": 73.953125,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-08-1.png",
+    "source": "09-pick-song",
+    "source_sha256": "e0e4324dfb800c5f2dbc4e1fe4a888addd5c69a980ac6da613b01d39f8302479",
+    "marks": [
+      {
+        "number": 1,
+        "label": "곡 선택",
+        "box": {
+          "x": 0,
+          "y": 362.79998779296875,
+          "width": 412,
+          "height": 88
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-08-2.png",
+    "source": "09-pick-version",
+    "source_sha256": "0953aaa536f3021542e35fbc56657487c01ada6b4ba348a5ecd1d9dc4f7c5a66",
+    "marks": [
+      {
+        "number": 2,
+        "label": "버전 선택",
+        "box": {
+          "x": 0,
+          "y": 612,
+          "width": 412,
+          "height": 72
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-09-1.png",
+    "source": "10-edit-setlist",
+    "source_sha256": "5f7e591b48dff6445105285dccfe537800673686b1b9c363f001c3d0735ef28e",
+    "marks": [
+      {
+        "number": 1,
+        "label": "버전",
+        "box": {
+          "x": 20,
+          "y": 228,
+          "width": 372,
+          "height": 56
+        }
+      },
+      {
+        "number": 2,
+        "label": "송폼",
+        "box": {
+          "x": 20,
+          "y": 432,
+          "width": 378,
+          "height": 86
+        }
+      },
+      {
+        "number": 3,
+        "label": "저장",
+        "box": {
+          "x": 20,
+          "y": 624,
+          "width": 372,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-09-2.png",
+    "source": "10-draft-publish",
+    "source_sha256": "83470326a42bfa46cfde1a4a9484d67bdb3658541b919ded42871c745428d3f8",
+    "marks": [
+      {
+        "number": 4,
+        "label": "콘티 공지하기",
+        "box": {
+          "x": 163.485595703125,
+          "y": 190,
+          "width": 137.4375,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-10-1.png",
+    "source": "11-rotation-member",
+    "source_sha256": "f92358ac0f133112f74f6fbbf4f8c96094e985cf145528a52d0eb9ca142ffd5e",
+    "marks": [
+      {
+        "number": 1,
+        "label": "내 이름",
+        "box": {
+          "x": 116,
+          "y": 358,
+          "width": 92.9375,
+          "height": 38
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-10-2.png",
+    "source": "11-response-actions",
+    "source_sha256": "df036d937b51faa99ab6f0926b663da8833ed64cefa20fc2655b8bdf0d25c85b",
+    "marks": [
+      {
+        "number": 2,
+        "label": "수락",
+        "box": {
+          "x": 0,
+          "y": 572,
+          "width": 412,
+          "height": 56
+        }
+      },
+      {
+        "number": 3,
+        "label": "대타 요청",
+        "box": {
+          "x": 0,
+          "y": 684,
+          "width": 412,
+          "height": 56
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-11-1.png",
+    "source": "12-blockouts",
+    "source_sha256": "10fa9e132727b787804fccf163d2d1f806e00cc428a19f3fb61675a1a2c4974b",
+    "marks": [
+      {
+        "number": 1,
+        "label": "날짜 추가",
+        "box": {
+          "x": 290.514404296875,
+          "y": 80,
+          "width": 109.484375,
+          "height": 32
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-11-2.png",
+    "source": "12-date-range",
+    "source_sha256": "c7b3dcc65cf20112c9fb1afb4cda8356f2123105f411b39d26c8480d64cfb1e4",
+    "marks": [
+      {
+        "number": 2,
+        "label": "시작일",
+        "box": {
+          "x": 290.8571472167969,
+          "y": 320,
+          "width": 56.5625,
+          "height": 42
+        }
+      },
+      {
+        "number": 3,
+        "label": "종료일",
+        "box": {
+          "x": 347.4285583496094,
+          "y": 320,
+          "width": 56.5625,
+          "height": 42
+        }
+      },
+      {
+        "number": 4,
+        "label": "저장",
+        "box": {
+          "x": 340,
+          "y": 2.5,
+          "width": 64,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-12-1.png",
+    "source": "13-rotation-leader",
+    "source_sha256": "a99c9f6c02384ce8e2123891003fcdadceb511c853346cb83985be4b0ed9b50a",
+    "marks": [
+      {
+        "number": 1,
+        "label": "필요 인원",
+        "box": {
+          "x": 20,
+          "y": 168,
+          "width": 96,
+          "height": 25
+        }
+      },
+      {
+        "number": 2,
+        "label": "사람 추가",
+        "box": {
+          "x": 116,
+          "y": 168,
+          "width": 110.484375,
+          "height": 39
+        }
+      },
+      {
+        "number": 3,
+        "label": "보내기",
+        "box": {
+          "x": 147.85968017578125,
+          "y": 680,
+          "width": 116.265625,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-12-2.png",
+    "source": "13-auto-menu",
+    "source_sha256": "8a13eca77b1f7597081d94d389c15feeae89e032717612889d25354d9a8fca2a",
+    "marks": [
+      {
+        "number": 4,
+        "label": "자동 배정",
+        "box": {
+          "x": 292,
+          "y": 16,
+          "width": 112,
+          "height": 48
+        }
+      },
+      {
+        "number": 5,
+        "label": "기본 필요 인원",
+        "box": {
+          "x": 292,
+          "y": 64,
+          "width": 112,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-13-1.png",
+    "source": "14-rehearsal",
+    "source_sha256": "e63122942870fbde8bd5df89c3a697d0c337bf0b7cbf3a43c9f48349666a876a",
+    "marks": [
+      {
+        "number": 1,
+        "label": "연습 추가",
+        "box": {
+          "x": 290.514404296875,
+          "y": 514.5,
+          "width": 109.484375,
+          "height": 40
+        }
+      },
+      {
+        "number": 4,
+        "label": "참석",
+        "box": {
+          "x": 200,
+          "y": 585.5,
+          "width": 64,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-13-2.png",
+    "source": "14-rehearsal-date",
+    "source_sha256": "019d333d30b22273d1664af04972ae2fe89f4cb481ec69ccf881941e27db845b",
+    "marks": [
+      {
+        "number": 2,
+        "label": "연습 날짜",
+        "box": {
+          "x": 326,
+          "y": 394,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "number": 3,
+        "label": "확인",
+        "box": {
+          "x": 314,
+          "y": 648,
+          "width": 64,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-14-1.png",
+    "source": "15-live",
+    "source_sha256": "48d8d78c9eb9a58e8e06aaa343256b8bc5e4fbadd79497ad433ed907d458c6d6",
+    "marks": [
+      {
+        "number": 1,
+        "label": "따라가기",
+        "box": {
+          "x": 213.3726806640625,
+          "y": 44,
+          "width": 182.625,
+          "height": 40
+        }
+      },
+      {
+        "number": 2,
+        "label": "한 번 더",
+        "box": {
+          "x": 8,
+          "y": 631,
+          "width": 94.5,
+          "height": 40
+        }
+      },
+      {
+        "number": 5,
+        "label": "라이브 나가기",
+        "box": {
+          "x": 79.53446197509766,
+          "y": 772,
+          "width": 135.43749237060547,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-14-2.png",
+    "source": "15-cues",
+    "source_sha256": "b7b7aa96721e29b224139028625d833ce43c7dcecb9ffc73553f4b85d9e706ef",
+    "marks": [
+      {
+        "number": 3,
+        "label": "받는 파트",
+        "box": {
+          "x": 20,
+          "y": 469.6666564941406,
+          "width": 79.953125,
+          "height": 38
+        }
+      },
+      {
+        "number": 4,
+        "label": "후렴으로",
+        "box": {
+          "x": 146.66665649414062,
+          "y": 567.6666870117188,
+          "width": 118.65625,
+          "height": 49.4375
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-15-1.png",
+    "source": "16-sheet-viewer",
+    "source_sha256": "c4c5ba3929d9ba27a22dd22b9262ba6866fcac9a6f12d2721d41e19f1a4e0c04",
+    "marks": [
+      {
+        "number": 1,
+        "label": "확대",
+        "box": {
+          "x": 364,
+          "y": 80,
+          "width": 40,
+          "height": 40
+        }
+      },
+      {
+        "number": 2,
+        "label": "화면 맞춤",
+        "box": {
+          "x": 300,
+          "y": 80,
+          "width": 64,
+          "height": 40
+        }
+      },
+      {
+        "number": 3,
+        "label": "필기",
+        "box": {
+          "x": 14.791662216186523,
+          "y": 724,
+          "width": 91.95312690734863,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-15-2.png",
+    "source": "16-ink-private",
+    "source_sha256": "7f66b070e9d39a111cceec81e40e1c3244138a063ae9184b658be263e7f27014",
+    "marks": [
+      {
+        "number": 4,
+        "label": "나만 보기",
+        "box": {
+          "x": 8,
+          "y": 770,
+          "width": 109.484375,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-16-1.png",
+    "source": "16-ink-team",
+    "source_sha256": "b7a1518b98f2ba0f4ec332c0e2a86374ccc33c7691d60875538fb1ac23fac556",
+    "marks": [
+      {
+        "number": 1,
+        "label": "팀 공용",
+        "box": {
+          "x": 117.485595703125,
+          "y": 770,
+          "width": 109.484375,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-16-2.png",
+    "source": "16-ink-done",
+    "source_sha256": "9d60f1c82e285eac2af0455ecf1c73952e925b27037c63b9f3e11080a2ffb1e4",
+    "marks": [
+      {
+        "number": 2,
+        "label": "완료",
+        "box": {
+          "x": 330.04,
+          "y": 766,
+          "width": 73.95,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-17-1.png",
+    "source": "17-channels",
+    "source_sha256": "31b59f47da8834b863691724000ba09c825e801d566e1bc91aef2262cd1a20af",
+    "marks": [
+      {
+        "number": 1,
+        "label": "공지",
+        "box": {
+          "x": 0,
+          "y": 56,
+          "width": 412,
+          "height": 56
+        }
+      },
+      {
+        "number": 2,
+        "label": "전체 채팅",
+        "box": {
+          "x": 0,
+          "y": 177,
+          "width": 412,
+          "height": 72
+        }
+      },
+      {
+        "number": 3,
+        "label": "채널 만들기",
+        "box": {
+          "x": 277.5344543457031,
+          "y": 137,
+          "width": 122.453125,
+          "height": 32
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-17-2.png",
+    "source": "17-chat",
+    "source_sha256": "9645575f1e42b8f32c551a73ad0f38cdb10b05c6fedab99afcc8148e4b0748a2",
+    "marks": [
+      {
+        "number": 4,
+        "label": "투표 만들기",
+        "box": {
+          "x": 8,
+          "y": 768,
+          "width": 40,
+          "height": 40
+        }
+      },
+      {
+        "number": 5,
+        "label": "보내기",
+        "box": {
+          "x": 364,
+          "y": 768,
+          "width": 40,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-18-1.png",
+    "source": "18-announcements",
+    "source_sha256": "fee2f5b1f737bd7118cb14bee14d28582602a04b3ac3da05115f6c732a13fb43",
+    "marks": [
+      {
+        "number": 1,
+        "label": "공지 쓰기",
+        "box": {
+          "x": 282.514404296875,
+          "y": 68,
+          "width": 109.484375,
+          "height": 32
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-18-2.png",
+    "source": "18-write-announcement",
+    "source_sha256": "b0f4634b5587d9747f1854535bb676f63bac30de8150d2323424ae2a959eff03",
+    "marks": [
+      {
+        "number": 2,
+        "label": "제목",
+        "box": {
+          "x": 64,
+          "y": 249,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 3,
+        "label": "내용",
+        "box": {
+          "x": 64,
+          "y": 317,
+          "width": 290,
+          "height": 182
+        }
+      },
+      {
+        "number": 4,
+        "label": "저장",
+        "box": {
+          "x": 274.04010009765625,
+          "y": 573,
+          "width": 73.953125,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-19-1.png",
+    "source": "18-poll",
+    "source_sha256": "8c81cc3c5adb72d080e6d1535d8d2702303465cb385ce02af3c6c39f34a5ea45",
+    "marks": [
+      {
+        "number": 1,
+        "label": "질문",
+        "box": {
+          "x": 64,
+          "y": 231,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 2,
+        "label": "첫 번째 선택지",
+        "box": {
+          "x": 64,
+          "y": 295,
+          "width": 292,
+          "height": 62
+        }
+      },
+      {
+        "number": 3,
+        "label": "만들기",
+        "box": {
+          "x": 261.0601806640625,
+          "y": 591,
+          "width": 86.9375,
+          "height": 48
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-19-2.png",
+    "source": "18-notifications",
+    "source_sha256": "fb0e3757c02bd345884da05790442b6d161cb9d77aa60ec92d9e5a273fb97887",
+    "marks": [
+      {
+        "number": 4,
+        "label": "모든 예배 콘티 받기",
+        "box": {
+          "x": 0,
+          "y": 418,
+          "width": 412,
+          "height": 72
+        }
+      },
+      {
+        "number": 5,
+        "label": "푸시 알림",
+        "box": {
+          "x": 0,
+          "y": 543,
+          "width": 412,
+          "height": 56
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-20-1.png",
+    "source": "17-team-invite",
+    "source_sha256": "5298765e2b6bd556af7523c8eef8e6132c6530933fe687efb51912db79d11bfc",
+    "marks": [
+      {
+        "number": 1,
+        "label": "복사",
+        "box": {
+          "x": 312,
+          "y": 109,
+          "width": 40,
+          "height": 40
+        }
+      },
+      {
+        "number": 2,
+        "label": "가입 승인",
+        "box": {
+          "x": 318.04010009765625,
+          "y": 283,
+          "width": 73.953125,
+          "height": 48
+        }
+      },
+      {
+        "number": 3,
+        "label": "파트 관리",
+        "box": {
+          "x": 332.514404296875,
+          "y": 8,
+          "width": 79.484375,
+          "height": 40
+        }
+      }
+    ]
+  },
+  {
+    "file": "page-20-2.png",
+    "source": "19-role",
+    "source_sha256": "97b9ac57d5fe1d5b446841a59bdcb8eaac49dbd2be335da356ed94dababc7ff0",
+    "marks": [
+      {
+        "number": 4,
+        "label": "리더 역할",
+        "box": {
+          "x": 0,
+          "y": 564,
+          "width": 412,
+          "height": 56
+        }
+      }
+    ]
+  }
+]

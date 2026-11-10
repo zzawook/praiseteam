@@ -127,7 +127,10 @@ def table(doc, spec):
 
 
 def main():
-    data = json.loads((ROOT / 'docs/guide/content.ko.json').read_text())
+    source = ROOT / 'docs/guide/walkthrough.ko.json'
+    if not source.exists():
+        source = ROOT / 'docs/guide/content.ko.json'
+    data = json.loads(source.read_text())
     doc = Document()
     sec = doc.sections[0]
     sec.page_width, sec.page_height = Mm(210), Mm(297)
@@ -155,10 +158,10 @@ def main():
     run.font.size = Pt(8)
     field = OxmlElement('w:fldSimple'); field.set(qn('w:instr'), 'PAGE'); footer._p.append(field)
     for index, page in enumerate(data['pages'], 1):
-        if index > 1: doc.add_page_break()
         if index == 1:
             para(doc, data['title'], 'Title')
-        para(doc, f'{index}  {page["title"]}', 'Heading 1')
+        heading = para(doc, f'{index}  {page["title"]}', 'Heading 1')
+        heading.paragraph_format.page_break_before = index > 1
         p = para(doc, page['audience'], 'Subtitle'); p.paragraph_format.space_after = Pt(6)
         para(doc, page['intro'])
         if index == 1:
@@ -169,6 +172,32 @@ def main():
             r = OxmlElement('w:r'); props = OxmlElement('w:rPr')
             color = OxmlElement('w:color'); color.set(qn('w:val'), '2541B2'); props.append(color); r.append(props)
             txt = OxmlElement('w:t'); txt.text = data['app_url']; r.append(txt); link.append(r); p._p.append(link)
+        if page.get('path'):
+            p = para(doc, page['path'])
+            p.paragraph_format.space_after = Pt(6)
+            for run in p.runs:
+                run.font.size = Pt(9.5)
+        if page.get('visuals'):
+            p = doc.add_paragraph()
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.line_spacing = 1.0
+            p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.keep_with_next = True
+            p.paragraph_format.keep_together = True
+            width = page.get('image_width_mm', 76)
+            for j, figure in enumerate(page['visuals'], 1):
+                if j > 1:
+                    spacer = p.add_run('   ')
+                    spacer.font.size = Pt(16)
+                image = ROOT / f'docs/guide/screenshots/page-{index:02}-{j}.png'
+                shape = p.add_run().add_picture(str(image), width=Mm(width))
+                shape._inline.docPr.set('descr', figure['caption'])
+            caption = doc.add_paragraph()
+            caption.paragraph_format.line_spacing = Pt(12)
+            caption.paragraph_format.space_after = Pt(4)
+            caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            labels = [f'{chr(65+j)}  {figure["caption"]}' for j,figure in enumerate(page['visuals'])]
+            run = caption.add_run('     |     '.join(labels)); run.font.size = Pt(8.5)
         for section in page['sections']:
             para(doc, section['title'], 'Heading 2')
             if 'steps' in section: add_list(doc, section['steps'], 'decimal')
