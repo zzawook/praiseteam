@@ -26,6 +26,8 @@ def main():
         document = etree.fromstring(archive.read('word/document.xml'))
         footer = etree.fromstring(archive.read('word/footer1.xml'))
         numbering = etree.fromstring(archive.read('word/numbering.xml'))
+    margins = document.find('w:body/w:sectPr/w:pgMar', NS)
+    margin = {key: float(margins.get('{'+NS['w']+'}'+key))/20 for key in ['top','bottom','left','right']}
     names = set(document.xpath('//w:bookmarkStart/@w:name', namespaces=NS))
     links = document.xpath('//w:hyperlink/@w:anchor', namespaces=NS) + footer.xpath('//w:hyperlink/@w:anchor', namespaces=NS)
     assert links and all(name in names for name in links), 'Every Word link must resolve'
@@ -66,6 +68,7 @@ def main():
     topics = {topic['id']: topic for topic in DATA['topics']}
     assert len(toc) == len(keys) == len(topics)
     report = []
+    continuing_pages = []
     with pdfplumber.open(args.pdf) as rendered:
         assert sum(c['text'] == '•' for c in rendered.pages[0].chars) == len(DATA['topics']), 'PDF contents bullets must be visible'
         # Check the exported layout, not just the Word XML: the full instruction
@@ -78,6 +81,8 @@ def main():
         for page in rendered.pages:
             previous_bottom = 0
             for image in sorted(page.images, key=lambda item: item['top']):
+                assert image['x0'] >= margin['left'] - 1
+                assert image['x1'] <= page.width - margin['right'] + 1, 'Screenshot exceeds the text area'
                 step = next(expected_steps)
                 above = page.crop((0, previous_bottom, page.width, image['top'])).extract_text() or ''
                 assert normalized(step['text']) in normalized(above), f'Instruction separated from screenshot: {step["text"]}'
@@ -99,6 +104,18 @@ def main():
             report.append({'topic': key, 'label': wanted, 'pdf_page': page_number+1})
         starts = [entry['pdf_page'] for entry in report]
         assert starts == sorted(set(starts)), 'Topics must start on distinct, ordered pages'
+        # Only pages that continue the same topic need to fill the available
+        # space. A short topic can still end naturally on its own page.
+        for index, entry in enumerate(report):
+            end = starts[index+1] - 1 if index+1 < len(starts) else len(rendered.pages)
+            for number in range(entry['pdf_page'], end):
+                page = rendered.pages[number-1]
+                body_bottom = page.height - margin['bottom']
+                chars = [char for char in page.chars if char['top'] < body_bottom]
+                last = max([char['bottom'] for char in chars] + [image['bottom'] for image in page.images])
+                gap_mm = (body_bottom-last)*25.4/72
+                assert gap_mm <= 40, f'Page {number} leaves {gap_mm:.1f} mm before its continuation'
+                continuing_pages.append({'topic':entry['topic'], 'pdf_page':number, 'unused_bottom_mm':round(gap_mm,1)})
         for i, page in enumerate(reader.pages):
             internal = [a.get_object() for a in page.get('/Annots', []) if destination(a.get_object())]
             assert all(0 <= target(a)[0] < len(reader.pages) for a in internal)
@@ -110,6 +127,7 @@ def main():
     output = {'pages': len(reader.pages), 'steps_with_immediate_screenshots': count,
               'bulleted_contents_items': len(bullets), 'topics_on_separate_pages': len(report),
               'word_links_resolved': len(links), 'toc_destinations': report,
+              'continuing_pages': continuing_pages,
               'back_links': len(reader.pages)}
     (ROOT/'output/guide/stepwise-verification.json').write_text(json.dumps(output, ensure_ascii=False, indent=2)+'\n')
     print(f'PASS: {count} step/image pairs; {len(bullets)} clickable contents bullets; {len(report)} topics start on separate pages; {len(reader.pages)} return links work.')

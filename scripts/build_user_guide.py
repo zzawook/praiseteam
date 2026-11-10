@@ -255,6 +255,9 @@ def main():
     for run in p.runs: run.font.size = Pt(9)
 
     for index, topic in enumerate(data['topics'], 1):
+        layout = topic.get('layout', {})
+        image_width = layout.get('image_width_mm', 104)
+        step_gap = layout.get('step_gap_pt', 10)
         heading = para(doc, f'{index}  {topic["title"]}', 'Heading 1')
         heading.paragraph_format.page_break_before = True
         heading.paragraph_format.space_before = Pt(0)
@@ -269,7 +272,6 @@ def main():
             num_id = list_numbering(doc, 'decimal')
         for number, step in enumerate(topic['steps'], 1):
             p = para(doc, step['text'])
-            p.paragraph_format.page_break_before = step.get('new_page', False)
             p.paragraph_format.left_indent = Mm(5.3)
             p.paragraph_format.first_line_indent = Mm(-5.3)
             p.paragraph_format.keep_with_next = True
@@ -283,8 +285,9 @@ def main():
             pic.paragraph_format.left_indent = Mm(5.3)
             pic.paragraph_format.line_spacing = 1.0
             pic.paragraph_format.keep_together = True
-            pic.paragraph_format.space_after = Pt(10)
-            width = 104 * step['image']['crop'][2] / 412
+            pic.paragraph_format.space_after = Pt(step_gap)
+            step_width = step.get('layout', {}).get('image_width_mm', image_width)
+            width = step_width * step['image']['crop'][2] / 412
             shape = pic.add_run().add_picture(str(image), width=Mm(width))
             shape._inline.docPr.set('descr', f'{topic["title"]} {number}단계 ' + re.sub(r'\*\*', '', step['text']))
         for section in topic['notes']:
