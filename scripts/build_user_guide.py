@@ -120,6 +120,9 @@ def list_numbering(doc, kind):
     ppr = OxmlElement('w:pPr')
     ind = OxmlElement('w:ind'); ind.set(qn('w:left'), '300'); ind.set(qn('w:hanging'), '300'); ppr.append(ind)
     lvl.append(ppr); abstract.append(lvl); root.append(abstract)
+    marker_fonts = OxmlElement('w:rPr')
+    explicit_fonts(marker_fonts)
+    lvl.append(marker_fonts)
     num = OxmlElement('w:num'); num.set(qn('w:numId'), str(num_id))
     ref = OxmlElement('w:abstractNumId'); ref.set(qn('w:val'), str(abstract_id)); num.append(ref); root.append(num)
     return num_id
@@ -233,11 +236,18 @@ def main():
     color = OxmlElement('w:color'); color.set(qn('w:val'), '2541B2'); props.append(color); run.append(props)
     txt = OxmlElement('w:t'); txt.text = data['app_url']; run.append(txt); link.append(run); p._p.append(link)
     topics = {topic['id']: topic for topic in data['topics']}
+    contents_bullets = list_numbering(doc, 'bullet')
     for group in data['contents_groups']:
         p = para(doc, group['title'], 'Heading 2')
         p.paragraph_format.space_before = Pt(7); p.paragraph_format.space_after = Pt(3)
         for key in group['items']:
             p = doc.add_paragraph(); internal_link(p, topics[key]['title'], key)
+            numpr = OxmlElement('w:numPr')
+            level = OxmlElement('w:ilvl'); level.set(qn('w:val'), '0')
+            num = OxmlElement('w:numId'); num.set(qn('w:val'), str(contents_bullets))
+            numpr.extend([level, num]); p._p.get_or_add_pPr().append(numpr)
+            p.paragraph_format.left_indent = Mm(5.3)
+            p.paragraph_format.first_line_indent = Mm(-5.3)
             p.paragraph_format.space_after = Pt(2)
             p.paragraph_format.line_spacing = Pt(17)
     p = para(doc, '사진 속 팀·이름·코드·날짜는 예시입니다. 우리 팀의 초대 코드와 일정을 사용하세요.')
@@ -246,8 +256,8 @@ def main():
 
     for index, topic in enumerate(data['topics'], 1):
         heading = para(doc, f'{index}  {topic["title"]}', 'Heading 1')
-        heading.paragraph_format.page_break_before = index == 1
-        heading.paragraph_format.space_before = Pt(15 if index > 1 else 0)
+        heading.paragraph_format.page_break_before = True
+        heading.paragraph_format.space_before = Pt(0)
         bookmark(heading, topic['id'], index + 1)
         p = para(doc, topic['audience'], 'Subtitle')
         p.paragraph_format.space_after = Pt(5); p.paragraph_format.keep_with_next = True
@@ -259,6 +269,7 @@ def main():
             num_id = list_numbering(doc, 'decimal')
         for number, step in enumerate(topic['steps'], 1):
             p = para(doc, step['text'])
+            p.paragraph_format.page_break_before = step.get('new_page', False)
             p.paragraph_format.left_indent = Mm(5.3)
             p.paragraph_format.first_line_indent = Mm(-5.3)
             p.paragraph_format.keep_with_next = True

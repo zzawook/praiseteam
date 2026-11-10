@@ -25,10 +25,25 @@ def main():
     with ZipFile(args.docx) as archive:
         document = etree.fromstring(archive.read('word/document.xml'))
         footer = etree.fromstring(archive.read('word/footer1.xml'))
+        numbering = etree.fromstring(archive.read('word/numbering.xml'))
     names = set(document.xpath('//w:bookmarkStart/@w:name', namespaces=NS))
     links = document.xpath('//w:hyperlink/@w:anchor', namespaces=NS) + footer.xpath('//w:hyperlink/@w:anchor', namespaces=NS)
     assert links and all(name in names for name in links), 'Every Word link must resolve'
-    numbered = document.xpath('//w:body/w:p[w:pPr/w:numPr]', namespaces=NS)
+    definitions = {node.get('{'+NS['w']+'}abstractNumId'): node.find('w:lvl/w:numFmt', NS).get('{'+NS['w']+'}val')
+                   for node in numbering.findall('w:abstractNum', NS)}
+    formats = {node.get('{'+NS['w']+'}numId'): definitions[node.find('w:abstractNumId', NS).get('{'+NS['w']+'}val')]
+               for node in numbering.findall('w:num', NS)}
+    list_paragraphs = document.xpath('//w:body/w:p[w:pPr/w:numPr]', namespaces=NS)
+    def list_format(p):
+        return formats[p.find('w:pPr/w:numPr/w:numId', NS).get('{'+NS['w']+'}val')]
+    numbered = [p for p in list_paragraphs if list_format(p) == 'decimal']
+    bullets = [p for p in list_paragraphs if list_format(p) == 'bullet']
+    assert len(bullets) == len(DATA['topics']), 'Every contents item must be a real bullet'
+    assert all(p.xpath('./w:hyperlink[@w:anchor]', namespaces=NS) for p in bullets)
+    for topic in DATA['topics']:
+        heading = document.xpath('//w:body/w:p[w:bookmarkStart[@w:name=$name]]', namespaces=NS, name='guide_'+topic['id'])[0]
+        page_break = heading.find('w:pPr/w:pageBreakBefore', NS)
+        assert page_break is not None and page_break.get('{'+NS['w']+'}val') not in ['0','false'], 'Every topic must start a new page'
     count = sum(len(topic['steps']) for topic in DATA['topics'])
     assert len(numbered) == count
     for p in numbered:
@@ -52,6 +67,7 @@ def main():
     assert len(toc) == len(keys) == len(topics)
     report = []
     with pdfplumber.open(args.pdf) as rendered:
+        assert sum(c['text'] == '•' for c in rendered.pages[0].chars) == len(DATA['topics']), 'PDF contents bullets must be visible'
         # Check the exported layout, not just the Word XML: the full instruction
         # must occur on the same page immediately above its screenshot.
         expected_steps = iter(step for topic in DATA['topics'] for step in topic['steps'])
@@ -76,10 +92,13 @@ def main():
             wanted = topics[key]['title']
             assert ''.join(label.split()) == ''.join(wanted.split()), (key, label)
             page_number, top = target(annotation)
+            assert top > rendered.pages[page_number].height - 90, 'Topic must begin at the top of its own page'
             hits = rendered.pages[page_number].search(re.escape(wanted))
             assert hits, (key, page_number)
             assert min(abs(top - (rendered.pages[page_number].height-hit['top'])) for hit in hits) < 35, 'Link must land on its heading, not merely somewhere on its page'
             report.append({'topic': key, 'label': wanted, 'pdf_page': page_number+1})
+        starts = [entry['pdf_page'] for entry in report]
+        assert starts == sorted(set(starts)), 'Topics must start on distinct, ordered pages'
         for i, page in enumerate(reader.pages):
             internal = [a.get_object() for a in page.get('/Annots', []) if destination(a.get_object())]
             assert all(0 <= target(a)[0] < len(reader.pages) for a in internal)
@@ -89,10 +108,11 @@ def main():
     assert '[[' not in text
     assert not re.search(r'\d+\s*[~–-]?\s*\d*쪽', text), 'Use links instead of stale page references'
     output = {'pages': len(reader.pages), 'steps_with_immediate_screenshots': count,
+              'bulleted_contents_items': len(bullets), 'topics_on_separate_pages': len(report),
               'word_links_resolved': len(links), 'toc_destinations': report,
               'back_links': len(reader.pages)}
     (ROOT/'output/guide/stepwise-verification.json').write_text(json.dumps(output, ensure_ascii=False, indent=2)+'\n')
-    print(f'PASS: {count} steps each immediately followed by a screenshot; {len(toc)} contents links reach their headings; {len(reader.pages)} return links work.')
+    print(f'PASS: {count} step/image pairs; {len(bullets)} clickable contents bullets; {len(report)} topics start on separate pages; {len(reader.pages)} return links work.')
 
 
 if __name__ == '__main__':
