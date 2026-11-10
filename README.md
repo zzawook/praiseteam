@@ -4,6 +4,8 @@
 웹과 Android를 지원하며, iOS는 Codemagic 시뮬레이터 검증 및 TestFlight 워크플로우를 제공합니다.
 스토어 서명·Apple 계정 설정과 배포 절차는 [docs/STORES.md](docs/STORES.md)를 참고하세요.
 
+팀원과 인도자를 위한 [사용 가이드](docs/guide/README.md)는 공유용 PDF와 수정용 Word 문서로 제공합니다.
+
 ## 구성
 
 - `app/`: Flutter, Riverpod, GoRouter. 한국어·영어를 지원합니다.
