@@ -2,29 +2,38 @@
 
 공유용 [PDF](PraiseTeam_사용가이드.pdf)와 수정용 [Word 문서](PraiseTeam_사용가이드.docx).
 가입, 콘티 확인과 작성, 곡·악보 등록, 로타, 연습, 라이브, 필기,
-채팅·공지·알림, 팀 운영을 실제 휴대폰 화면과 번호로 안내합니다.
+채팅·공지·알림, 팀 운영을 실제 휴대폰 화면으로 안내합니다.
+각 번호 설명 바로 아래에 해당 단계의 스크린샷 한 장을 둡니다.
+첫 페이지의 목차, 관련 기능 링크, 각 페이지의 목차 복귀 링크는
+Word와 PDF 모두 문서 안의 해당 항목으로 이동합니다.
 
-그림 가이드 문구의 원본은 `walkthrough.ko.json`입니다. 처음 작성한
-글 중심 가이드는 `content.ko.json`에 보관합니다. 앱 사용법이 바뀌면 문구와
+현재 가이드 원본은 `steps.ko.json`입니다. 각 단계의 설명, 스크린샷,
+필요 영역과 표시 위치, 이동 링크를 함께 관리합니다. 이전 구성은
+`content.ko.json`과 `walkthrough.ko.json`에 보관합니다. 앱 사용법이 바뀌면 문구와
 확인 날짜를 고친 뒤 `scripts/build_user_guide.py`로 문서를 다시 만듭니다.
 생성 파일은 `output/guide/`에 저장됩니다.
 
 문서 제작에는 `python-docx`가 포함된 문서 제작 환경을 사용합니다.
 DOCX를 PDF와 페이지 이미지로 렌더링해 모든 페이지를 확인하고,
-첫 페이지의 쪽 번호 안내가 실제 내용과 맞는지 확인합니다.
+`scripts/verify_user_guide.py`로 설명과 스크린샷이 같은 페이지에서
+연속하는지, Word와 PDF의 내부 링크가 정확한 제목으로 이동하는지 확인합니다.
 검토를 마친 DOCX와 PDF만 이 폴더에 복사합니다.
 
 ## 스크린샷
 
-`screenshots/`에는 문서에 들어가는 40장의 화면을 보관합니다. 로그인은
+`source-captures/`에는 원본 화면을, `step-images/`에는 각 설명 바로 아래에
+들어가는 화면을 보관합니다. 로그인은
 운영 웹에서, 나머지는 같은 앱의 격리된 로컬 샘플 팀에서 촬영했습니다.
 실제 가입 승인, 콘티 저장·공지, PDF 업로드와 두 계정의 라이브 연결을
 확인했습니다. 촬영용 계정과 데이터는 촬영 후 삭제했습니다.
 
-원본 화면은 `output/guide/screenshots/raw/`에 따로 남기고,
-`e2e/prepare_guide_figures.cjs`가 원본 픽셀 위에 번호와 테두리만 표시합니다.
-UI 글자나 버튼을 재구성하지 않습니다. `screenshots/manifest.json`에
-원본 해시와 표시 위치를 기록합니다. `e2e/guide_capture_helpers.cjs`는
+`e2e/prepare_guide_step_images.cjs`가 필요한 영역을 잘라 현재 단계의
+번호와 테두리만 표시합니다. UI 글자나 버튼을 재구성하지 않습니다.
+`scripts/verify_guide_step_images.py`로 번호 표시를 제외한 픽셀이
+원본 화면과 일치하는지 확인합니다.
+`step-images/manifest.json`에 원본 해시와 자른 영역을 기록합니다.
+이전 두 화면 배치의 자료는 `screenshots/`에 보관합니다.
+`e2e/guide_capture_helpers.cjs`는
 표시 대상이 화면 안에 있는지 확인하며, `guide_capture_session.cjs`는
 기록된 로컬 샘플 팀에만 연결하고 촬영 데이터를 정리합니다.
 

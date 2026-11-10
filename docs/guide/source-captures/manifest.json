@@ -1,0 +1,317 @@
+{
+  "01-login": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "01-login.png"
+  },
+  "02-join": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "02-join.png"
+  },
+  "02-pending": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "02-pending.png"
+  },
+  "03-home": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "03-home.png"
+  },
+  "04-settings-name": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "04-settings-name.png"
+  },
+  "04-name-edit": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "04-name-edit.png"
+  },
+  "04-parts": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "04-parts.png"
+  },
+  "03-setlist": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "03-setlist.png"
+  },
+  "05-reference-links": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "05-reference-links.png"
+  },
+  "05-song-sheets": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "05-song-sheets.png"
+  },
+  "06-new-song": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "06-new-song.png"
+  },
+  "06-version": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "06-version.png"
+  },
+  "08-upload": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "08-upload.png"
+  },
+  "08-link": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "08-link.png"
+  },
+  "07-sessions": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "07-sessions.png"
+  },
+  "07-create-service": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "07-create-service.png"
+  },
+  "09-pick-song": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "09-pick-song.png"
+  },
+  "09-pick-version": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "09-pick-version.png"
+  },
+  "09-empty-setlist": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "09-empty-setlist.png"
+  },
+  "10-draft-publish": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "10-draft-publish.png"
+  },
+  "10-edit-setlist": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "10-edit-setlist.png"
+  },
+  "11-rotation-member": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "11-rotation-member.png"
+  },
+  "11-response-actions": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "11-response-actions.png"
+  },
+  "12-blockouts": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "12-blockouts.png"
+  },
+  "12-date-range": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "12-date-range.png"
+  },
+  "13-rotation-leader": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "13-rotation-leader.png"
+  },
+  "13-auto-menu": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "13-auto-menu.png"
+  },
+  "14-rehearsal": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "14-rehearsal.png"
+  },
+  "14-rehearsal-date": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "14-rehearsal-date.png"
+  },
+  "14-rehearsal-place": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "14-rehearsal-place.png"
+  },
+  "15-live": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "15-live.png"
+  },
+  "15-cues": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "15-cues.png"
+  },
+  "16-sheet-viewer": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "16-sheet-viewer.png"
+  },
+  "16-ink-private": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "16-ink-private.png"
+  },
+  "16-ink-done": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "16-ink-done.png"
+  },
+  "16-ink-team": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "16-ink-team.png"
+  },
+  "17-channels": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "17-channels.png"
+  },
+  "17-chat": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "17-chat.png"
+  },
+  "18-announcements": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "18-announcements.png"
+  },
+  "18-write-announcement": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "18-write-announcement.png"
+  },
+  "18-poll": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "18-poll.png"
+  },
+  "18-notifications": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "18-notifications.png"
+  },
+  "17-team-invite": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "17-team-invite.png"
+  },
+  "19-role": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "19-role.png"
+  },
+  "14-rehearsal-time": {
+    "viewport": {
+      "width": 412,
+      "height": 820
+    },
+    "filename": "14-rehearsal-time.png"
+  }
+}

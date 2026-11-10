@@ -22,6 +22,27 @@ FONT = 'Noto Sans CJK KR'
 INK = '000000'
 
 
+def internal_link(paragraph, label, target):
+    link = OxmlElement('w:hyperlink')
+    link.set(qn('w:anchor'), 'guide_' + target)
+    link.set(qn('w:history'), '1')
+    run = OxmlElement('w:r')
+    props = OxmlElement('w:rPr')
+    color = OxmlElement('w:color'); color.set(qn('w:val'), '2541B2'); props.append(color)
+    underline = OxmlElement('w:u'); underline.set(qn('w:val'), 'single'); props.append(underline)
+    run.append(props)
+    text = OxmlElement('w:t'); text.text = label; run.append(text)
+    link.append(run); paragraph._p.append(link)
+
+
+def bookmark(paragraph, name, number):
+    start = OxmlElement('w:bookmarkStart')
+    start.set(qn('w:id'), str(number)); start.set(qn('w:name'), 'guide_' + name)
+    end = OxmlElement('w:bookmarkEnd'); end.set(qn('w:id'), str(number))
+    paragraph._p.insert(1 if paragraph._p.pPr is not None else 0, start)
+    paragraph._p.append(end)
+
+
 def font(style, size, bold=False):
     style.font.name = FONT
     style.font.size = Pt(size)
@@ -40,11 +61,17 @@ def font(style, size, bold=False):
 
 
 def rich(paragraph, value):
-    for index, part in enumerate(re.split(r'\*\*(.*?)\*\*', value)):
-        if part:
-            run = paragraph.add_run(part)
-            if index % 2 == 1:
-                run.bold = True
+    position = 0
+    for match in re.finditer(r'\*\*(.*?)\*\*|\[\[([a-z_0-9]+)\|([^\]]+)\]\]', value):
+        if match.start() > position:
+            paragraph.add_run(value[position:match.start()])
+        if match.group(1) is not None:
+            paragraph.add_run(match.group(1)).bold = True
+        else:
+            internal_link(paragraph, match.group(3), match.group(2))
+        position = match.end()
+    if position < len(value):
+        paragraph.add_run(value[position:])
     return paragraph
 
 
@@ -127,10 +154,13 @@ def table(doc, spec):
 
 
 def main():
-    source = ROOT / 'docs/guide/walkthrough.ko.json'
-    if not source.exists():
-        source = ROOT / 'docs/guide/content.ko.json'
+    source = ROOT / 'docs/guide/steps.ko.json'
     data = json.loads(source.read_text())
+    required = [ROOT / 'docs/guide/step-images' / step['image']['file']
+                for topic in data['topics'] for step in topic['steps']]
+    missing = [str(path) for path in required if not path.exists()]
+    if missing:
+        raise SystemExit('Finish prepare_guide_step_images.cjs before building: ' + ', '.join(missing))
     doc = Document()
     sec = doc.sections[0]
     sec.page_width, sec.page_height = Mm(210), Mm(297)
@@ -154,54 +184,66 @@ def main():
     doc.core_properties.keywords = '찬양팀, 콘티, 악보, 로타, 라이브, 사용 가이드'
     footer = sec.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    run = footer.add_run(f'{data["title"]}  |  {data["updated"]}  |  ')
-    run.font.size = Pt(8)
+    internal_link(footer, '목차로', 'contents')
+    run = footer.add_run(f'    {data["title"]}  |  ')
+    run.font.size = Pt(8.5)
     field = OxmlElement('w:fldSimple'); field.set(qn('w:instr'), 'PAGE'); footer._p.append(field)
-    for index, page in enumerate(data['pages'], 1):
-        if index == 1:
-            para(doc, data['title'], 'Title')
-        heading = para(doc, f'{index}  {page["title"]}', 'Heading 1')
-        heading.paragraph_format.page_break_before = index > 1
-        p = para(doc, page['audience'], 'Subtitle'); p.paragraph_format.space_after = Pt(6)
-        para(doc, page['intro'])
-        if index == 1:
-            p = doc.add_paragraph()
-            p.add_run('앱 열기  ').bold = True
-            link = OxmlElement('w:hyperlink')
-            link.set(qn('r:id'), doc.part.relate_to(data['app_url'], RT.HYPERLINK, is_external=True))
-            r = OxmlElement('w:r'); props = OxmlElement('w:rPr')
-            color = OxmlElement('w:color'); color.set(qn('w:val'), '2541B2'); props.append(color); r.append(props)
-            txt = OxmlElement('w:t'); txt.text = data['app_url']; r.append(txt); link.append(r); p._p.append(link)
-        if page.get('path'):
-            p = para(doc, page['path'])
-            p.paragraph_format.space_after = Pt(6)
-            for run in p.runs:
-                run.font.size = Pt(9.5)
-        if page.get('visuals'):
-            p = doc.add_paragraph()
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.paragraph_format.line_spacing = 1.0
+    para(doc, data['title'], 'Title')
+    heading = para(doc, '필요한 부분 찾기', 'Heading 1')
+    bookmark(heading, 'contents', 1)
+    para(doc, '항목을 누르면 해당 사용법으로 이동합니다. 각 단계의 설명 바로 아래 사진을 보며 따라 하세요.')
+    p = doc.add_paragraph(); p.add_run('앱 열기  ').bold = True
+    link = OxmlElement('w:hyperlink')
+    link.set(qn('r:id'), doc.part.relate_to(data['app_url'], RT.HYPERLINK, is_external=True))
+    run = OxmlElement('w:r'); props = OxmlElement('w:rPr')
+    color = OxmlElement('w:color'); color.set(qn('w:val'), '2541B2'); props.append(color); run.append(props)
+    txt = OxmlElement('w:t'); txt.text = data['app_url']; run.append(txt); link.append(run); p._p.append(link)
+    topics = {topic['id']: topic for topic in data['topics']}
+    for group in data['contents_groups']:
+        p = para(doc, group['title'], 'Heading 2')
+        p.paragraph_format.space_before = Pt(7); p.paragraph_format.space_after = Pt(3)
+        for key in group['items']:
+            p = doc.add_paragraph(); internal_link(p, topics[key]['title'], key)
             p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.line_spacing = Pt(17)
+    p = para(doc, '사진 속 팀·이름·코드·날짜는 예시입니다. 우리 팀의 초대 코드와 일정을 사용하세요.')
+    p.paragraph_format.space_before = Pt(8)
+    for run in p.runs: run.font.size = Pt(9)
+
+    for index, topic in enumerate(data['topics'], 1):
+        heading = para(doc, f'{index}  {topic["title"]}', 'Heading 1')
+        heading.paragraph_format.page_break_before = index == 1
+        heading.paragraph_format.space_before = Pt(15 if index > 1 else 0)
+        bookmark(heading, topic['id'], index + 1)
+        p = para(doc, topic['audience'], 'Subtitle')
+        p.paragraph_format.space_after = Pt(5); p.paragraph_format.keep_with_next = True
+        p = para(doc, topic['intro']); p.paragraph_format.keep_with_next = True
+        if topic.get('path'):
+            p = para(doc, topic['path']); p.paragraph_format.keep_with_next = True
+            for run in p.runs: run.font.size = Pt(9.5)
+        if topic['steps']:
+            num_id = list_numbering(doc, 'decimal')
+        for number, step in enumerate(topic['steps'], 1):
+            p = para(doc, step['text'])
+            p.paragraph_format.left_indent = Mm(5.3)
+            p.paragraph_format.first_line_indent = Mm(-5.3)
             p.paragraph_format.keep_with_next = True
-            p.paragraph_format.keep_together = True
-            width = page.get('image_width_mm', 76)
-            for j, figure in enumerate(page['visuals'], 1):
-                if j > 1:
-                    spacer = p.add_run('   ')
-                    spacer.font.size = Pt(16)
-                image = ROOT / f'docs/guide/screenshots/page-{index:02}-{j}.png'
-                shape = p.add_run().add_picture(str(image), width=Mm(width))
-                shape._inline.docPr.set('descr', figure['caption'])
-            caption = doc.add_paragraph()
-            caption.paragraph_format.line_spacing = Pt(12)
-            caption.paragraph_format.space_after = Pt(4)
-            caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            labels = [f'{chr(65+j)}  {figure["caption"]}' for j,figure in enumerate(page['visuals'])]
-            run = caption.add_run('     |     '.join(labels)); run.font.size = Pt(8.5)
-        for section in page['sections']:
+            p.paragraph_format.space_after = Pt(4)
+            numpr = OxmlElement('w:numPr')
+            level = OxmlElement('w:ilvl'); level.set(qn('w:val'), '0')
+            num = OxmlElement('w:numId'); num.set(qn('w:val'), str(num_id))
+            numpr.extend([level, num]); p._p.get_or_add_pPr().append(numpr)
+            image = ROOT / 'docs/guide/step-images' / step['image']['file']
+            pic = doc.add_paragraph()
+            pic.paragraph_format.left_indent = Mm(5.3)
+            pic.paragraph_format.line_spacing = 1.0
+            pic.paragraph_format.keep_together = True
+            pic.paragraph_format.space_after = Pt(10)
+            width = 104 * step['image']['crop'][2] / 412
+            shape = pic.add_run().add_picture(str(image), width=Mm(width))
+            shape._inline.docPr.set('descr', f'{topic["title"]} {number}단계 ' + re.sub(r'\*\*', '', step['text']))
+        for section in topic['notes']:
             para(doc, section['title'], 'Heading 2')
-            if 'steps' in section: add_list(doc, section['steps'], 'decimal')
-            if 'bullets' in section: add_list(doc, section['bullets'], 'bullet')
             if 'table' in section: table(doc, section['table'])
             if 'text' in section: para(doc, section['text'])
     OUT.mkdir(parents=True, exist_ok=True)

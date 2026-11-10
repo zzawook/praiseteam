@@ -1,0 +1,1198 @@
+[
+  {
+    "file": "announcements-01.png",
+    "topic": "announcements",
+    "step": 1,
+    "source": "18-announcements",
+    "source_sha256": "fee2f5b1f737bd7118cb14bee14d28582602a04b3ac3da05115f6c732a13fb43",
+    "crop": [
+      0,
+      38,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "announcements-02.png",
+    "topic": "announcements",
+    "step": 2,
+    "source": "18-write-announcement",
+    "source_sha256": "b0f4634b5587d9747f1854535bb676f63bac30de8150d2323424ae2a959eff03",
+    "crop": [
+      0,
+      219,
+      412,
+      114
+    ]
+  },
+  {
+    "file": "announcements-03.png",
+    "topic": "announcements",
+    "step": 3,
+    "source": "18-write-announcement",
+    "source_sha256": "b0f4634b5587d9747f1854535bb676f63bac30de8150d2323424ae2a959eff03",
+    "crop": [
+      0,
+      287,
+      412,
+      234
+    ]
+  },
+  {
+    "file": "announcements-04.png",
+    "topic": "announcements",
+    "step": 4,
+    "source": "18-write-announcement",
+    "source_sha256": "b0f4634b5587d9747f1854535bb676f63bac30de8150d2323424ae2a959eff03",
+    "crop": [
+      0,
+      543,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "blockouts-01.png",
+    "topic": "blockouts",
+    "step": 1,
+    "source": "12-blockouts",
+    "source_sha256": "10fa9e132727b787804fccf163d2d1f806e00cc428a19f3fb61675a1a2c4974b",
+    "crop": [
+      0,
+      50,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "blockouts-02.png",
+    "topic": "blockouts",
+    "step": 2,
+    "source": "12-date-range",
+    "source_sha256": "c7b3dcc65cf20112c9fb1afb4cda8356f2123105f411b39d26c8480d64cfb1e4",
+    "crop": [
+      0,
+      175,
+      412,
+      225
+    ]
+  },
+  {
+    "file": "blockouts-03.png",
+    "topic": "blockouts",
+    "step": 3,
+    "source": "12-date-range",
+    "source_sha256": "c7b3dcc65cf20112c9fb1afb4cda8356f2123105f411b39d26c8480d64cfb1e4",
+    "crop": [
+      0,
+      175,
+      412,
+      225
+    ]
+  },
+  {
+    "file": "blockouts-04.png",
+    "topic": "blockouts",
+    "step": 4,
+    "source": "12-date-range",
+    "source_sha256": "c7b3dcc65cf20112c9fb1afb4cda8356f2123105f411b39d26c8480d64cfb1e4",
+    "crop": [
+      0,
+      0,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "chat-01.png",
+    "topic": "chat",
+    "step": 1,
+    "source": "17-channels",
+    "source_sha256": "31b59f47da8834b863691724000ba09c825e801d566e1bc91aef2262cd1a20af",
+    "crop": [
+      0,
+      26,
+      412,
+      108
+    ]
+  },
+  {
+    "file": "chat-02.png",
+    "topic": "chat",
+    "step": 2,
+    "source": "17-channels",
+    "source_sha256": "31b59f47da8834b863691724000ba09c825e801d566e1bc91aef2262cd1a20af",
+    "crop": [
+      0,
+      147,
+      412,
+      124
+    ]
+  },
+  {
+    "file": "chat-03.png",
+    "topic": "chat",
+    "step": 3,
+    "source": "17-channels",
+    "source_sha256": "31b59f47da8834b863691724000ba09c825e801d566e1bc91aef2262cd1a20af",
+    "crop": [
+      0,
+      107,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "chat-04.png",
+    "topic": "chat",
+    "step": 4,
+    "source": "17-chat",
+    "source_sha256": "9645575f1e42b8f32c551a73ad0f38cdb10b05c6fedab99afcc8148e4b0748a2",
+    "crop": [
+      0,
+      720,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "chat-05.png",
+    "topic": "chat",
+    "step": 5,
+    "source": "17-chat",
+    "source_sha256": "9645575f1e42b8f32c551a73ad0f38cdb10b05c6fedab99afcc8148e4b0748a2",
+    "crop": [
+      0,
+      720,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "create_service-01.png",
+    "topic": "create_service",
+    "step": 1,
+    "source": "07-sessions",
+    "source_sha256": "4a4c3706b6111e89b8f150f3e530ad8d7228bad69a6ebf5d8a4d9e13cff00ef2",
+    "crop": [
+      0,
+      509,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "create_service-02.png",
+    "topic": "create_service",
+    "step": 2,
+    "source": "07-create-service",
+    "source_sha256": "1ec351e247ef0b65b5f7e685a4f312fd4db2684adf81c2847901d1fdaa2e6b5c",
+    "crop": [
+      40,
+      205,
+      332,
+      238
+    ]
+  },
+  {
+    "file": "create_service-03.png",
+    "topic": "create_service",
+    "step": 3,
+    "source": "07-create-service",
+    "source_sha256": "1ec351e247ef0b65b5f7e685a4f312fd4db2684adf81c2847901d1fdaa2e6b5c",
+    "crop": [
+      0,
+      483,
+      412,
+      114
+    ]
+  },
+  {
+    "file": "create_service-04.png",
+    "topic": "create_service",
+    "step": 4,
+    "source": "07-create-service",
+    "source_sha256": "1ec351e247ef0b65b5f7e685a4f312fd4db2684adf81c2847901d1fdaa2e6b5c",
+    "crop": [
+      0,
+      694,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "live-01.png",
+    "topic": "live",
+    "step": 1,
+    "source": "15-live",
+    "source_sha256": "48d8d78c9eb9a58e8e06aaa343256b8bc5e4fbadd79497ad433ed907d458c6d6",
+    "crop": [
+      0,
+      0,
+      412,
+      140
+    ]
+  },
+  {
+    "file": "live-02.png",
+    "topic": "live",
+    "step": 2,
+    "source": "15-live",
+    "source_sha256": "48d8d78c9eb9a58e8e06aaa343256b8bc5e4fbadd79497ad433ed907d458c6d6",
+    "crop": [
+      0,
+      610,
+      412,
+      115
+    ]
+  },
+  {
+    "file": "live-03.png",
+    "topic": "live",
+    "step": 3,
+    "source": "15-cues",
+    "source_sha256": "b7b7aa96721e29b224139028625d833ce43c7dcecb9ffc73553f4b85d9e706ef",
+    "crop": [
+      10,
+      437,
+      392,
+      125
+    ]
+  },
+  {
+    "file": "live-04.png",
+    "topic": "live",
+    "step": 4,
+    "source": "15-cues",
+    "source_sha256": "b7b7aa96721e29b224139028625d833ce43c7dcecb9ffc73553f4b85d9e706ef",
+    "crop": [
+      10,
+      552,
+      392,
+      258
+    ]
+  },
+  {
+    "file": "live-05.png",
+    "topic": "live",
+    "step": 5,
+    "source": "15-live",
+    "source_sha256": "48d8d78c9eb9a58e8e06aaa343256b8bc5e4fbadd79497ad433ed907d458c6d6",
+    "crop": [
+      0,
+      720,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "login-01.png",
+    "topic": "login",
+    "step": 1,
+    "source": "01-login",
+    "source_sha256": "dff0bec553d43d4316802b405ff857d84a8b5e6bd4a1ef7ae04a37151d14cb46",
+    "crop": [
+      0,
+      429,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "login-02.png",
+    "topic": "login",
+    "step": 2,
+    "source": "02-join",
+    "source_sha256": "24e5e5226c035130418ff2522b459e78a77d810173b731b1af960bc5d788f55b",
+    "crop": [
+      0,
+      198,
+      412,
+      120
+    ]
+  },
+  {
+    "file": "login-03.png",
+    "topic": "login",
+    "step": 3,
+    "source": "02-join",
+    "source_sha256": "24e5e5226c035130418ff2522b459e78a77d810173b731b1af960bc5d788f55b",
+    "crop": [
+      0,
+      272,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "login-04.png",
+    "topic": "login",
+    "step": 4,
+    "source": "02-pending",
+    "source_sha256": "ace0a0c72d68823084f2750ccb8ed0f60eacd55b1e28d84f1b12024b249594ea",
+    "crop": [
+      0,
+      198,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "poll_notifications-01.png",
+    "topic": "poll_notifications",
+    "step": 1,
+    "source": "18-poll",
+    "source_sha256": "8c81cc3c5adb72d080e6d1535d8d2702303465cb385ce02af3c6c39f34a5ea45",
+    "crop": [
+      0,
+      201,
+      412,
+      114
+    ]
+  },
+  {
+    "file": "poll_notifications-02.png",
+    "topic": "poll_notifications",
+    "step": 2,
+    "source": "18-poll",
+    "source_sha256": "8c81cc3c5adb72d080e6d1535d8d2702303465cb385ce02af3c6c39f34a5ea45",
+    "crop": [
+      40,
+      270,
+      332,
+      310
+    ]
+  },
+  {
+    "file": "poll_notifications-03.png",
+    "topic": "poll_notifications",
+    "step": 3,
+    "source": "18-poll",
+    "source_sha256": "8c81cc3c5adb72d080e6d1535d8d2702303465cb385ce02af3c6c39f34a5ea45",
+    "crop": [
+      0,
+      561,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "poll_notifications-04.png",
+    "topic": "poll_notifications",
+    "step": 4,
+    "source": "18-notifications",
+    "source_sha256": "fb0e3757c02bd345884da05790442b6d161cb9d77aa60ec92d9e5a273fb97887",
+    "crop": [
+      0,
+      388,
+      412,
+      124
+    ]
+  },
+  {
+    "file": "poll_notifications-05.png",
+    "topic": "poll_notifications",
+    "step": 5,
+    "source": "18-notifications",
+    "source_sha256": "fb0e3757c02bd345884da05790442b6d161cb9d77aa60ec92d9e5a273fb97887",
+    "crop": [
+      0,
+      515,
+      412,
+      190
+    ]
+  },
+  {
+    "file": "poll_notifications-06.png",
+    "topic": "poll_notifications",
+    "step": 6,
+    "source": "18-notifications",
+    "source_sha256": "fb0e3757c02bd345884da05790442b6d161cb9d77aa60ec92d9e5a273fb97887",
+    "crop": [
+      0,
+      335,
+      412,
+      83
+    ]
+  },
+  {
+    "file": "profile_parts-01.png",
+    "topic": "profile_parts",
+    "step": 1,
+    "source": "03-home",
+    "source_sha256": "d151d4d9333fdcb143a92104d8a2263ef9bc55e623c0d66672484c2670b91c66",
+    "crop": [
+      0,
+      0,
+      412,
+      95
+    ]
+  },
+  {
+    "file": "profile_parts-02.png",
+    "topic": "profile_parts",
+    "step": 2,
+    "source": "04-settings-name",
+    "source_sha256": "e4ff941ffe6f71aecd88249a210ed11971bf33c1c65f0e5c0880c9680238a798",
+    "crop": [
+      0,
+      78,
+      412,
+      124
+    ]
+  },
+  {
+    "file": "profile_parts-03.png",
+    "topic": "profile_parts",
+    "step": 3,
+    "source": "04-name-edit",
+    "source_sha256": "21f696d7cd3aa774ab65d291a96d7c733ed364ed07bd78c45b0926ff58211dab",
+    "crop": [
+      65,
+      305,
+      282,
+      200
+    ]
+  },
+  {
+    "file": "profile_parts-04.png",
+    "topic": "profile_parts",
+    "step": 4,
+    "source": "04-parts",
+    "source_sha256": "5494b3c9ff61f3d1dd0974bcc620e644143c76f746d4ca6481148678c6e0c48a",
+    "crop": [
+      12,
+      315,
+      388,
+      345
+    ]
+  },
+  {
+    "file": "profile_parts-05.png",
+    "topic": "profile_parts",
+    "step": 5,
+    "source": "04-parts",
+    "source_sha256": "5494b3c9ff61f3d1dd0974bcc620e644143c76f746d4ca6481148678c6e0c48a",
+    "crop": [
+      0,
+      642,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "references-01.png",
+    "topic": "references",
+    "step": 1,
+    "source": "05-reference-links",
+    "source_sha256": "1cdaeb0a164ff49d7cdaf7b8e9050c2b472d9a6e943ac476bbf141a911120013",
+    "crop": [
+      0,
+      428,
+      412,
+      132
+    ]
+  },
+  {
+    "file": "references-02.png",
+    "topic": "references",
+    "step": 2,
+    "source": "05-reference-links",
+    "source_sha256": "1cdaeb0a164ff49d7cdaf7b8e9050c2b472d9a6e943ac476bbf141a911120013",
+    "crop": [
+      0,
+      674,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "references-03.png",
+    "topic": "references",
+    "step": 3,
+    "source": "05-reference-links",
+    "source_sha256": "1cdaeb0a164ff49d7cdaf7b8e9050c2b472d9a6e943ac476bbf141a911120013",
+    "crop": [
+      0,
+      674,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "references-04.png",
+    "topic": "references",
+    "step": 4,
+    "source": "05-song-sheets",
+    "source_sha256": "c0c8acf72879ea4b763e0b871382d80287f9fa76aedadef467d441efb3fb9f89",
+    "crop": [
+      0,
+      359,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rehearsal-01.png",
+    "topic": "rehearsal",
+    "step": 1,
+    "source": "14-rehearsal",
+    "source_sha256": "e63122942870fbde8bd5df89c3a697d0c337bf0b7cbf3a43c9f48349666a876a",
+    "crop": [
+      0,
+      484,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rehearsal-02.png",
+    "topic": "rehearsal",
+    "step": 2,
+    "source": "14-rehearsal-date",
+    "source_sha256": "019d333d30b22273d1664af04972ae2fe89f4cb481ec69ccf881941e27db845b",
+    "crop": [
+      25,
+      240,
+      362,
+      240
+    ]
+  },
+  {
+    "file": "rehearsal-03.png",
+    "topic": "rehearsal",
+    "step": 3,
+    "source": "14-rehearsal-date",
+    "source_sha256": "019d333d30b22273d1664af04972ae2fe89f4cb481ec69ccf881941e27db845b",
+    "crop": [
+      0,
+      618,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rehearsal-04.png",
+    "topic": "rehearsal",
+    "step": 4,
+    "source": "14-rehearsal-time",
+    "source_sha256": "a2c9031951edfbff33b11e345182e463b94c9c128858d9dea12c97e4bc730c6d",
+    "crop": [
+      50,
+      280,
+      312,
+      256
+    ]
+  },
+  {
+    "file": "rehearsal-05.png",
+    "topic": "rehearsal",
+    "step": 5,
+    "source": "14-rehearsal-place",
+    "source_sha256": "c11a8d657d35a788878d6b41bb240e87b37d7ca3b3ffa23dffcf3dd9b917924e",
+    "crop": [
+      55,
+      320,
+      302,
+      220
+    ]
+  },
+  {
+    "file": "rehearsal-06.png",
+    "topic": "rehearsal",
+    "step": 6,
+    "source": "14-rehearsal",
+    "source_sha256": "e63122942870fbde8bd5df89c3a697d0c337bf0b7cbf3a43c9f48349666a876a",
+    "crop": [
+      10,
+      490,
+      392,
+      170
+    ]
+  },
+  {
+    "file": "rota_plan-01.png",
+    "topic": "rota_plan",
+    "step": 1,
+    "source": "13-rotation-leader",
+    "source_sha256": "a99c9f6c02384ce8e2123891003fcdadceb511c853346cb83985be4b0ed9b50a",
+    "crop": [
+      0,
+      138,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rota_plan-02.png",
+    "topic": "rota_plan",
+    "step": 2,
+    "source": "13-rotation-leader",
+    "source_sha256": "a99c9f6c02384ce8e2123891003fcdadceb511c853346cb83985be4b0ed9b50a",
+    "crop": [
+      0,
+      138,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rota_plan-03.png",
+    "topic": "rota_plan",
+    "step": 3,
+    "source": "13-rotation-leader",
+    "source_sha256": "a99c9f6c02384ce8e2123891003fcdadceb511c853346cb83985be4b0ed9b50a",
+    "crop": [
+      0,
+      650,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rota_plan-04.png",
+    "topic": "rota_plan",
+    "step": 4,
+    "source": "13-auto-menu",
+    "source_sha256": "8a13eca77b1f7597081d94d389c15feeae89e032717612889d25354d9a8fca2a",
+    "crop": [
+      0,
+      0,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rota_plan-05.png",
+    "topic": "rota_plan",
+    "step": 5,
+    "source": "13-auto-menu",
+    "source_sha256": "8a13eca77b1f7597081d94d389c15feeae89e032717612889d25354d9a8fca2a",
+    "crop": [
+      0,
+      34,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rota_reply-01.png",
+    "topic": "rota_reply",
+    "step": 1,
+    "source": "11-rotation-member",
+    "source_sha256": "f92358ac0f133112f74f6fbbf4f8c96094e985cf145528a52d0eb9ca142ffd5e",
+    "crop": [
+      0,
+      328,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "rota_reply-02.png",
+    "topic": "rota_reply",
+    "step": 2,
+    "source": "11-response-actions",
+    "source_sha256": "df036d937b51faa99ab6f0926b663da8833ed64cefa20fc2655b8bdf0d25c85b",
+    "crop": [
+      0,
+      542,
+      412,
+      108
+    ]
+  },
+  {
+    "file": "rota_reply-03.png",
+    "topic": "rota_reply",
+    "step": 3,
+    "source": "11-response-actions",
+    "source_sha256": "df036d937b51faa99ab6f0926b663da8833ed64cefa20fc2655b8bdf0d25c85b",
+    "crop": [
+      0,
+      654,
+      412,
+      108
+    ]
+  },
+  {
+    "file": "setlist_add-01.png",
+    "topic": "setlist_add",
+    "step": 1,
+    "source": "09-pick-song",
+    "source_sha256": "e0e4324dfb800c5f2dbc4e1fe4a888addd5c69a980ac6da613b01d39f8302479",
+    "crop": [
+      0,
+      332,
+      412,
+      140
+    ]
+  },
+  {
+    "file": "setlist_add-02.png",
+    "topic": "setlist_add",
+    "step": 2,
+    "source": "09-pick-version",
+    "source_sha256": "0953aaa536f3021542e35fbc56657487c01ada6b4ba348a5ecd1d9dc4f7c5a66",
+    "crop": [
+      0,
+      582,
+      412,
+      124
+    ]
+  },
+  {
+    "file": "setlist_add-03.png",
+    "topic": "setlist_add",
+    "step": 3,
+    "source": "09-empty-setlist",
+    "source_sha256": "4ac1a11eaf45ca7c286d6f1a376a9a8a41f6ebcb3873625481bf9ba2b214fc24",
+    "crop": [
+      0,
+      201,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "setlist_add-04.png",
+    "topic": "setlist_add",
+    "step": 4,
+    "source": "10-draft-publish",
+    "source_sha256": "83470326a42bfa46cfde1a4a9484d67bdb3658541b919ded42871c745428d3f8",
+    "crop": [
+      20,
+      235,
+      392,
+      240
+    ]
+  },
+  {
+    "file": "setlist_edit-01.png",
+    "topic": "setlist_edit",
+    "step": 1,
+    "source": "10-edit-setlist",
+    "source_sha256": "5f7e591b48dff6445105285dccfe537800673686b1b9c363f001c3d0735ef28e",
+    "crop": [
+      12,
+      210,
+      392,
+      210
+    ]
+  },
+  {
+    "file": "setlist_edit-02.png",
+    "topic": "setlist_edit",
+    "step": 2,
+    "source": "10-edit-setlist",
+    "source_sha256": "5f7e591b48dff6445105285dccfe537800673686b1b9c363f001c3d0735ef28e",
+    "crop": [
+      12,
+      410,
+      392,
+      200
+    ]
+  },
+  {
+    "file": "setlist_edit-03.png",
+    "topic": "setlist_edit",
+    "step": 3,
+    "source": "10-edit-setlist",
+    "source_sha256": "5f7e591b48dff6445105285dccfe537800673686b1b9c363f001c3d0735ef28e",
+    "crop": [
+      0,
+      594,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "setlist_edit-04.png",
+    "topic": "setlist_edit",
+    "step": 4,
+    "source": "10-draft-publish",
+    "source_sha256": "83470326a42bfa46cfde1a4a9484d67bdb3658541b919ded42871c745428d3f8",
+    "crop": [
+      0,
+      160,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "setlist_read-01.png",
+    "topic": "setlist_read",
+    "step": 1,
+    "source": "03-home",
+    "source_sha256": "d151d4d9333fdcb143a92104d8a2263ef9bc55e623c0d66672484c2670b91c66",
+    "crop": [
+      0,
+      710,
+      412,
+      110
+    ]
+  },
+  {
+    "file": "setlist_read-02.png",
+    "topic": "setlist_read",
+    "step": 2,
+    "source": "03-setlist",
+    "source_sha256": "af9272438cea7924abaa03e96dde336abb4a10659e1cadeadc050f0c655f1928",
+    "crop": [
+      0,
+      244,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "setlist_read-03.png",
+    "topic": "setlist_read",
+    "step": 3,
+    "source": "03-setlist",
+    "source_sha256": "af9272438cea7924abaa03e96dde336abb4a10659e1cadeadc050f0c655f1928",
+    "crop": [
+      0,
+      650,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "shared_notes-01.png",
+    "topic": "shared_notes",
+    "step": 1,
+    "source": "16-ink-team",
+    "source_sha256": "b7a1518b98f2ba0f4ec332c0e2a86374ccc33c7691d60875538fb1ac23fac556",
+    "crop": [
+      0,
+      735,
+      412,
+      85
+    ]
+  },
+  {
+    "file": "shared_notes-02.png",
+    "topic": "shared_notes",
+    "step": 2,
+    "source": "16-ink-team",
+    "source_sha256": "b7a1518b98f2ba0f4ec332c0e2a86374ccc33c7691d60875538fb1ac23fac556",
+    "crop": [
+      15,
+      383,
+      382,
+      110
+    ]
+  },
+  {
+    "file": "shared_notes-03.png",
+    "topic": "shared_notes",
+    "step": 3,
+    "source": "16-ink-done",
+    "source_sha256": "9d60f1c82e285eac2af0455ecf1c73952e925b27037c63b9f3e11080a2ffb1e4",
+    "crop": [
+      0,
+      735,
+      412,
+      85
+    ]
+  },
+  {
+    "file": "shared_notes-04.png",
+    "topic": "shared_notes",
+    "step": 4,
+    "source": "16-ink-done",
+    "source_sha256": "9d60f1c82e285eac2af0455ecf1c73952e925b27037c63b9f3e11080a2ffb1e4",
+    "crop": [
+      265,
+      738,
+      145,
+      82
+    ]
+  },
+  {
+    "file": "shared_notes-05.png",
+    "topic": "shared_notes",
+    "step": 5,
+    "source": "16-ink-done",
+    "source_sha256": "9d60f1c82e285eac2af0455ecf1c73952e925b27037c63b9f3e11080a2ffb1e4",
+    "crop": [
+      0,
+      735,
+      412,
+      85
+    ]
+  },
+  {
+    "file": "shared_notes-06.png",
+    "topic": "shared_notes",
+    "step": 6,
+    "source": "16-sheet-viewer",
+    "source_sha256": "c4c5ba3929d9ba27a22dd22b9262ba6866fcac9a6f12d2721d41e19f1a4e0c04",
+    "crop": [
+      0,
+      703,
+      412,
+      117
+    ]
+  },
+  {
+    "file": "sheet_notes-01.png",
+    "topic": "sheet_notes",
+    "step": 1,
+    "source": "16-sheet-viewer",
+    "source_sha256": "c4c5ba3929d9ba27a22dd22b9262ba6866fcac9a6f12d2721d41e19f1a4e0c04",
+    "crop": [
+      0,
+      50,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "sheet_notes-02.png",
+    "topic": "sheet_notes",
+    "step": 2,
+    "source": "16-sheet-viewer",
+    "source_sha256": "c4c5ba3929d9ba27a22dd22b9262ba6866fcac9a6f12d2721d41e19f1a4e0c04",
+    "crop": [
+      0,
+      50,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "sheet_notes-03.png",
+    "topic": "sheet_notes",
+    "step": 3,
+    "source": "16-sheet-viewer",
+    "source_sha256": "c4c5ba3929d9ba27a22dd22b9262ba6866fcac9a6f12d2721d41e19f1a4e0c04",
+    "crop": [
+      0,
+      694,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "sheet_notes-04.png",
+    "topic": "sheet_notes",
+    "step": 4,
+    "source": "16-ink-private",
+    "source_sha256": "7f66b070e9d39a111cceec81e40e1c3244138a063ae9184b658be263e7f27014",
+    "crop": [
+      0,
+      720,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "sheet_notes-05.png",
+    "topic": "sheet_notes",
+    "step": 5,
+    "source": "16-ink-private",
+    "source_sha256": "7f66b070e9d39a111cceec81e40e1c3244138a063ae9184b658be263e7f27014",
+    "crop": [
+      15,
+      245,
+      382,
+      170
+    ]
+  },
+  {
+    "file": "sheet_notes-06.png",
+    "topic": "sheet_notes",
+    "step": 6,
+    "source": "16-ink-done",
+    "source_sha256": "9d60f1c82e285eac2af0455ecf1c73952e925b27037c63b9f3e11080a2ffb1e4",
+    "crop": [
+      0,
+      735,
+      412,
+      85
+    ]
+  },
+  {
+    "file": "song_files-01.png",
+    "topic": "song_files",
+    "step": 1,
+    "source": "08-upload",
+    "source_sha256": "7db10174c8cb89bd26e9737146fd94eb0143dd7a311e9f42480c159caefeff17",
+    "crop": [
+      60,
+      300,
+      290,
+      196
+    ]
+  },
+  {
+    "file": "song_files-02.png",
+    "topic": "song_files",
+    "step": 2,
+    "source": "08-upload",
+    "source_sha256": "7db10174c8cb89bd26e9737146fd94eb0143dd7a311e9f42480c159caefeff17",
+    "crop": [
+      0,
+      471,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "song_files-03.png",
+    "topic": "song_files",
+    "step": 3,
+    "source": "08-link",
+    "source_sha256": "c635cee67f847cab97fa6be5a1322c3813d36b9e3427a3337f4c903aafbf9879",
+    "crop": [
+      0,
+      307,
+      412,
+      114
+    ]
+  },
+  {
+    "file": "song_files-04.png",
+    "topic": "song_files",
+    "step": 4,
+    "source": "08-link",
+    "source_sha256": "c635cee67f847cab97fa6be5a1322c3813d36b9e3427a3337f4c903aafbf9879",
+    "crop": [
+      0,
+      375,
+      412,
+      114
+    ]
+  },
+  {
+    "file": "song_files-05.png",
+    "topic": "song_files",
+    "step": 5,
+    "source": "08-link",
+    "source_sha256": "c635cee67f847cab97fa6be5a1322c3813d36b9e3427a3337f4c903aafbf9879",
+    "crop": [
+      0,
+      455,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "songs-01.png",
+    "topic": "songs",
+    "step": 1,
+    "source": "06-new-song",
+    "source_sha256": "364f50add70b3d7f6240b1b893eea7045f330f2ac75673ed1913ef87a4dab684",
+    "crop": [
+      0,
+      140,
+      412,
+      114
+    ]
+  },
+  {
+    "file": "songs-02.png",
+    "topic": "songs",
+    "step": 2,
+    "source": "06-new-song",
+    "source_sha256": "364f50add70b3d7f6240b1b893eea7045f330f2ac75673ed1913ef87a4dab684",
+    "crop": [
+      40,
+      472,
+      332,
+      164
+    ]
+  },
+  {
+    "file": "songs-03.png",
+    "topic": "songs",
+    "step": 3,
+    "source": "06-new-song",
+    "source_sha256": "364f50add70b3d7f6240b1b893eea7045f330f2ac75673ed1913ef87a4dab684",
+    "crop": [
+      0,
+      621,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "songs-04.png",
+    "topic": "songs",
+    "step": 4,
+    "source": "06-version",
+    "source_sha256": "b5604d82d71b8c0a5e4ca4b5cb524c5e25d42b30faf6c75754a9b8fff87038c4",
+    "crop": [
+      40,
+      305,
+      332,
+      166
+    ]
+  },
+  {
+    "file": "songs-05.png",
+    "topic": "songs",
+    "step": 5,
+    "source": "06-version",
+    "source_sha256": "b5604d82d71b8c0a5e4ca4b5cb524c5e25d42b30faf6c75754a9b8fff87038c4",
+    "crop": [
+      0,
+      456,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "team_admin-01.png",
+    "topic": "team_admin",
+    "step": 1,
+    "source": "17-team-invite",
+    "source_sha256": "5298765e2b6bd556af7523c8eef8e6132c6530933fe687efb51912db79d11bfc",
+    "crop": [
+      0,
+      79,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "team_admin-02.png",
+    "topic": "team_admin",
+    "step": 2,
+    "source": "17-team-invite",
+    "source_sha256": "5298765e2b6bd556af7523c8eef8e6132c6530933fe687efb51912db79d11bfc",
+    "crop": [
+      0,
+      253,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "team_admin-03.png",
+    "topic": "team_admin",
+    "step": 3,
+    "source": "17-team-invite",
+    "source_sha256": "5298765e2b6bd556af7523c8eef8e6132c6530933fe687efb51912db79d11bfc",
+    "crop": [
+      0,
+      0,
+      412,
+      100
+    ]
+  },
+  {
+    "file": "team_admin-04.png",
+    "topic": "team_admin",
+    "step": 4,
+    "source": "19-role",
+    "source_sha256": "97b9ac57d5fe1d5b446841a59bdcb8eaac49dbd2be335da356ed94dababc7ff0",
+    "crop": [
+      0,
+      534,
+      412,
+      108
+    ]
+  }
+]
