@@ -1,4 +1,5 @@
 """Verify screenshot placement and real Word/PDF navigation destinations."""
+import argparse
 import json
 import re
 from pathlib import Path
@@ -17,7 +18,11 @@ NS = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
 
 
 def main():
-    with ZipFile(DOCX) as archive:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--docx', type=Path, default=DOCX)
+    parser.add_argument('--pdf', type=Path, default=PDF)
+    args = parser.parse_args()
+    with ZipFile(args.docx) as archive:
         document = etree.fromstring(archive.read('word/document.xml'))
         footer = etree.fromstring(archive.read('word/footer1.xml'))
     names = set(document.xpath('//w:bookmarkStart/@w:name', namespaces=NS))
@@ -32,7 +37,7 @@ def main():
         assert p.xpath('./w:pPr/w:keepNext', namespaces=NS), 'Keep instruction and screenshot together'
     assert len(document.xpath('//wp:inline', namespaces=NS)) == count
 
-    reader = PdfReader(PDF)
+    reader = PdfReader(args.pdf)
     pages = {page.indirect_reference.idnum: i for i, page in enumerate(reader.pages)}
     def destination(annotation):
         return annotation.get('/Dest') or annotation.get('/A', {}).get('/D')
@@ -46,7 +51,7 @@ def main():
     topics = {topic['id']: topic for topic in DATA['topics']}
     assert len(toc) == len(keys) == len(topics)
     report = []
-    with pdfplumber.open(PDF) as rendered:
+    with pdfplumber.open(args.pdf) as rendered:
         # Check the exported layout, not just the Word XML: the full instruction
         # must occur on the same page immediately above its screenshot.
         expected_steps = iter(step for topic in DATA['topics'] for step in topic['steps'])

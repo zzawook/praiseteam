@@ -15,11 +15,31 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Mm, Pt, RGBColor
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
+from embed_guide_fonts import embed_fonts
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'output/guide'
-FONT = 'Noto Sans CJK KR'
+FONT = 'Noto Sans KR'
 INK = '000000'
+STYLE_COLORS = {'Title': '17365D', 'Heading 1': '365F91', 'Heading 2': '4F81BD', 'Subtitle': '4F81BD'}
+
+
+def explicit_fonts(rpr):
+    fonts = rpr.find(qn('w:rFonts'))
+    if fonts is None:
+        fonts = OxmlElement('w:rFonts'); rpr.insert(0, fonts)
+    for key in list(fonts.attrib):
+        if key.lower().endswith('theme'):
+            del fonts.attrib[key]
+    for key in ['ascii', 'hAnsi', 'eastAsia', 'cs']:
+        fonts.set(qn(f'w:{key}'), FONT)
+
+
+def explicit_color(rpr, value):
+    color = rpr.find(qn('w:color'))
+    if color is None:
+        color = OxmlElement('w:color'); rpr.append(color)
+    color.attrib.clear(); color.set(qn('w:val'), value)
 
 
 def internal_link(paragraph, label, target):
@@ -28,6 +48,7 @@ def internal_link(paragraph, label, target):
     link.set(qn('w:history'), '1')
     run = OxmlElement('w:r')
     props = OxmlElement('w:rPr')
+    explicit_fonts(props)
     color = OxmlElement('w:color'); color.set(qn('w:val'), '2541B2'); props.append(color)
     underline = OxmlElement('w:u'); underline.set(qn('w:val'), 'single'); props.append(underline)
     run.append(props)
@@ -43,21 +64,20 @@ def bookmark(paragraph, name, number):
     paragraph._p.append(end)
 
 
-def font(style, size, bold=False):
+def font(style, size, bold=False, color=INK):
     style.font.name = FONT
     style.font.size = Pt(size)
     style.font.bold = bold
     style.font.italic = False
-    style.font.color.rgb = RGBColor.from_string(INK)
+    style.font.color.rgb = RGBColor.from_string(color)
     rpr = style.element.get_or_add_rPr()
-    fonts = rpr.find(qn('w:rFonts'))
-    if fonts is None:
-        fonts = OxmlElement('w:rFonts')
-        rpr.append(fonts)
-    for key in ['ascii', 'hAnsi', 'eastAsia', 'cs']:
-        fonts.set(qn(f'w:{key}'), FONT)
-    for key in ['asciiTheme', 'hAnsiTheme', 'eastAsiaTheme', 'cstheme']:
-        fonts.attrib.pop(qn(f'w:{key}'), None)
+    explicit_fonts(rpr)
+    explicit_color(rpr, color)
+    for name, value in [('szCs', str(round(size*2))), ('bCs', '1' if bold else '0'), ('iCs', '0')]:
+        element = rpr.find(qn('w:'+name))
+        if element is None:
+            element = OxmlElement('w:'+name); rpr.append(element)
+        element.set(qn('w:val'), value)
 
 
 def rich(paragraph, value):
@@ -78,6 +98,12 @@ def rich(paragraph, value):
 def para(doc, text, style=None):
     p = doc.add_paragraph(style=style)
     rich(p, text)
+    if style in STYLE_COLORS:
+        # Explicit run values also survive importers that use linked character
+        # styles differently from Word's paragraph styles.
+        for run in p.runs:
+            explicit_fonts(run._r.get_or_add_rPr())
+            explicit_color(run._r.get_or_add_rPr(), STYLE_COLORS[style])
     p.paragraph_format.keep_together = True
     return p
 
@@ -171,13 +197,21 @@ def main():
     normal.paragraph_format.line_spacing = Pt(16.5)
     normal.paragraph_format.space_after = Pt(4)
     for name, size in [('Title', 24), ('Subtitle', 11), ('Heading 1', 19), ('Heading 2', 12)]:
-        s = doc.styles[name]; font(s, size, bold=name != 'Subtitle')
+        s = doc.styles[name]; font(s, size, bold=name != 'Subtitle', color=STYLE_COLORS[name])
+        linked = {'Title': 'Title Char', 'Subtitle': 'Subtitle Char', 'Heading 1': 'Heading 1 Char', 'Heading 2': 'Heading 2 Char'}[name]
+        if linked in doc.styles:
+            font(doc.styles[linked], size, bold=name != 'Subtitle', color=STYLE_COLORS[name])
         s.paragraph_format.space_before = Pt(9 if name == 'Heading 2' else 0)
         s.paragraph_format.space_after = Pt(5)
         s.paragraph_format.keep_with_next = True
         s.paragraph_format.line_spacing = Pt(size * 1.4)
         ppr = s.element.get_or_add_pPr()
         for border in list(ppr.findall(qn('w:pBdr'))): ppr.remove(border)
+    defaults = doc.styles.element.find(qn('w:docDefaults')).find(qn('w:rPrDefault')).find(qn('w:rPr'))
+    explicit_fonts(defaults)
+    for name in ['Footer', 'Footer Char']:
+        if name in doc.styles:
+            font(doc.styles[name], 8.5)
     doc.core_properties.title = data['title']
     doc.core_properties.subject = '찬양팀 가입과 콘티 로타 연습 라이브 사용 안내'
     doc.core_properties.author = 'PraiseTeam'
@@ -249,6 +283,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / 'PraiseTeam_사용가이드.docx'
     doc.save(path)
+    embed_fonts(path)
     print(path)
 
 
